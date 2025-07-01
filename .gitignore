@@ -23,9 +23,19 @@
 hs_err_pid*
 replay_pid*
 
-# Default ignored files
-/shelf/
-/workspace.xml
+# idea files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/datasources.xml
+.idea/dataSources.local.xml
+.idea/sonarlint/
+*.iml
+
+# compilation files
+ecommerce/target/
+**/target/
+**/pom.xml.versionsBackup
 
 # Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
