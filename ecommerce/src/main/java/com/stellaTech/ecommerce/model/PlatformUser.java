@@ -26,7 +26,7 @@ public class PlatformUser {
     private String rfc;
 
     @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     public PlatformUser() {
     }
