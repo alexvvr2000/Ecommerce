@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "platform_user")
+@Table(name = "platform_user", schema = "user_data")
 public class PlatformUser {
 
     @Id
