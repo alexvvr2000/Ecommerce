@@ -39,3 +39,6 @@ ecommerce/target/
 
 # Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
+
+# private files
+env.properties
