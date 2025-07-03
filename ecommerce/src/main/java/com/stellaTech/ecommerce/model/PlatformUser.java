@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -26,6 +27,7 @@ public class PlatformUser {
     private String rfc;
 
     @Column(name = "deleted", nullable = false)
+    @JsonIgnore
     private Boolean deleted = false;
 
     public PlatformUser() {
@@ -88,7 +90,7 @@ public class PlatformUser {
         this.rfc = rfc;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 
