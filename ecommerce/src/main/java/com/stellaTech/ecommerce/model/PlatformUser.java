@@ -23,7 +23,7 @@ public class PlatformUser {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "rfc") // RFC can be null based on the image (no NOT NULL specified)
+    @Column(name = "rfc")
     private String rfc;
 
     @Column(name = "deleted", nullable = false)
