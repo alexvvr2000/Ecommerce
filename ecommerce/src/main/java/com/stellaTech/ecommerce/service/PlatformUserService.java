@@ -2,7 +2,7 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.service.repository.PlatformUserIdentity;
+import com.stellaTech.ecommerce.service.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.service.specification.PlatformUserSpecs;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +14,27 @@ import java.util.Map;
 @Service
 public class PlatformUserService {
     @Autowired
-    private PlatformUserIdentity userIdentity;
+    private PlatformUserRepository userRepository;
 
     public List<PlatformUser> getAllUsers() {
-        return userIdentity.findAll(PlatformUserSpecs.isNotDeleted());
+        return userRepository.findAll(PlatformUserSpecs.isNotDeleted());
     }
 
     @Transactional
     public Long logicalDeleteUser(Long id) throws Exception {
-        PlatformUser user = userIdentity.findById(id)
+        PlatformUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (user.isDeleted()) {
             throw new Exception("User already deleted");
         }
         user.setDeleted(true);
-        userIdentity.save(user);
+        userRepository.save(user);
         return id;
     }
 
     @Transactional
     public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) {
-        PlatformUser existingUser = userIdentity.findById(idUser)
+        PlatformUser existingUser = userRepository.findById(idUser)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User with id " + idUser + " was not found"));
 
@@ -43,7 +43,7 @@ public class PlatformUserService {
         existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
         existingUser.setRfc(updatedUser.getRfc());
 
-        return userIdentity.save(existingUser);
+        return userRepository.save(existingUser);
     }
 
     @Transactional
@@ -65,27 +65,27 @@ public class PlatformUserService {
                     break;
             }
         });
-        return userIdentity.save(platformUser);
+        return userRepository.save(platformUser);
     }
 
     @Transactional
     public PlatformUser createUser(PlatformUser newUser) {
-        return userIdentity.save(newUser);
+        return userRepository.save(newUser);
     }
 
     @Transactional
     public PlatformUser markUserAsDeleted(Long id) {
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
-        return userIdentity.save(user);
+        return userRepository.save(user);
     }
 
     public List<PlatformUser> getAllActiveUsers() {
-        return userIdentity.findAll(PlatformUserSpecs.isNotDeleted());
+        return userRepository.findAll(PlatformUserSpecs.isNotDeleted());
     }
 
     public PlatformUser getUserById(Long id) {
-        return userIdentity.findOne(
+        return userRepository.findOne(
                 PlatformUserSpecs.activeUserById(id)
         ).orElseThrow(() ->
                 new ResourceNotFoundException("Active user with id " + id + " was not found")

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlatformUserIdentity extends JpaRepository<PlatformUser, Long>, JpaSpecificationExecutor<PlatformUser> {
+public interface PlatformUserRepository extends JpaRepository<PlatformUser, Long>, JpaSpecificationExecutor<PlatformUser> {
 }
