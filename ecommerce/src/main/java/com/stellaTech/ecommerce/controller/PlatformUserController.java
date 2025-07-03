@@ -2,30 +2,29 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.repository.PlatformUserIdentity;
+import com.stellaTech.ecommerce.service.PlatformUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/")
 public class PlatformUserController {
     @Autowired
-    private PlatformUserIdentity userIdentity;
+    private PlatformUserService userService;
 
     @GetMapping("/users")
     public List<PlatformUser> getAllUsers() {
-        return userIdentity.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/users/{idUser}")
-    public ResponseEntity<PlatformUser> getUser(@PathVariable Long idUser) {
-        Optional<PlatformUser> user = userIdentity.findById(idUser);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public PlatformUser getUser(@PathVariable Long idUser) {
+        return userService.getUserById(idUser);
     }
 
     @PutMapping("/users/{idUser}")
@@ -33,22 +32,32 @@ public class PlatformUserController {
             @PathVariable Long idUser,
             @RequestBody PlatformUser updatedUser
     ) {
-        PlatformUser existingUser = userIdentity.findById(idUser)
-                .orElseThrow(() -> new ResourceNotFoundException("user with ID " + idUser + " not found"));
-
-        existingUser.setFullName(updatedUser.getFullName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setRfc(updatedUser.getRfc());
-        existingUser.setDeleted(updatedUser.getDeleted());
-
-        PlatformUser savedUser = userIdentity.save(existingUser);
-
+        PlatformUser savedUser = userService.updateEntireUser(idUser, updatedUser);
         return ResponseEntity.ok(savedUser);
     }
 
+    @PatchMapping("/users/{idUser}")
+    public ResponseEntity<PlatformUser> partialUpdateUser(
+            @PathVariable Long idUser,
+            @RequestBody Map<String, Object> updatedFields
+    ) {
+        PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
+        return ResponseEntity.ok(savedUser);
+    }
+    @DeleteMapping("/users/{idUser}")
+    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long idUser) {
+        try {
+            userService.logicalDeleteUser(idUser);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(new Error("Internal server error"));
+        }
+    }
     @PostMapping("/users")
     public PlatformUser createUser(@RequestBody PlatformUser newUser) {
-        return userIdentity.save(newUser);
+        return userService.createUser(newUser);
     }
 }
