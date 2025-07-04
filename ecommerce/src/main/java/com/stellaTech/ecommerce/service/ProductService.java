@@ -20,9 +20,6 @@ public class ProductService {
     @Transactional
     public Long logicalDeleteProduct(Long id) throws Exception {
         Product product = getProductById(id);
-        if (product.isDeleted()) {
-            throw new IllegalStateException("Product with id " + id + " was already deleted");
-        }
         product.setDeleted(true);
         return id;
     }

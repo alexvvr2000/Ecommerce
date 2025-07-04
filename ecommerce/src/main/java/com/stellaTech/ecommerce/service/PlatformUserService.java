@@ -19,9 +19,6 @@ public class PlatformUserService {
     @Transactional
     public Long logicalDeleteUser(Long id) throws Exception {
         PlatformUser user = getUserById(id);
-        if (user.isDeleted()) {
-            throw new Exception("User already deleted");
-        }
         user.setDeleted(true);
         userRepository.save(user);
         return id;
