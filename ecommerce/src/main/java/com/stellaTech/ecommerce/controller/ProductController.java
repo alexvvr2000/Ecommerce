@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.controller;
 
+import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
@@ -36,12 +37,25 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
-    @PatchMapping("/users/{idProduct}")
+    @PatchMapping("/products/{idProduct}")
     public ResponseEntity<Product> partialUpdateUser(
             @PathVariable Long idProduct,
             @RequestBody Map<String, Object> updatedFields
     ) {
         Product savedProduct = productService.updateProductPartially(idProduct, updatedFields);
         return ResponseEntity.ok(savedProduct);
+    }
+
+    @DeleteMapping("/products/{idProduct}")
+    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long idProduct) {
+        try {
+            productService.logicalDeleteProduct(idProduct);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(new Error("Internal server error"));
+        }
     }
 }
