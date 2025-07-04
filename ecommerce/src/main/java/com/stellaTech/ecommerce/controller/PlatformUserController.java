@@ -39,8 +39,9 @@ public class PlatformUserController {
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> partialUpdateUser(
             @PathVariable Long idUser,
-            @RequestBody Map<String, Object> updatedFields
+            @RequestBody Map<String, Object> updatedFields // recibir el platformUser
     ) {
+        // revisar cuales campos que son nulos y luego actualizarlo si no lo son
         PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
         return ResponseEntity.ok(savedUser);
     }

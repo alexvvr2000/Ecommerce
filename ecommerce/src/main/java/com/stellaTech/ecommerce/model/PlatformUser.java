@@ -30,6 +30,8 @@ public class PlatformUser {
     @JsonIgnore
     private Boolean deleted = false;
 
+    // agregar actualizacion de password (que no sea igual al que esta en la base)
+
     public PlatformUser() {
     }
 
@@ -41,6 +43,8 @@ public class PlatformUser {
         this.rfc = rfc;
         this.deleted = deleted;
     }
+
+    // plugin lombok para intellij
 
     public Integer getId() {
         return id;
