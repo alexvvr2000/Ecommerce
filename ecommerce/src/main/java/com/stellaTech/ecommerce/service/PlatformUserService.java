@@ -18,8 +18,7 @@ public class PlatformUserService {
 
     @Transactional
     public Long logicalDeleteUser(Long id) throws Exception {
-        PlatformUser user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        PlatformUser user = getUserById(id);
         if (user.isDeleted()) {
             throw new Exception("User already deleted");
         }
@@ -30,13 +29,12 @@ public class PlatformUserService {
 
     @Transactional
     public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) {
-        PlatformUser existingUser = userRepository.findById(idUser)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User with id " + idUser + " was not found"));
+        PlatformUser existingUser = getUserById(idUser);
 
         existingUser.setFullName(updatedUser.getFullName());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        existingUser.setCurp(updatedUser.getCurp());
         existingUser.setRfc(updatedUser.getRfc());
 
         return userRepository.save(existingUser);
@@ -45,6 +43,7 @@ public class PlatformUserService {
     @Transactional
     public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields) {
         PlatformUser platformUser = getUserById(id);
+        // posible caso con java reflection para escalarlo cuando hay mas campos en el futuro
         updatedFields.forEach((key, value) -> {
             switch (key) {
                 case "fullName":

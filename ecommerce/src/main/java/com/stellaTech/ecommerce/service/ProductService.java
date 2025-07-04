@@ -19,21 +19,17 @@ public class ProductService {
 
     @Transactional
     public Long logicalDeleteProduct(Long id) throws Exception {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Product product = getProductById(id);
         if (product.isDeleted()) {
-            throw new Exception("User already deleted");
+            throw new IllegalStateException("Product with id " + id + " was already deleted");
         }
         product.setDeleted(true);
-        productRepository.save(product);
         return id;
     }
 
     @Transactional
     public Product updateEntireProduct(Long productId, Product updatedProduct) {
-        Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Product with id " + productId + " was not found"));
+        Product existingProduct = getProductById(productId);
 
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setAverageRating(updatedProduct.getAverageRating());
@@ -53,10 +49,10 @@ public class ProductService {
                     product.setName((String) value);
                     break;
                 case "averageRating":
-                    product.setAverageRating((BigDecimal) value);
+                    product.setAverageRating(new BigDecimal(value.toString()));
                     break;
                 case "price":
-                    product.setPrice((BigDecimal) value);
+                    product.setPrice(new BigDecimal(value.toString()));
                     break;
                 case "mdFormatDescription":
                     product.setMdFormatDescription((String) value);
