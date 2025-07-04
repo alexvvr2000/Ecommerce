@@ -58,4 +58,9 @@ public class ProductController {
                     .body(new Error("Internal server error"));
         }
     }
+
+    @PostMapping("/products")
+    public Product createProduct(@RequestBody Product newProduct) {
+        return productService.createProduct(newProduct);
+    }
 }
