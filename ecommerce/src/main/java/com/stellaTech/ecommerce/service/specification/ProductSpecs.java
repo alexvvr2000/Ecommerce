@@ -8,7 +8,7 @@ public class ProductSpecs {
         return (root, query, cb) -> cb.equal(root.get("deleted"), false);
     }
 
-    public static Specification<Product> activeUserById(Long id) {
+    public static Specification<Product> activeProductById(Long id) {
         return isNotDeleted().and(
                 (root, query, cb) -> cb.equal(root.get("id"), id)
         );
