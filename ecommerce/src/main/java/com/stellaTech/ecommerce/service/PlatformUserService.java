@@ -4,9 +4,9 @@ import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.service.specification.PlatformUserSpecs;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -15,10 +15,6 @@ import java.util.Map;
 public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
-
-    public List<PlatformUser> getAllUsers() {
-        return userRepository.findAll(PlatformUserSpecs.isNotDeleted());
-    }
 
     @Transactional
     public Long logicalDeleteUser(Long id) throws Exception {
@@ -80,10 +76,12 @@ public class PlatformUserService {
         return userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public List<PlatformUser> getAllActiveUsers() {
         return userRepository.findAll(PlatformUserSpecs.isNotDeleted());
     }
 
+    @Transactional(readOnly = true)
     public PlatformUser getUserById(Long id) {
         return userRepository.findOne(
                 PlatformUserSpecs.activeUserById(id)

@@ -19,7 +19,7 @@ public class PlatformUserController {
 
     @GetMapping("/users")
     public List<PlatformUser> getAllUsers() {
-        return userService.getAllUsers();
+        return userService.getAllActiveUsers();
     }
 
     @GetMapping("/users/{idUser}")
