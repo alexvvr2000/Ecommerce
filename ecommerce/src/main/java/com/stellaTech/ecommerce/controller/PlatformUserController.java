@@ -44,6 +44,7 @@ public class PlatformUserController {
         PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
         return ResponseEntity.ok(savedUser);
     }
+
     @DeleteMapping("/users/{idUser}")
     public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long idUser) {
         try {
@@ -56,6 +57,7 @@ public class PlatformUserController {
                     .body(new Error("Internal server error"));
         }
     }
+
     @PostMapping("/users")
     public PlatformUser createUser(@RequestBody PlatformUser newUser) {
         return userService.createUser(newUser);

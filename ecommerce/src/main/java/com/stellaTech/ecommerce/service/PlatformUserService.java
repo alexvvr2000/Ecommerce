@@ -47,7 +47,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields){
+    public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields) {
         PlatformUser platformUser = getUserById(id);
         updatedFields.forEach((key, value) -> {
             switch (key) {
