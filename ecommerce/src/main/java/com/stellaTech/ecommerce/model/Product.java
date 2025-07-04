@@ -29,7 +29,7 @@ public class Product {
 
     @Column(name = "deleted", nullable = false)
     @JsonIgnore
-    private Boolean deleted = false;
+    private boolean deleted = false;
 
     public Product() {
 
@@ -45,7 +45,7 @@ public class Product {
         this.deleted = deleted;
     }
 
-    public Boolean isDeleted() {
+    public boolean isDeleted() {
         return deleted;
     }
 
@@ -103,16 +103,11 @@ public class Product {
 
     @PrePersist
     @PreUpdate
-    private void validateRating() throws Exception {
+    private void validateColumns() throws Exception {
         if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
                 averageRating.compareTo(new BigDecimal("10.00")) > 0) {
             throw new Exception("Rating out of range");
         }
-    }
-
-    @PrePersist
-    @PreUpdate
-    public void validatePrice() {
         if (price.compareTo(new BigDecimal("0.01")) < 0) {
             throw new IllegalArgumentException("Invalid price");
         }
