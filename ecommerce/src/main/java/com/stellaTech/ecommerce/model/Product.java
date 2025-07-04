@@ -16,16 +16,16 @@ public class Product {
     private String name;
 
     @Column(name = "average_rating", precision = 4, scale = 2)
-    private BigDecimal average_rating;
+    private BigDecimal averageRating;
 
     @Column(name = "price", precision = 8, scale = 2, nullable = false)
     private BigDecimal price;
 
     @Column(name = "md_format_description")
-    private String md_format_description;
+    private String mdFormatDescription;
 
     @Column(name = "main_image_url")
-    private String main_image_url;
+    private String mainImageUrl;
 
     @Column(name = "deleted", nullable = false)
     @JsonIgnore
@@ -38,10 +38,10 @@ public class Product {
     public Product(Integer id, String name, BigDecimal average_rating, BigDecimal price, String md_format_description, String main_image_url, Boolean deleted) {
         this.id = id;
         this.name = name;
-        this.average_rating = average_rating;
+        this.averageRating = average_rating;
         this.price = price;
-        this.md_format_description = md_format_description;
-        this.main_image_url = main_image_url;
+        this.mdFormatDescription = md_format_description;
+        this.mainImageUrl = main_image_url;
         this.deleted = deleted;
     }
 
@@ -53,20 +53,20 @@ public class Product {
         this.deleted = deleted;
     }
 
-    public String getMain_image_url() {
-        return main_image_url;
+    public String getMainImageUrl() {
+        return mainImageUrl;
     }
 
-    public void setMain_image_url(String main_image_url) {
-        this.main_image_url = main_image_url;
+    public void setMainImageUrl(String mainImageUrl) {
+        this.mainImageUrl = mainImageUrl;
     }
 
-    public String getMd_format_description() {
-        return md_format_description;
+    public String getMdFormatDescription() {
+        return mdFormatDescription;
     }
 
-    public void setMd_format_description(String md_format_description) {
-        this.md_format_description = md_format_description;
+    public void setMdFormatDescription(String mdFormatDescription) {
+        this.mdFormatDescription = mdFormatDescription;
     }
 
     public BigDecimal getPrice() {
@@ -77,12 +77,12 @@ public class Product {
         this.price = price;
     }
 
-    public BigDecimal getAverage_rating() {
-        return average_rating;
+    public BigDecimal getAverageRating() {
+        return averageRating;
     }
 
-    public void setAverage_rating(BigDecimal average_rating) {
-        this.average_rating = average_rating;
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
     }
 
     public String getName() {
@@ -104,8 +104,8 @@ public class Product {
     @PrePersist
     @PreUpdate
     private void validateRating() throws Exception {
-        if (average_rating.compareTo(BigDecimal.ZERO) < 0 ||
-                average_rating.compareTo(new BigDecimal("10.00")) > 0) {
+        if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
+                averageRating.compareTo(new BigDecimal("10.00")) > 0) {
             throw new Exception("Rating out of range");
         }
     }
