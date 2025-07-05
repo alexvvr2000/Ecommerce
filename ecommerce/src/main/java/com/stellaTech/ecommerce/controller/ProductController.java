@@ -1,7 +1,6 @@
 package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
