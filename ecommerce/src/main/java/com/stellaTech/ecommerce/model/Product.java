@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -35,8 +35,7 @@ public class Product {
 
     }
 
-    public Product(Integer id, String name, BigDecimal average_rating, BigDecimal price, String md_format_description, String main_image_url, Boolean deleted) {
-        this.id = id;
+    public Product(String name, BigDecimal average_rating, BigDecimal price, String md_format_description, String main_image_url, Boolean deleted) {
         this.name = name;
         this.averageRating = average_rating;
         this.price = price;
@@ -93,11 +92,11 @@ public class Product {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
