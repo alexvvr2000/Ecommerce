@@ -35,69 +35,12 @@ public class Product {
 
     }
 
-    public Product(String name, BigDecimal average_rating, BigDecimal price, String md_format_description, String main_image_url, Boolean deleted) {
+    public Product(String name, BigDecimal averageRating, BigDecimal price, String mdFormatDescription, String mainImageUrl) {
         this.name = name;
-        this.averageRating = average_rating;
-        this.price = price;
-        this.mdFormatDescription = md_format_description;
-        this.mainImageUrl = main_image_url;
-        this.deleted = deleted;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getMainImageUrl() {
-        return mainImageUrl;
-    }
-
-    public void setMainImageUrl(String mainImageUrl) {
-        this.mainImageUrl = mainImageUrl;
-    }
-
-    public String getMdFormatDescription() {
-        return mdFormatDescription;
-    }
-
-    public void setMdFormatDescription(String mdFormatDescription) {
-        this.mdFormatDescription = mdFormatDescription;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public BigDecimal getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(BigDecimal averageRating) {
         this.averageRating = averageRating;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.price = price;
+        this.mdFormatDescription = mdFormatDescription;
+        this.mainImageUrl = mainImageUrl;
     }
 
     @PrePersist
@@ -110,5 +53,57 @@ public class Product {
         if (price.compareTo(new BigDecimal("0.01")) < 0) {
             throw new IllegalArgumentException("Invalid price");
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getMdFormatDescription() {
+        return mdFormatDescription;
+    }
+
+    public void setMdFormatDescription(String mdFormatDescription) {
+        this.mdFormatDescription = mdFormatDescription;
+    }
+
+    public String getMainImageUrl() {
+        return mainImageUrl;
+    }
+
+    public void setMainImageUrl(String mainImageUrl) {
+        this.mainImageUrl = mainImageUrl;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

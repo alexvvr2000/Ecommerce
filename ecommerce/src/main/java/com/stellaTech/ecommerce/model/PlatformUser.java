@@ -35,16 +35,15 @@ public class PlatformUser {
     public PlatformUser() {
     }
 
-    public PlatformUser(String curp, String fullName, String email, String phoneNumber, String rfc, Boolean deleted) {
+    public PlatformUser(String curp, String fullName, String email, String phoneNumber, String rfc) {
         this.curp = curp;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.rfc = rfc;
-        this.deleted = deleted;
     }
 
-    // plugin lombok para intellij
+    // usar lombok
 
     public Long getId() {
         return id;
