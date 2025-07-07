@@ -7,11 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "order", schema = "product_data",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uq_user_product_order_combination", columnNames = {"user_id", "product_id"})
-        }
-)
+@Table(name = "order", schema = "product_data")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
