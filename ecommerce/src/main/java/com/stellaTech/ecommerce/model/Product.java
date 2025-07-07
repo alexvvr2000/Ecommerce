@@ -43,18 +43,6 @@ public class Product {
         this.mainImageUrl = mainImageUrl;
     }
 
-    @PrePersist
-    @PreUpdate
-    private void validateColumns() throws Exception {
-        if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
-                averageRating.compareTo(new BigDecimal("10.00")) > 0) {
-            throw new Exception("Rating out of range");
-        }
-        if (price.compareTo(new BigDecimal("0.01")) < 0) {
-            throw new IllegalArgumentException("Invalid price");
-        }
-    }
-
     public Long getId() {
         return id;
     }
@@ -71,7 +59,11 @@ public class Product {
         return averageRating;
     }
 
-    public void setAverageRating(BigDecimal averageRating) {
+    public void setAverageRating(BigDecimal averageRating) throws Exception {
+        if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
+                averageRating.compareTo(new BigDecimal("10.00")) > 0) {
+            throw new Exception("Rating out of range");
+        }
         this.averageRating = averageRating;
     }
 
@@ -80,6 +72,9 @@ public class Product {
     }
 
     public void setPrice(BigDecimal price) {
+        if (price.compareTo(new BigDecimal("0.01")) < 0) {
+            throw new IllegalArgumentException("Invalid price");
+        }
         this.price = price;
     }
 
