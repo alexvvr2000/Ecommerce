@@ -31,7 +31,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long idProduct,
             @RequestBody Product updatedProduct
-    ) {
+    ) throws Exception {
         Product savedProduct = productService.updateEntireProduct(idProduct, updatedProduct);
         return ResponseEntity.ok(savedProduct);
     }
