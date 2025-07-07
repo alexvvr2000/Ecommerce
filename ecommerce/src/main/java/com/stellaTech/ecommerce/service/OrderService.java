@@ -29,7 +29,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Order> getAllActiveOrder() {
+    public List<Order> getAllActiveOrders() {
         return orderRepository.findAll(OrderSpecs.isNotDeleted());
     }
 
