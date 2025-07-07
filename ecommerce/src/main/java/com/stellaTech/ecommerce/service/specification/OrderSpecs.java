@@ -9,10 +9,10 @@ public class OrderSpecs {
         return (root, query, cb) -> cb.equal(root.get("deleted"), false);
     }
 
-    public static Specification<Order> hasId(OrderPK id) {
-        return (root, query, cb) -> cb.and(
+    public static Specification<Order> orderIsActive(OrderPK id) {
+        return isNotDeleted().and((root, query, cb) -> cb.and(
                 cb.equal(root.get("id").get("productId"), id.getProductId()),
                 cb.equal(root.get("id").get("userId"), id.getUserId())
-        );
+        ));
     }
 }
