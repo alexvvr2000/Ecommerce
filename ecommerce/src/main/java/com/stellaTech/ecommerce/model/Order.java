@@ -9,60 +9,51 @@ import java.util.Date;
 @Entity
 @Table(name = "order", schema = "product_data")
 public class Order {
-    @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_product")
-    private Product purchasedProduct;
 
-    @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_user")
-    private PlatformUser orderUser;
+    @EmbeddedId
+    @AttributeOverrides(
+            {
+                    @AttributeOverride(name = "productId", column = @Column(name = "product_id")),
+                    @AttributeOverride(name = "userId", column = @Column(name = "user_id"))
+            }
+    )
+    private OrderPK orderPK;
 
-    @Column(name = "product_count", nullable = false, updatable = false)
-    private int productCount = 1;
+    @MapsId("productId")
+    private Product product;
 
-    @Column(name = "deleted", nullable = false)
-    @JsonIgnore
-    private boolean deleted = false;
+    @MapsId("userId")
+    private PlatformUser platformUser;
 
     @Column(name = "purchased_date", updatable = false)
     @CreationTimestamp
     private Date purchasedDate;
 
+    @Column(name = "deleted", nullable = false)
+    @JsonIgnore
+    private boolean deleted = false;
+
+    @Column(name = "product_count", nullable = false, updatable = false)
+    private int productCount = 1;
+
     public Order() {
     }
 
-    public Order(boolean deleted, int productCount, PlatformUser orderUser, Product purchasedProduct, Date purchasedDate) {
-        this.deleted = deleted;
+    public Order(OrderPK orderPK, int productCount) {
+        this.orderPK = orderPK;
         this.productCount = productCount;
-        this.orderUser = orderUser;
-        this.purchasedProduct = purchasedProduct;
-        this.purchasedDate = purchasedDate;
+    }
+
+    public PlatformUser getPlatformUser() {
+        return platformUser;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public Date getPurchasedDate() {
         return purchasedDate;
-    }
-
-    public void setPurchasedDate(Date purchasedDate) {
-        this.purchasedDate = purchasedDate;
-    }
-
-    public Product getPurchasedProduct() {
-        return purchasedProduct;
-    }
-
-    public void setPurchasedProduct(Product purchasedProduct) {
-        this.purchasedProduct = purchasedProduct;
-    }
-
-    public PlatformUser getOrderUser() {
-        return orderUser;
-    }
-
-    public void setOrderUser(PlatformUser orderUser) {
-        this.orderUser = orderUser;
     }
 
     public int getProductCount() {
@@ -71,6 +62,14 @@ public class Order {
 
     public void setProductCount(int productCount) {
         this.productCount = productCount;
+    }
+
+    public OrderPK getOrderPK() {
+        return orderPK;
+    }
+
+    public void setOrderPK(OrderPK orderPK) {
+        this.orderPK = orderPK;
     }
 
     public boolean isDeleted() {
