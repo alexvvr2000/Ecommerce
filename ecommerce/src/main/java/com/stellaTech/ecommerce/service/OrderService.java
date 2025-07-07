@@ -31,7 +31,10 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long productId, Long userId, int productCount) {
+    public Order createOrder(Long productId, Long userId, int productCount) throws Exception{
+        if(orderRepository.exists(OrderSpecs.hasNotBeenDeleted(productId, userId))){
+            throw new Exception("Order has already been created");
+        }
         Product product = productService.getProductById(productId);
         PlatformUser platformUser = platformUserService.getUserById(userId);
         Order newOrder = new Order(product, platformUser, productCount);
@@ -44,9 +47,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public boolean orderExistsWithUserAndProduct(Long productId, Long platformUserId) {
+        return orderRepository.findOne(
+                OrderSpecs.orderByProduct(productId).and(
+                        OrderSpecs.orderByPlatformUser(platformUserId)
+                )
+        ).isPresent();
+    }
+
+    @Transactional(readOnly = true)
     public Order getOrderById(Long id) throws ResourceNotFoundException {
         return orderRepository.findOne(
-                OrderSpecs.orderIsActive(id)
+                OrderSpecs.hasNotBeenDeleted(id)
         ).orElseThrow(() ->
                 new ResourceNotFoundException("Active product with id " + id + " was not found")
         );
