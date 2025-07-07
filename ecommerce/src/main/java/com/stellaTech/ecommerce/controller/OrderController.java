@@ -1,8 +1,6 @@
 package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.Order;
-import com.stellaTech.ecommerce.model.OrderPK;
-import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public Order getOrder(@PathVariable Long orderPK) {
-        return orderService.getOrderById(orderPK);
+    public Order getOrder(@PathVariable Long orderId) {
+        return orderService.getOrderById(orderId);
     }
 }
