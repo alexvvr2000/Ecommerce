@@ -1,8 +1,10 @@
 package com.stellaTech.ecommerce.controller;
 
+import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
 import com.stellaTech.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,20 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public Order getOrder(@PathVariable Long orderId) {
+    public Order getAllOrders(@PathVariable Long orderId) {
         return orderService.getOrderById(orderId);
+    }
+
+    @DeleteMapping("/orders/{orderId}")
+    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long orderId) {
+        try {
+            orderService.logicalDeleteOrder(orderId);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(new Error("Internal server error"));
+        }
     }
 }
