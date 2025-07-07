@@ -73,7 +73,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<Product> getAllActiveProducts() {
-        return productRepository.findAll(ProductSpecs.isNotDeleted());
+        return productRepository.findAll(ProductSpecs.hasNotBeenDeleted());
     }
 
     @Transactional(readOnly = true)

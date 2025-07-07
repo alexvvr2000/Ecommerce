@@ -74,7 +74,7 @@ public class PlatformUserService {
 
     @Transactional(readOnly = true)
     public List<PlatformUser> getAllActiveUsers() {
-        return userRepository.findAll(PlatformUserSpecs.isNotDeleted());
+        return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted());
     }
 
     @Transactional(readOnly = true)
