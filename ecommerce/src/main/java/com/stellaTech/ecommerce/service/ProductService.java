@@ -73,7 +73,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws ResourceNotFoundException {
         return productRepository.findOne(
                 ProductSpecs.activeProductById(id)
         ).orElseThrow(() ->

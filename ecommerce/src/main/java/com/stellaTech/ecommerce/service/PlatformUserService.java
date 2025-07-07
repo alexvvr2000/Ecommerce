@@ -78,7 +78,7 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    public PlatformUser getUserById(Long id) {
+    public PlatformUser getUserById(Long id) throws ResourceNotFoundException {
         return userRepository.findOne(
                 PlatformUserSpecs.activeUserById(id)
         ).orElseThrow(() ->
