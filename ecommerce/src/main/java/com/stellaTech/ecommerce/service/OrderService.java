@@ -2,6 +2,7 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
+import com.stellaTech.ecommerce.model.OrderPK;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
 import com.stellaTech.ecommerce.service.specification.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,15 @@ public class OrderService {
     protected OrderRepository orderRepository;
 
     @Transactional
-    public Long logicalDeleteOrder(Long id) throws Exception {
-        Order product = getOrderById(id);
-        product.setDeleted(true);
+    public OrderPK logicalDeleteOrder(OrderPK id) throws Exception {
+        Order order = getOrderById(id);
+        order.setDeleted(true);
         return id;
     }
 
     @Transactional
-    public Order createOrder(Order newProduct) {
-        return orderRepository.save(newProduct);
+    public Order createOrder(Order newOrder) {
+        return orderRepository.save(newOrder);
     }
 
     @Transactional(readOnly = true)
@@ -33,9 +34,9 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Order getOrderById(Long id) throws ResourceNotFoundException {
+    public Order getOrderById(OrderPK id) throws ResourceNotFoundException {
         return orderRepository.findOne(
-                OrderSpecs.activeProductById(id)
+                OrderSpecs.orderIsActive(id)
         ).orElseThrow(() ->
                 new ResourceNotFoundException("Active product with id " + id + " was not found")
         );
