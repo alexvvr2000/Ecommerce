@@ -20,9 +20,11 @@ public class Order {
     private OrderPK orderPK;
 
     @MapsId("productId")
+    @ManyToOne
     private Product product;
 
     @MapsId("userId")
+    @ManyToOne
     private PlatformUser platformUser;
 
     @Column(name = "purchased_date", updatable = false)
