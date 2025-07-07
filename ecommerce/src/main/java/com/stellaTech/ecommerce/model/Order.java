@@ -18,14 +18,14 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", updatable = false)
+    @JoinColumn(name = "product_id", updatable = false, nullable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", updatable = false)
+    @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
     private PlatformUser platformUser;
 
-    @Column(name = "purchased_date", updatable = false)
+    @Column(name = "purchased_date", updatable = false, nullable = false)
     @CreationTimestamp
     private Date purchasedDate;
 
