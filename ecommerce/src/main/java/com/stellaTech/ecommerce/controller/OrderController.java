@@ -27,8 +27,13 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public Order createOrder(@RequestBody OrderRequest newOrder){
-        return orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest newOrder){
+        try {
+            Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
+            return ResponseEntity.ok(persistedOrder);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e);
+        }
     }
 
     @DeleteMapping("/orders/{orderId}")
