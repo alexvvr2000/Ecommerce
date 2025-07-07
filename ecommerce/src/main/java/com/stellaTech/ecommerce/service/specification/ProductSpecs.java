@@ -4,12 +4,12 @@ import com.stellaTech.ecommerce.model.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecs {
-    public static Specification<Product> isNotDeleted() {
+    public static Specification<Product> hasNotBeenDeleted() {
         return (root, query, cb) -> cb.equal(root.get("deleted"), false);
     }
 
     public static Specification<Product> activeProductById(Long id) {
-        return isNotDeleted().and(
+        return hasNotBeenDeleted().and(
                 (root, query, cb) -> cb.equal(root.get("id"), id)
         );
     }
