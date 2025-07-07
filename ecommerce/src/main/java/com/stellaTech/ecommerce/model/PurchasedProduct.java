@@ -13,7 +13,7 @@ public class PurchasedProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "purchased_date", nullable = false)
+    @Column(name = "purchased_date", updatable = false)
     @CreationTimestamp
     private Date purchasedDate;
 
