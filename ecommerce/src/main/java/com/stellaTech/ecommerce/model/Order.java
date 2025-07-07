@@ -41,7 +41,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderPK orderPK, int productCount) {
+    public Order(OrderPK orderPK, int productCount) throws Exception{
         this.setOrderPK(orderPK);
         this.setProductCount(productCount);
     }
@@ -62,7 +62,10 @@ public class Order {
         return productCount;
     }
 
-    public void setProductCount(int productCount) {
+    public void setProductCount(int productCount) throws Exception{
+        if(productCount < 0){
+            throw new Exception("The product count for the order is not valid");
+        }
         this.productCount = productCount;
     }
 
