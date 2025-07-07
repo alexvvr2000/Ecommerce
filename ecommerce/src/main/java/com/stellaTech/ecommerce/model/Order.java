@@ -10,46 +10,35 @@ import java.util.Date;
 @Table(name = "order", schema = "product_data")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name = "purchased_date", updatable = false)
-    @CreationTimestamp
-    private Date purchasedDate;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_product")
     private Product purchasedProduct;
 
+    @Id
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_user")
     private PlatformUser orderUser;
 
-    @Column(name = "product_count", nullable = false)
+    @Column(name = "product_count", nullable = false, updatable = false)
     private int productCount = 1;
 
     @Column(name = "deleted", nullable = false)
     @JsonIgnore
     private boolean deleted = false;
 
+    @Column(name = "purchased_date", updatable = false)
+    @CreationTimestamp
+    private Date purchasedDate;
+
     public Order() {
     }
 
-    public Order(boolean deleted, int productCount, PlatformUser orderUser, Product purchasedProduct, Date purchasedDate, Integer id) {
+    public Order(boolean deleted, int productCount, PlatformUser orderUser, Product purchasedProduct, Date purchasedDate) {
         this.deleted = deleted;
         this.productCount = productCount;
         this.orderUser = orderUser;
         this.purchasedProduct = purchasedProduct;
         this.purchasedDate = purchasedDate;
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Date getPurchasedDate() {
