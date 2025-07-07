@@ -17,7 +17,7 @@ public class OrderService {
     protected OrderRepository orderRepository;
 
     @Transactional
-    public OrderPK logicalDeleteOrder(OrderPK id) throws Exception {
+    public Long logicalDeleteOrder(Long id) throws Exception {
         Order order = getOrderById(id);
         order.setDeleted(true);
         return id;
@@ -34,7 +34,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Order getOrderById(OrderPK id) throws ResourceNotFoundException {
+    public Order getOrderById(Long id) throws ResourceNotFoundException {
         return orderRepository.findOne(
                 OrderSpecs.orderIsActive(id)
         ).orElseThrow(() ->

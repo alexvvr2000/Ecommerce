@@ -21,8 +21,8 @@ public class OrderController {
         return orderService.getAllActiveOrders();
     }
 
-    @GetMapping("/orders/{orderPK}")
-    public Order getOrder(@PathVariable OrderPK orderPK) {
+    @GetMapping("/orders/{orderId}")
+    public Order getOrder(@PathVariable Long orderPK) {
         return orderService.getOrderById(orderPK);
     }
 }
