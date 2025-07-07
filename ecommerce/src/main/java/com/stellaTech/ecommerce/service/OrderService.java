@@ -2,6 +2,8 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
+import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
 import com.stellaTech.ecommerce.service.specification.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,13 @@ import java.util.List;
 @Service
 public class OrderService {
     @Autowired
-    protected OrderRepository orderRepository;
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private PlatformUserService platformUserService;
 
     @Transactional
     public Long logicalDeleteOrder(Long id) throws Exception {
@@ -23,7 +31,10 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Order newOrder) {
+    public Order createOrder(Long productId, Long userId, int productCount) {
+        Product product = productService.getProductById(productId);
+        PlatformUser platformUser = platformUserService.getUserById(userId);
+        Order newOrder = new Order(product, platformUser, productCount);
         return orderRepository.save(newOrder);
     }
 

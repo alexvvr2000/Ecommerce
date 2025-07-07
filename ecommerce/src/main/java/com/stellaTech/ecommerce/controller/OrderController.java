@@ -26,6 +26,11 @@ public class OrderController {
         return orderService.getOrderById(orderId);
     }
 
+    @PostMapping("/orders")
+    public Order createOrder(@RequestBody OrderRequest newOrder){
+        return orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
+    }
+
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long orderId) {
         try {
@@ -38,4 +43,10 @@ public class OrderController {
                     .body(new Error("Internal server error"));
         }
     }
+
+    public record OrderRequest(
+            Long productId,
+            Long userId,
+            int productCount
+    ) {}
 }
