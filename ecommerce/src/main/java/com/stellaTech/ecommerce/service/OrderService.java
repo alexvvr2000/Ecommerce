@@ -2,7 +2,6 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
-import com.stellaTech.ecommerce.model.OrderPK;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
 import com.stellaTech.ecommerce.service.specification.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
