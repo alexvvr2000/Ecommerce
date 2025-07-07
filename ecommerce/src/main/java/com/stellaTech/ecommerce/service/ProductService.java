@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, Product updatedProduct) {
+    public Product updateEntireProduct(Long productId, Product updatedProduct) throws Exception {
         Product existingProduct = getProductById(productId);
 
         existingProduct.setName(updatedProduct.getName());
@@ -46,7 +46,11 @@ public class ProductService {
                     product.setName((String) value);
                     break;
                 case "averageRating":
-                    product.setAverageRating(new BigDecimal(value.toString()));
+                    try {
+                        product.setAverageRating(new BigDecimal(value.toString()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case "price":
                     product.setPrice(new BigDecimal(value.toString()));
