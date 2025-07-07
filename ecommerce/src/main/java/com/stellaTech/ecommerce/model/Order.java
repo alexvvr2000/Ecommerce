@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "order", schema = "product_data")
-public class PurchasedProduct {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,10 +32,10 @@ public class PurchasedProduct {
     @JsonIgnore
     private boolean deleted = false;
 
-    public PurchasedProduct() {
+    public Order() {
     }
 
-    public PurchasedProduct(boolean deleted, int productCount, PlatformUser orderUser, Product purchasedProduct, Date purchasedDate, Integer id) {
+    public Order(boolean deleted, int productCount, PlatformUser orderUser, Product purchasedProduct, Date purchasedDate, Integer id) {
         this.deleted = deleted;
         this.productCount = productCount;
         this.orderUser = orderUser;

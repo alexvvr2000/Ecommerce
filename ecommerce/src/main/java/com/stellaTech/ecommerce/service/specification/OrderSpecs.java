@@ -1,14 +1,14 @@
 package com.stellaTech.ecommerce.service.specification;
 
-import com.stellaTech.ecommerce.model.PurchasedProduct;
+import com.stellaTech.ecommerce.model.Order;
 import org.springframework.data.jpa.domain.Specification;
 
-public class PurchasedProductSpecs {
-    public static Specification<PurchasedProduct> isNotDeleted() {
+public class OrderSpecs {
+    public static Specification<Order> isNotDeleted() {
         return (root, query, cb) -> cb.equal(root.get("deleted"), false);
     }
 
-    public static Specification<PurchasedProduct> activeProductById(Long id) {
+    public static Specification<Order> activeProductById(Long id) {
         return isNotDeleted().and(
                 (root, query, cb) -> cb.equal(root.get("id"), id)
         );
