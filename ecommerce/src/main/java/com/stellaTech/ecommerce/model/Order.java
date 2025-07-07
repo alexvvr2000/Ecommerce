@@ -42,8 +42,8 @@ public class Order {
     }
 
     public Order(OrderPK orderPK, int productCount) {
-        this.orderPK = orderPK;
-        this.productCount = productCount;
+        this.setOrderPK(orderPK);
+        this.setProductCount(productCount);
     }
 
     public PlatformUser getPlatformUser() {

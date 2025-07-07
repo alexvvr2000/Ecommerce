@@ -14,8 +14,8 @@ public class OrderPK implements Serializable {
     }
 
     public OrderPK(Long productId, Long userId) {
-        this.productId = productId;
-        this.userId = userId;
+        this.setProductId(productId);
+        this.setUserId(userId);
     }
 
     public Long getProductId() {

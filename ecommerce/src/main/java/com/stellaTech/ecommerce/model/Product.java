@@ -35,12 +35,12 @@ public class Product {
 
     }
 
-    public Product(String name, BigDecimal averageRating, BigDecimal price, String mdFormatDescription, String mainImageUrl) {
-        this.name = name;
-        this.averageRating = averageRating;
-        this.price = price;
-        this.mdFormatDescription = mdFormatDescription;
-        this.mainImageUrl = mainImageUrl;
+    public Product(String name, BigDecimal averageRating, BigDecimal price, String mdFormatDescription, String mainImageUrl) throws Exception {
+        this.setName(name);
+        this.setAverageRating(averageRating);
+        this.setPrice(price);
+        this.setMdFormatDescription(mdFormatDescription);
+        this.setMainImageUrl(mainImageUrl);
     }
 
     public Long getId() {

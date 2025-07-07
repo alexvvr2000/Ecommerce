@@ -25,25 +25,36 @@ public class PlatformUser {
 
     @Column(name = "rfc")
     private String rfc;
-
+    @Column(name = "password", nullable = false)
+    private String password;
     @Column(name = "deleted", nullable = false)
     @JsonIgnore
     private Boolean deleted = false;
 
-    // agregar actualizacion de password (que no sea igual al que esta en la base)
-
     public PlatformUser() {
     }
 
-    public PlatformUser(String curp, String fullName, String email, String phoneNumber, String rfc) {
-        this.curp = curp;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.rfc = rfc;
+    public PlatformUser(String curp, String fullName, String email, String phoneNumber, String rfc, String password) throws Exception {
+        this.setCurp(curp);
+        this.setFullName(fullName);
+        this.setEmail(email);
+        this.setPhoneNumber(phoneNumber);
+        this.setRfc(rfc);
+        this.setPassword(password);
     }
 
-    // usar lombok
+    // agregar actualizacion de password (que no sea igual al que esta en la base)
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) throws Exception {
+        if (password.equals(this.password)) {
+            throw new Exception("The password is the same as the previous one");
+        }
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
