@@ -3,6 +3,7 @@ package com.stellaTech.ecommerce.controller;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,14 @@ public class ProductController {
     }
 
     @GetMapping("/products/{idProduct}")
-    public Product getProduct(@PathVariable Long idProduct) {
+    public Product getProduct(@NonNull  @PathVariable Long idProduct) {
         return productService.getProductById(idProduct);
     }
 
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable Long idProduct,
-            @RequestBody Product updatedProduct
+            @NonNull @PathVariable Long idProduct,
+            @NonNull @RequestBody Product updatedProduct
     ) throws Exception {
         Product savedProduct = productService.updateEntireProduct(idProduct, updatedProduct);
         return ResponseEntity.ok(savedProduct);
@@ -38,15 +39,15 @@ public class ProductController {
 
     @PatchMapping("/products/{idProduct}")
     public ResponseEntity<Product> partialUpdateUser(
-            @PathVariable Long idProduct,
-            @RequestBody Map<String, Object> updatedFields
+            @NonNull @PathVariable Long idProduct,
+            @NonNull @RequestBody Map<String, Object> updatedFields
     ) {
         Product savedProduct = productService.updateProductPartially(idProduct, updatedFields);
         return ResponseEntity.ok(savedProduct);
     }
 
     @DeleteMapping("/products/{idProduct}")
-    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long idProduct) {
+    public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idProduct) {
         try {
             productService.logicalDeleteProduct(idProduct);
             return ResponseEntity.noContent().build();
@@ -59,7 +60,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody Product newProduct) {
+    public Product createProduct(@NonNull @RequestBody Product newProduct) {
         return productService.createProduct(newProduct);
     }
 }

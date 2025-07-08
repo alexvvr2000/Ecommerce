@@ -3,6 +3,7 @@ package com.stellaTech.ecommerce.controller;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
 import com.stellaTech.ecommerce.service.OrderService;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,12 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public Order getAllOrders(@PathVariable Long orderId) {
+    public Order getAllOrders(@NonNull @PathVariable Long orderId) {
         return orderService.getOrderById(orderId);
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest newOrder) {
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderRequest newOrder) {
         try {
             Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
             return ResponseEntity.ok(persistedOrder);
@@ -37,7 +38,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/orders/{orderId}")
-    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long orderId) {
+    public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long orderId) {
         try {
             orderService.logicalDeleteOrder(orderId);
             return ResponseEntity.noContent().build();
@@ -49,10 +50,11 @@ public class OrderController {
         }
     }
 
-    public record OrderRequest(
-            Long productId,
-            Long userId,
-            int productCount
-    ) {
+    @Value
+    @AllArgsConstructor
+    public static class OrderRequest{
+            Long productId;
+            Long userId;
+            int productCount;
     }
 }

@@ -3,6 +3,7 @@ package com.stellaTech.ecommerce.controller;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,14 @@ public class PlatformUserController {
     }
 
     @GetMapping("/users/{idUser}")
-    public PlatformUser getUser(@PathVariable Long idUser) {
+    public PlatformUser getUser(@NonNull @PathVariable Long idUser) {
         return userService.getUserById(idUser);
     }
 
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> updateUser(
-            @PathVariable Long idUser,
-            @RequestBody PlatformUser updatedUser
+            @NonNull @PathVariable Long idUser,
+            @NonNull @RequestBody PlatformUser updatedUser
     ) {
         PlatformUser savedUser = userService.updateEntireUser(idUser, updatedUser);
         return ResponseEntity.ok(savedUser);
@@ -38,8 +39,8 @@ public class PlatformUserController {
 
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> partialUpdateUser(
-            @PathVariable Long idUser,
-            @RequestBody Map<String, Object> updatedFields // recibir el platformUser
+            @NonNull @PathVariable Long idUser,
+            @NonNull @RequestBody Map<String, Object> updatedFields // recibir el platformUser
     ) {
         // revisar cuales campos que son nulos y luego actualizarlo si no lo son
         PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
@@ -47,7 +48,7 @@ public class PlatformUserController {
     }
 
     @DeleteMapping("/users/{idUser}")
-    public ResponseEntity<?> logicalDeletePlatformUser(@PathVariable Long idUser) {
+    public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idUser) {
         try {
             userService.logicalDeleteUser(idUser);
             return ResponseEntity.noContent().build();
@@ -60,7 +61,7 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public PlatformUser createUser(@RequestBody PlatformUser newUser) {
+    public PlatformUser createUser(@NonNull @RequestBody PlatformUser newUser) {
         return userService.createUser(newUser);
     }
 }
