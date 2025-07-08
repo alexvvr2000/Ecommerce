@@ -14,19 +14,19 @@ public class OrderSpecs {
         );
     }
 
-    public static Specification<Order> hasNotBeenDeleted(Long productId, Long platformUserId){
+    public static Specification<Order> hasNotBeenDeleted(Long productId, Long platformUserId) {
         return isNotDeleted().and(
                 orderByProduct(productId).and(orderByPlatformUser(platformUserId))
         );
     }
 
-    public static Specification <Order> orderByProduct(Long productId) {
+    public static Specification<Order> orderByProduct(Long productId) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(
                 root.get("product").get("id"), productId
         );
     }
 
-    public static Specification <Order> orderByPlatformUser(Long platformUserId) {
+    public static Specification<Order> orderByPlatformUser(Long platformUserId) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(
                 root.get("platformUser").get("id"), platformUserId
         );

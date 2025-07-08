@@ -31,8 +31,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long productId, Long userId, int productCount) throws Exception{
-        if(orderRepository.exists(OrderSpecs.hasNotBeenDeleted(productId, userId))){
+    public Order createOrder(Long productId, Long userId, int productCount) throws Exception {
+        if (orderRepository.exists(OrderSpecs.hasNotBeenDeleted(productId, userId))) {
             throw new Exception("Order has already been created");
         }
         Product product = productService.getProductById(productId);

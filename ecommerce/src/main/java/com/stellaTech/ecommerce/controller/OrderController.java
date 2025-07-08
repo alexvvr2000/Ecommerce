@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest newOrder){
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest newOrder) {
         try {
             Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
             return ResponseEntity.ok(persistedOrder);
@@ -53,5 +53,6 @@ public class OrderController {
             Long productId,
             Long userId,
             int productCount
-    ) {}
+    ) {
+    }
 }
