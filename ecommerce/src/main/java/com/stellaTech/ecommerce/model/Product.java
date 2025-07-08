@@ -1,9 +1,12 @@
 package com.stellaTech.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Getter
 @Entity
 @Table(name = "product", schema = "product_data")
 public class Product extends LogicallyDeletableEntity {
@@ -11,20 +14,23 @@ public class Product extends LogicallyDeletableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Setter
+    @Column(name = "md_format_description")
+    private String mdFormatDescription;
+
+    @Setter
+    @Column(name = "main_image_url")
+    private String mainImageUrl;
 
     @Column(name = "average_rating", precision = 4, scale = 2)
     private BigDecimal averageRating;
 
     @Column(name = "price", precision = 8, scale = 2, nullable = false)
     private BigDecimal price;
-
-    @Column(name = "md_format_description")
-    private String mdFormatDescription;
-
-    @Column(name = "main_image_url")
-    private String mainImageUrl;
 
     public Product() {
 
@@ -38,22 +44,6 @@ public class Product extends LogicallyDeletableEntity {
         this.setMainImageUrl(mainImageUrl);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getAverageRating() {
-        return averageRating;
-    }
-
     public void setAverageRating(BigDecimal averageRating) throws Exception {
         if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
                 averageRating.compareTo(new BigDecimal("10.00")) > 0) {
@@ -62,30 +52,10 @@ public class Product extends LogicallyDeletableEntity {
         this.averageRating = averageRating;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public void setPrice(BigDecimal price) {
         if (price.compareTo(new BigDecimal("0.01")) < 0) {
             throw new IllegalArgumentException("Invalid price");
         }
         this.price = price;
-    }
-
-    public String getMdFormatDescription() {
-        return mdFormatDescription;
-    }
-
-    public void setMdFormatDescription(String mdFormatDescription) {
-        this.mdFormatDescription = mdFormatDescription;
-    }
-
-    public String getMainImageUrl() {
-        return mainImageUrl;
-    }
-
-    public void setMainImageUrl(String mainImageUrl) {
-        this.mainImageUrl = mainImageUrl;
     }
 }

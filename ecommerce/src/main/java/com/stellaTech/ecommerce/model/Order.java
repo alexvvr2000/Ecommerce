@@ -1,10 +1,15 @@
 package com.stellaTech.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "order", schema = "product_data")
 public class Order extends LogicallyDeletableEntity {
@@ -12,10 +17,12 @@ public class Order extends LogicallyDeletableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "product_id", updatable = false, nullable = false)
     private Product product;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
     private PlatformUser platformUser;
@@ -27,33 +34,10 @@ public class Order extends LogicallyDeletableEntity {
     @Column(name = "product_count", nullable = false, updatable = false)
     private int productCount = 1;
 
-    public Order() {
-    }
-
-    public Order(Product product, PlatformUser platformUser, int productCount) {
-        this.product = product;
-        this.platformUser = platformUser;
-        this.productCount = productCount;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public PlatformUser getPlatformUser() {
-        return platformUser;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public Date getPurchasedDate() {
-        return purchasedDate;
-    }
-
-    public int getProductCount() {
-        return productCount;
+    public Order(Product product, PlatformUser platformUser, int productCount) throws Exception {
+        this.setProduct(product);
+        this.setPlatformUser(platformUser);
+        this.setProductCount(productCount);
     }
 
     public void setProductCount(int productCount) throws Exception {
