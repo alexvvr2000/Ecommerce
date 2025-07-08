@@ -1,13 +1,12 @@
 package com.stellaTech.ecommerce.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product", schema = "product_data")
-public class Product {
+public class Product extends LogicallyDeletableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,10 +25,6 @@ public class Product {
 
     @Column(name = "main_image_url")
     private String mainImageUrl;
-
-    @Column(name = "deleted", nullable = false)
-    @JsonIgnore
-    private boolean deleted = false;
 
     public Product() {
 
@@ -92,13 +87,5 @@ public class Product {
 
     public void setMainImageUrl(String mainImageUrl) {
         this.mainImageUrl = mainImageUrl;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

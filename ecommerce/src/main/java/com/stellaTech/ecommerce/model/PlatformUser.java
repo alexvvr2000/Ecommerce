@@ -1,12 +1,10 @@
 package com.stellaTech.ecommerce.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "platform_user", schema = "user_data")
-public class PlatformUser {
-
+public class PlatformUser extends LogicallyDeletableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,11 +23,9 @@ public class PlatformUser {
 
     @Column(name = "rfc")
     private String rfc;
+
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "deleted", nullable = false)
-    @JsonIgnore
-    private Boolean deleted = false;
 
     public PlatformUser() {
     }
@@ -102,13 +98,5 @@ public class PlatformUser {
 
     public void setRfc(String rfc) {
         this.rfc = rfc;
-    }
-
-    public Boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 }
