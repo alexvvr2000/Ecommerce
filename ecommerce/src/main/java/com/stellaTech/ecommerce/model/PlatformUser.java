@@ -3,6 +3,7 @@ package com.stellaTech.ecommerce.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -37,7 +38,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public PlatformUser(String curp, String fullName, String email, String phoneNumber, String rfc, String password) throws Exception {
+    public PlatformUser(@NonNull String curp, @NonNull String fullName, @NonNull String email, @NonNull String phoneNumber, @NonNull String password, String rfc) throws Exception {
         this.setCurp(curp);
         this.setFullName(fullName);
         this.setEmail(email);
@@ -46,9 +47,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
         this.setPassword(password);
     }
 
-    // agregar actualizacion de password (que no sea igual al que esta en la base)
-
-    public void setPassword(String password) throws Exception {
+    public void setPassword(@NonNull String password) throws Exception {
         if (password.equals(this.password)) {
             throw new Exception("The password is the same as the previous one");
         }
