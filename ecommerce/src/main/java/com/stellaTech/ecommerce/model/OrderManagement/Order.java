@@ -48,14 +48,4 @@ public class Order extends LogicallyDeletableEntity {
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Order otherOrder)) return false;
-        if (id == null && otherOrder.id == null) {
-            return false;
-        }
-        return id != null && id.equals(otherOrder.id);
-    }
 }
