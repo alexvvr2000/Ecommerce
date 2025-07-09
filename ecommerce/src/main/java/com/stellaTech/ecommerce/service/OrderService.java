@@ -3,9 +3,6 @@ package com.stellaTech.ecommerce.service;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
-import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
-import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.service.dto.order.OrderMapper;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
@@ -14,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class OrderService {
