@@ -19,10 +19,9 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Transactional
-    public Long logicalDeleteProduct(Long id) throws ResourceNotFoundException {
+    public void logicalDeleteProduct(Long id) throws ResourceNotFoundException {
         Product product = getProductById(id);
         product.setDeleted(true);
-        return id;
     }
 
     @Transactional

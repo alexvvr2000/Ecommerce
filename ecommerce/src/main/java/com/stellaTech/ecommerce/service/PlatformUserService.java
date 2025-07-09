@@ -17,11 +17,10 @@ public class PlatformUserService {
     private PlatformUserRepository userRepository;
 
     @Transactional
-    public Long logicalDeleteUser(Long id) throws ResourceNotFoundException {
+    public void logicalDeleteUser(Long id) throws ResourceNotFoundException {
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
         userRepository.save(user);
-        return id;
     }
 
     @Transactional
@@ -62,13 +61,6 @@ public class PlatformUserService {
     @Transactional
     public PlatformUser createUser(PlatformUser newUser) {
         return userRepository.save(newUser);
-    }
-
-    @Transactional
-    public PlatformUser markUserAsDeleted(Long id) throws ResourceNotFoundException{
-        PlatformUser user = getUserById(id);
-        user.setDeleted(true);
-        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
