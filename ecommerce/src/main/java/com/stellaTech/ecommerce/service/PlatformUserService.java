@@ -17,7 +17,7 @@ public class PlatformUserService {
     private PlatformUserRepository userRepository;
 
     @Transactional
-    public Long logicalDeleteUser(Long id) throws Exception {
+    public Long logicalDeleteUser(Long id) throws ResourceNotFoundException {
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
         userRepository.save(user);
@@ -25,7 +25,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) {
+    public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) throws ResourceNotFoundException{
         PlatformUser existingUser = getUserById(idUser);
 
         existingUser.setFullName(updatedUser.getFullName());
@@ -38,9 +38,8 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields) {
+    public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException {
         PlatformUser platformUser = getUserById(id);
-        // posible caso con java reflection para escalarlo cuando hay mas campos en el futuro
         updatedFields.forEach((key, value) -> {
             switch (key) {
                 case "fullName":
@@ -66,7 +65,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser markUserAsDeleted(Long id) {
+    public PlatformUser markUserAsDeleted(Long id) throws ResourceNotFoundException{
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
         return userRepository.save(user);

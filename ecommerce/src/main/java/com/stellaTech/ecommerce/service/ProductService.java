@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.service;
 
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.repository.ProductRepository;
@@ -18,14 +19,14 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Transactional
-    public Long logicalDeleteProduct(Long id) throws Exception {
+    public Long logicalDeleteProduct(Long id) throws ResourceNotFoundException {
         Product product = getProductById(id);
         product.setDeleted(true);
         return id;
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, Product updatedProduct) throws Exception {
+    public Product updateEntireProduct(Long productId, Product updatedProduct) throws ResourceNotFoundException {
         Product existingProduct = getProductById(productId);
 
         existingProduct.setName(updatedProduct.getName());
@@ -38,7 +39,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProductPartially(Long id, Map<String, Object> updatedFields) {
+    public Product updateProductPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException, InvalidInputException{
         Product product = getProductById(id);
         updatedFields.forEach((key, value) -> {
             switch (key) {
@@ -48,8 +49,8 @@ public class ProductService {
                 case "averageRating":
                     try {
                         product.setAverageRating(new BigDecimal(value.toString()));
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                    } catch (InvalidInputException e) {
+                        throw new InvalidInputException(e.getMessage());
                     }
                     break;
                 case "price":
