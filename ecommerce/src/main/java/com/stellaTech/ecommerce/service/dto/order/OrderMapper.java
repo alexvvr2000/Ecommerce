@@ -1,7 +1,5 @@
 package com.stellaTech.ecommerce.service.dto.order;
 
-import com.stellaTech.ecommerce.exception.InvalidInputException;
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
 import com.stellaTech.ecommerce.model.PlatformUser;
@@ -22,17 +20,17 @@ public abstract class OrderMapper {
 
     @Mapping(target = "productList", source = "items")
     @Mapping(target = "platformUser", source = "platformUserId")
-    public abstract Order toOrder(OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException;
+    public abstract Order toOrder(OrderInsertDto dto);
 
     @Mapping(target = "product", source = "productId")
     @Mapping(target = "quantity", source = "productCount")
     public abstract OrderItem toOrderItem(OrderInsertDto.OrderItemInsertDto itemDto);
 
-    protected Product mapProductId(Long productId) throws ResourceNotFoundException {
+    protected Product mapProductId(Long productId) {
         return productService.getProductById(productId);
     }
 
-    protected PlatformUser mapPlatformUser(Long platformUserId) throws ResourceNotFoundException {
+    protected PlatformUser mapPlatformUser(Long platformUserId) {
         return platformUserService.getUserById(platformUserId);
     }
 }
