@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.controller;
 
-import com.stellaTech.ecommerce.model.Order;
+import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.service.OrderService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderService.NewOrder newOrder) {
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderService.orderDTO newOrder) {
         Order persistedOrder = orderService.createOrder(newOrder);
         return ResponseEntity.ok(persistedOrder);
     }

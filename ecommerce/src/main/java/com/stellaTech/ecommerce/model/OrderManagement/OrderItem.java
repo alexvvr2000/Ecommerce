@@ -1,6 +1,7 @@
-package com.stellaTech.ecommerce.model;
+package com.stellaTech.ecommerce.model.OrderManagement;
 
 import com.stellaTech.ecommerce.exception.InvalidInputException;
+import com.stellaTech.ecommerce.model.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

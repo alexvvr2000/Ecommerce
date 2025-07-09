@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.service;
 import com.stellaTech.ecommerce.exception.DuplicatedResourceException;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.Order;
+import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
 import com.stellaTech.ecommerce.service.specification.OrderSpecs;
 import lombok.Value;
@@ -31,7 +31,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(NewOrder newOrder) throws DuplicatedResourceException, InvalidInputException {
+    public Order createOrder(orderDTO newOrder) throws DuplicatedResourceException, InvalidInputException {
         return null;
     }
 
@@ -50,12 +50,12 @@ public class OrderService {
     }
 
     @Value
-    public static class NewOrder {
+    public static class orderDTO {
         Long userId;
-        List<OrderItem> items;
+        List<OrderItemDTO> items;
 
         @Value
-        public static class OrderItem {
+        public static class OrderItemDTO {
             Long productId;
             int productCount;
         }
