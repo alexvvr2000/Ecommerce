@@ -1,6 +1,5 @@
 package com.stellaTech.ecommerce.controller;
 
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
 import lombok.NonNull;
@@ -24,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{idProduct}")
-    public Product getProduct(@NonNull  @PathVariable Long idProduct) {
+    public Product getProduct(@NonNull @PathVariable Long idProduct) {
         return productService.getProductById(idProduct);
     }
 
@@ -32,7 +31,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(
             @NonNull @PathVariable Long idProduct,
             @NonNull @RequestBody Product updatedProduct
-    ) throws Exception {
+    ) {
         Product savedProduct = productService.updateEntireProduct(idProduct, updatedProduct);
         return ResponseEntity.ok(savedProduct);
     }
@@ -48,15 +47,8 @@ public class ProductController {
 
     @DeleteMapping("/products/{idProduct}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idProduct) {
-        try {
-            productService.logicalDeleteProduct(idProduct);
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(new Error("Internal server error"));
-        }
+        productService.logicalDeleteProduct(idProduct);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/products")

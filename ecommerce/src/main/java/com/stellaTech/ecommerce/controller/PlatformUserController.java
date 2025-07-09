@@ -1,6 +1,5 @@
 package com.stellaTech.ecommerce.controller;
 
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import lombok.NonNull;
@@ -40,24 +39,16 @@ public class PlatformUserController {
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody Map<String, Object> updatedFields // recibir el platformUser
+            @NonNull @RequestBody Map<String, Object> updatedFields
     ) {
-        // revisar cuales campos que son nulos y luego actualizarlo si no lo son
         PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
         return ResponseEntity.ok(savedUser);
     }
 
     @DeleteMapping("/users/{idUser}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idUser) {
-        try {
-            userService.logicalDeleteUser(idUser);
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(new Error("Internal server error"));
-        }
+        userService.logicalDeleteUser(idUser);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/users")

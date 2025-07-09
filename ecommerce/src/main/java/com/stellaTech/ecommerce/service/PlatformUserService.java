@@ -24,7 +24,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) throws ResourceNotFoundException{
+    public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) throws ResourceNotFoundException {
         PlatformUser existingUser = getUserById(idUser);
 
         existingUser.setFullName(updatedUser.getFullName());

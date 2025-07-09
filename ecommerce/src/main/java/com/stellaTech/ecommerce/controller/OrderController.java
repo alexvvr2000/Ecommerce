@@ -1,9 +1,10 @@
 package com.stellaTech.ecommerce.controller;
 
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
 import com.stellaTech.ecommerce.service.OrderService;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,32 +30,21 @@ public class OrderController {
 
     @PostMapping("/orders")
     public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderRequest newOrder) {
-        try {
-            Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
-            return ResponseEntity.ok(persistedOrder);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e);
-        }
+        Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
+        return ResponseEntity.ok(persistedOrder);
     }
 
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long orderId) {
-        try {
-            orderService.logicalDeleteOrder(orderId);
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(new Error("Internal server error"));
-        }
+        orderService.logicalDeleteOrder(orderId);
+        return ResponseEntity.noContent().build();
     }
 
     @Value
     @AllArgsConstructor
-    public static class OrderRequest{
-            Long productId;
-            Long userId;
-            int productCount;
+    public static class OrderRequest {
+        Long productId;
+        Long userId;
+        int productCount;
     }
 }

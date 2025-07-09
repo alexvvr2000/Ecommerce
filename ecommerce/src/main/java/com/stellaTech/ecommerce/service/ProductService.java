@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProductPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException, InvalidInputException{
+    public Product updateProductPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException, InvalidInputException {
         Product product = getProductById(id);
         updatedFields.forEach((key, value) -> {
             switch (key) {
