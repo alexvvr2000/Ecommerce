@@ -33,13 +33,12 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @EqualsAndHashCode.Include
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Setter
     @Column(name = "rfc", unique = true)
     private String rfc;
-
-    @Column(name = "password", nullable = false)
-    private String password;
 
     public PlatformUser(@NonNull String curp, @NonNull String fullName, @NonNull String email, @NonNull String phoneNumber, @NonNull String password, String rfc) throws InvalidInputException {
         this.setCurp(curp);
