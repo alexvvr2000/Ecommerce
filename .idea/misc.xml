@@ -2,7 +2,11 @@
 <project version="4">
   <component name="EntryPointsManager">
     <writeAnnotations>
+      <writeAnnotation name="jakarta.persistence.Column" />
+      <writeAnnotation name="jakarta.persistence.Embedded" />
       <writeAnnotation name="jakarta.persistence.GeneratedValue" />
+      <writeAnnotation name="jakarta.persistence.JoinColumn" />
+      <writeAnnotation name="jakarta.persistence.OneToMany" />
     </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

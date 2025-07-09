@@ -4,14 +4,13 @@ import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.model.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Entity
 @Getter
-@NoArgsConstructor
+@Entity
 @Table(name = "order_items")
 public class OrderItem {
     @Id
@@ -51,5 +50,16 @@ public class OrderItem {
 
     private void calculateSubtotal() {
         this.subtotal = purchasedPrice.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderItem otherOrderItem)) return false;
+        if (this.id != null && otherOrderItem.getId() != null) {
+            return this.id.equals(otherOrderItem.getId());
+        }
+        return Objects.equals(order.getId(), otherOrderItem.getOrder().getId()) &&
+                Objects.equals(product.getId(), otherOrderItem.getProduct().getId());
     }
 }
