@@ -6,7 +6,8 @@ import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.Product;
-import com.stellaTech.ecommerce.service.dto.OrderInsertDto;
+import com.stellaTech.ecommerce.service.dto.order.OrderInsertDto;
+import com.stellaTech.ecommerce.service.dto.order.OrderMapper;
 import com.stellaTech.ecommerce.service.repository.OrderRepository;
 import com.stellaTech.ecommerce.service.specification.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,7 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private PlatformUserService platformUserService;
+    private OrderMapper orderMapper;
 
     @Transactional
     public void logicalDeleteOrder(Long id) throws ResourceNotFoundException {
@@ -36,15 +33,8 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(OrderInsertDto newOrder) throws InvalidInputException, ResourceNotFoundException {
-        PlatformUser platformUser = platformUserService.getUserById(newOrder.getPlatformUserId());
-        Set<OrderItem> orderItems = new HashSet<>();
-        newOrder.getItems().forEach((currentItem) -> {
-            Product productOrder = productService.getProductById(currentItem.getProductId());
-            OrderItem newOrderItem = new OrderItem(productOrder, currentItem.getProductCount());
-            orderItems.add(newOrderItem);
-        });
-        Order newPersistentOrder = new Order(orderItems, platformUser);
-        return orderRepository.save(newPersistentOrder);
+        Order order = orderMapper.toOrder(newOrder);
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)

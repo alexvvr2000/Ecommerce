@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto;
+package com.stellaTech.ecommerce.service.dto.order;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
