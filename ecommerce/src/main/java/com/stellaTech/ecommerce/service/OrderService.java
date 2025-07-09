@@ -1,5 +1,7 @@
 package com.stellaTech.ecommerce.service;
 
+import com.stellaTech.ecommerce.exception.DuplicatedResourceException;
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Order;
 import com.stellaTech.ecommerce.model.PlatformUser;
@@ -24,16 +26,16 @@ public class OrderService {
     private PlatformUserService platformUserService;
 
     @Transactional
-    public Long logicalDeleteOrder(Long id) throws Exception {
+    public Long logicalDeleteOrder(Long id) throws ResourceNotFoundException {
         Order order = getOrderById(id);
         order.setDeleted(true);
         return id;
     }
 
     @Transactional
-    public Order createOrder(Long productId, Long userId, int productCount) throws Exception {
+    public Order createOrder(Long productId, Long userId, int productCount) throws DuplicatedResourceException, InvalidInputException {
         if (orderRepository.exists(OrderSpecs.hasNotBeenDeleted(productId, userId))) {
-            throw new Exception("Order has already been created");
+            throw new DuplicatedResourceException("Order has already been created");
         }
         Product product = productService.getProductById(productId);
         PlatformUser platformUser = platformUserService.getUserById(userId);
