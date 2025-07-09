@@ -2,9 +2,7 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.Order;
 import com.stellaTech.ecommerce.service.OrderService;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +27,8 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderRequest newOrder) {
-        Order persistedOrder = orderService.createOrder(newOrder.productId, newOrder.userId, newOrder.productCount);
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderService.NewOrder newOrder) {
+        Order persistedOrder = orderService.createOrder(newOrder);
         return ResponseEntity.ok(persistedOrder);
     }
 
@@ -38,13 +36,5 @@ public class OrderController {
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long orderId) {
         orderService.logicalDeleteOrder(orderId);
         return ResponseEntity.noContent().build();
-    }
-
-    @Value
-    @AllArgsConstructor
-    public static class OrderRequest {
-        Long productId;
-        Long userId;
-        int productCount;
     }
 }
