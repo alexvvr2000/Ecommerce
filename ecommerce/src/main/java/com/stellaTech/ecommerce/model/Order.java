@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @Entity
 @Table(name = "order", schema = "product_data")
 public class Order extends LogicallyDeletableEntity {
@@ -19,30 +22,31 @@ public class Order extends LogicallyDeletableEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", updatable = false, nullable = false)
-    private Product product;
-
-    @ManyToOne
     @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
     private PlatformUser platformUser;
 
     @Column(name = "purchased_date", updatable = false, nullable = false)
     @CreationTimestamp
-    private Date purchasedDate;
+    private Date orderDate;
 
-    @Column(name = "product_count", nullable = false, updatable = false)
-    private int productCount = 1;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    public Order(@NonNull Product product, @NonNull PlatformUser platformUser, int productCount) throws InvalidInputException {
-        this.product = product;
+    @Column(nullable = false)
+    private BigDecimal totalAmount;
+
+    public Order(@NonNull List<OrderItem> productList, @NonNull PlatformUser platformUser) throws InvalidInputException {
+        if (productList.isEmpty()) {
+            throw new InvalidInputException("Order must have at least one item");
+        }
+        this.orderItems = productList;
         this.platformUser = platformUser;
-        this.setProductCount(productCount);
+        totalAmount = calculateTotal();
     }
 
-    public void setProductCount(@NonNull Integer productCount) throws InvalidInputException {
-        if (productCount < 0) {
-            throw new InvalidInputException("The product count for the order is not valid");
-        }
-        this.productCount = productCount;
+    private BigDecimal calculateTotal() {
+        return orderItems.stream()
+                .map(OrderItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
