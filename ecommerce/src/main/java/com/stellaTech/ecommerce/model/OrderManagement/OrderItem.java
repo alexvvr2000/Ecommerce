@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_items", schema = "product_data")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
