@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.model;
 
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,15 +33,15 @@ public class Order extends LogicallyDeletableEntity {
     @Column(name = "product_count", nullable = false, updatable = false)
     private int productCount = 1;
 
-    public Order(@NonNull Product product, @NonNull PlatformUser platformUser, int productCount) throws Exception {
+    public Order(@NonNull Product product, @NonNull PlatformUser platformUser, int productCount) throws InvalidInputException {
         this.product = product;
         this.platformUser = platformUser;
         this.setProductCount(productCount);
     }
 
-    public void setProductCount(@NonNull Integer productCount) throws Exception {
+    public void setProductCount(@NonNull Integer productCount) throws InvalidInputException {
         if (productCount < 0) {
-            throw new Exception("The product count for the order is not valid");
+            throw new InvalidInputException("The product count for the order is not valid");
         }
         this.productCount = productCount;
     }

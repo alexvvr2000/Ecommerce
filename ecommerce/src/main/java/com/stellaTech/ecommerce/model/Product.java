@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.model;
 
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,17 +43,17 @@ public class Product extends LogicallyDeletableEntity {
         this.setMainImageUrl(mainImageUrl);
     }
 
-    public void setAverageRating(@NonNull BigDecimal averageRating) throws Exception {
+    public void setAverageRating(@NonNull BigDecimal averageRating) throws InvalidInputException {
         if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
                 averageRating.compareTo(new BigDecimal("10.00")) > 0) {
-            throw new Exception("Rating out of range");
+            throw new InvalidInputException("Rating out of range");
         }
         this.averageRating = averageRating;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(BigDecimal price) throws InvalidInputException {
         if (price.compareTo(new BigDecimal("0.01")) < 0) {
-            throw new IllegalArgumentException("Invalid price");
+            throw new InvalidInputException("Invalid price");
         }
         this.price = price;
     }

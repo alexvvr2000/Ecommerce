@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.model;
 
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public PlatformUser(@NonNull String curp, @NonNull String fullName, @NonNull String email, @NonNull String phoneNumber, @NonNull String password, String rfc) throws Exception {
+    public PlatformUser(@NonNull String curp, @NonNull String fullName, @NonNull String email, @NonNull String phoneNumber, @NonNull String password, String rfc) throws InvalidInputException {
         this.setCurp(curp);
         this.setFullName(fullName);
         this.setEmail(email);
@@ -47,9 +48,9 @@ public class PlatformUser extends LogicallyDeletableEntity {
         this.setPassword(password);
     }
 
-    public void setPassword(@NonNull String password) throws Exception {
+    public void setPassword(@NonNull String password) throws InvalidInputException {
         if (password.equals(this.password)) {
-            throw new Exception("The password is the same as the previous one");
+            throw new InvalidInputException("The password is the same as the previous one");
         }
         this.password = password;
     }
