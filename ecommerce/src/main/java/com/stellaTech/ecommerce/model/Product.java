@@ -2,10 +2,7 @@ package com.stellaTech.ecommerce.model;
 
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -14,6 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "product", schema = "product_data")
 public class Product extends LogicallyDeletableEntity {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

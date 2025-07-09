@@ -4,6 +4,7 @@ import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.model.LogicallyDeletableEntity;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,21 +14,26 @@ import java.util.Date;
 import java.util.Set;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "order", schema = "product_data")
 public class Order extends LogicallyDeletableEntity {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Include
     @ManyToOne
     @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
     private PlatformUser platformUser;
 
+    @EqualsAndHashCode.Include
     @Column(name = "purchased_date", updatable = false, nullable = false)
     @CreationTimestamp
     private Date orderDate;
 
+    @EqualsAndHashCode.Include
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
 

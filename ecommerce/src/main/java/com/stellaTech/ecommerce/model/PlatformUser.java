@@ -2,38 +2,40 @@ package com.stellaTech.ecommerce.model;
 
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
 @Table(name = "platform_user", schema = "user_data")
 public class PlatformUser extends LogicallyDeletableEntity {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Include
     @Setter
-    @Column(name = "curp", nullable = false, length = 18)
+    @Column(name = "curp", nullable = false, length = 18, unique = true)
     private String curp;
 
     @Setter
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
+    @EqualsAndHashCode.Include
     @Setter
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Setter
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @EqualsAndHashCode.Include
     @Setter
-    @Column(name = "rfc")
+    @Column(name = "rfc", unique = true)
     private String rfc;
 
     @Column(name = "password", nullable = false)
