@@ -2,6 +2,9 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserMapper;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
 import com.stellaTech.ecommerce.service.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.service.specification.PlatformUserSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
+
+    private PlatformUserMapper platformUserMapper;
 
     @Transactional
     public void logicalDeleteUser(Long id) throws ResourceNotFoundException {
@@ -24,43 +28,21 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateEntireUser(Long idUser, PlatformUser updatedUser) throws ResourceNotFoundException {
+    public PlatformUser updateEntireUser(Long idUser, PlatformUserInsertDto updatedUser) throws ResourceNotFoundException {
         PlatformUser existingUser = getUserById(idUser);
-
-        existingUser.setFullName(updatedUser.getFullName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setCurp(updatedUser.getCurp());
-        existingUser.setRfc(updatedUser.getRfc());
-
         return userRepository.save(existingUser);
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException {
-        PlatformUser platformUser = getUserById(id);
-        updatedFields.forEach((key, value) -> {
-            switch (key) {
-                case "fullName":
-                    platformUser.setFullName((String) value);
-                    break;
-                case "email":
-                    platformUser.setEmail((String) value);
-                    break;
-                case "phoneNumber":
-                    platformUser.setPhoneNumber((String) value);
-                    break;
-                case "rfc":
-                    platformUser.setRfc((String) value);
-                    break;
-            }
-        });
-        return userRepository.save(platformUser);
+    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserPatchDto newUserValues) throws ResourceNotFoundException {
+        PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
+        return platformUserMapper.updatePlatformUserFromDto(oldPlatformUser, newUserValues);
     }
 
     @Transactional
-    public PlatformUser createUser(PlatformUser newUser) {
-        return userRepository.save(newUser);
+    public PlatformUser createUser(PlatformUserInsertDto newUser) {
+        PlatformUser persistedUser = platformUserMapper.toEntity(newUser);
+        return userRepository.save(persistedUser);
     }
 
     @Transactional(readOnly = true)

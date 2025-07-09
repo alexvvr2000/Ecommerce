@@ -8,7 +8,9 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PlatformUserInsertDto {
-    @EqualsAndHashCode.Include @NotEmpty @Email
+    @EqualsAndHashCode.Include
+    @NotEmpty
+    @Email
     String email;
 
     @NotEmpty

@@ -2,13 +2,14 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -30,19 +31,19 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> updateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUser updatedUser
+            @NonNull @RequestBody PlatformUserInsertDto updatedUser
     ) {
         PlatformUser savedUser = userService.updateEntireUser(idUser, updatedUser);
         return ResponseEntity.ok(savedUser);
     }
 
     @PatchMapping("/users/{idUser}")
-    public ResponseEntity<PlatformUser> partialUpdateUser(
+    public ResponseEntity<?> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody Map<String, Object> updatedFields
+            @NonNull @RequestBody PlatformUserPatchDto updatedFields
     ) {
-        PlatformUser savedUser = userService.updateUserPartially(idUser, updatedFields);
-        return ResponseEntity.ok(savedUser);
+        PlatformUser updatedUser = userService.updateUserPartially(idUser, updatedFields);
+        return ResponseEntity.ok(updatedFields);
     }
 
     @DeleteMapping("/users/{idUser}")
@@ -52,7 +53,7 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public PlatformUser createUser(@NonNull @RequestBody PlatformUser newUser) {
+    public PlatformUser createUser(@NonNull @RequestBody PlatformUserInsertDto newUser) {
         return userService.createUser(newUser);
     }
 }
