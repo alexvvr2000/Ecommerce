@@ -26,19 +26,18 @@ public class OrderService {
     private PlatformUserService platformUserService;
 
     @Transactional
-    public Long logicalDeleteOrder(Long id) throws ResourceNotFoundException {
+    public void logicalDeleteOrder(Long id) throws ResourceNotFoundException {
         Order order = getOrderById(id);
         order.setDeleted(true);
-        return id;
     }
 
     @Transactional
-    public Order createOrder(Long productId, Long userId, int productCount) throws DuplicatedResourceException, InvalidInputException {
-        if (orderRepository.exists(OrderSpecs.hasNotBeenDeleted(productId, userId))) {
+    public Order createOrder(Long productId, Long platformUserId, int productCount) throws DuplicatedResourceException, InvalidInputException {
+        if (orderExists(productId, platformUserId)) {
             throw new DuplicatedResourceException("Order has already been created");
         }
         Product product = productService.getProductById(productId);
-        PlatformUser platformUser = platformUserService.getUserById(userId);
+        PlatformUser platformUser = platformUserService.getUserById(platformUserId);
         Order newOrder = new Order(product, platformUser, productCount);
         return orderRepository.save(newOrder);
     }
@@ -49,12 +48,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public boolean orderExistsWithUserAndProduct(Long productId, Long platformUserId) {
-        return orderRepository.findOne(
-                OrderSpecs.orderByProduct(productId).and(
-                        OrderSpecs.orderByPlatformUser(platformUserId)
-                )
-        ).isPresent();
+    public boolean orderExists(Long productId, Long platformUserId) {
+        return orderRepository.exists(
+                OrderSpecs.hasNotBeenDeleted(productId, platformUserId)
+        );
     }
 
     @Transactional(readOnly = true)
