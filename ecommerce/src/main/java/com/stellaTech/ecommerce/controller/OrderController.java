@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderService.orderDTO newOrder) {
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderService.OrderDTO newOrder) {
         Order persistedOrder = orderService.createOrder(newOrder);
         return ResponseEntity.ok(persistedOrder);
     }
