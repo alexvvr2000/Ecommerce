@@ -35,6 +35,9 @@ public class PlatformUserService {
         if(!persistedUser.getPassword().equals(dto.getOldPassword())){
             throw new InvalidInputException("Incorrect password");
         }
+        if(!dto.getConfirmPassword().equals(dto.getNewPassword())){
+            throw new InvalidInputException("Passwords do not match");
+        }
         PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(persistedUser, dto);
         userRepository.save(updatedPasswordUser);
     }

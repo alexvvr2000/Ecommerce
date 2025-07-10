@@ -11,5 +11,8 @@ public class PasswordChangeDto {
     String newPassword;
 
     @NotBlank
+    String confirmPassword;
+
+    @NotBlank
     String oldPassword;
 }
