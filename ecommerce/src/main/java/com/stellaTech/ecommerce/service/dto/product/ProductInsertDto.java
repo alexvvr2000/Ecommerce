@@ -10,7 +10,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class ProductInsertDto {
     @NotNull
     String name;
