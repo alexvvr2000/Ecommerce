@@ -15,6 +15,11 @@ public class ProductInsertDto {
     @NotNull
     String name;
 
+    @Digits(integer = 6, fraction = 2, message = "The price must be 8 digits long; 6 for integers and 2 for decimals")
+    @DecimalMin(value = "0.00", message = "The price must be greater than 0")
+    @NotNull
+    BigDecimal price;
+
     String mdFormatDescription;
 
     String mainImageUrl;
@@ -23,8 +28,4 @@ public class ProductInsertDto {
     @DecimalMin(value = "0.00", message = "The rating must be greater than 0")
     @DecimalMax(value = "10.00", message = "The rating can't be greater than 10")
     BigDecimal averageRating;
-
-    @Digits(integer = 6, fraction = 2, message = "The price must be 8 digits long; 6 for integers and 2 for decimals")
-    @DecimalMin(value = "0.00", message = "The price must be greater than 0")
-    BigDecimal price;
 }
