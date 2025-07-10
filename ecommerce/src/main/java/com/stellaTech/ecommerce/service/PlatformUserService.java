@@ -23,6 +23,7 @@ public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
 
+    @Autowired
     private PlatformUserMapper platformUserMapper;
 
     @Transactional
@@ -34,14 +35,17 @@ public class PlatformUserService {
 
     @Transactional
     public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws InvalidInputException {
-        PlatformUser persistedUser = getUserById(platformUserId);
-        if (!persistedUser.getPassword().equals(dto.getOldPassword())) {
-            throw new InvalidInputException("Incorrect password");
+        PlatformUser user = getUserById(platformUserId);
+        if (!user.getPassword().equals(dto.getOldPassword())) {
+            throw new InvalidInputException("Incorrect old password");
         }
-        if (!dto.getConfirmNewPassword().equals(dto.getNewPassword())) {
-            throw new InvalidInputException("Passwords do not match");
+        if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
+            throw new InvalidInputException("New passwords do not match");
         }
-        PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(persistedUser, dto);
+        if (dto.getNewPassword().equals(user.getPassword())) {
+            throw new InvalidInputException("New password must be different from current password");
+        }
+        PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(user, dto);
         userRepository.save(updatedPasswordUser);
     }
 
