@@ -1,6 +1,7 @@
 package com.stellaTech.ecommerce.dto.platformUser;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -11,22 +12,18 @@ import lombok.Value;
 public class PlatformUserUpdateDto {
     @EqualsAndHashCode.Include
     @Email
-    @NotNull
+    @NotBlank
     String email;
 
-    @NotEmpty
-    @NotNull
+    @NotBlank
     String curp;
 
-    @NotEmpty
-    @NotNull
+    @NotBlank
     String fullName;
 
-    @NotEmpty
-    @NotNull
+    @NotBlank
     String phoneNumber;
 
-    @NotEmpty
-    @NotNull
+    @NotBlank
     String rfc;
 }
