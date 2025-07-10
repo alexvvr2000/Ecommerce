@@ -20,17 +20,17 @@ public abstract class OrderMapper {
 
     @Mapping(target = "productList", source = "items")
     @Mapping(target = "platformUser", source = "platformUserId")
-    public abstract Order createOrder(OrderInsertDto dto);
+    public abstract Order createOrderEntity(OrderInsertDto dto);
 
     @Mapping(target = "product", source = "productId")
     @Mapping(target = "quantity", source = "productCount")
-    public abstract OrderItem createOrderItem(OrderInsertDto.OrderItemInsertDto itemDto);
+    public abstract OrderItem createOrderItemEntity(OrderInsertDto.OrderItemInsertDto itemDto);
 
     protected Product mapProductId(Long productId) {
         return productService.getProductById(productId);
     }
 
-    protected PlatformUser mapPlatformUser(Long platformUserId) {
+    protected PlatformUser mapPlatformUserId(Long platformUserId) {
         return platformUserService.getUserById(platformUserId);
     }
 }

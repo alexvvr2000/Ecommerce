@@ -28,7 +28,7 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(OrderInsertDto newOrder) throws InvalidInputException, ResourceNotFoundException {
-        Order createdOrder = orderMapper.createOrder(newOrder);
+        Order createdOrder = orderMapper.createOrderEntity(newOrder);
         return orderRepository.save(createdOrder);
     }
 
