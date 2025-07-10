@@ -8,7 +8,10 @@ public abstract class ProductMapper {
     @Mapping(target = "deleted", ignore = true)
     public abstract Product createProductInstance(ProductInsertDto productInsertDto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "deleted", ignore = true)
     public abstract Product updateProduct(@MappingTarget Product product, ProductInsertDto dto);
+
+    @Mapping(target = "deleted", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract Product patchProduct(@MappingTarget Product product, ProductPatchDto dto);
 }
