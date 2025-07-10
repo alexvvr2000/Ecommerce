@@ -27,7 +27,6 @@ public class ProductUpdateDto {
     String mainImageUrl;
 
     @NotNull
-    @NotEmpty
     @Digits(integer = 2, fraction = 2, message = "The rating must be 4 digits long; 2 for integers and 2 for decimals")
     @DecimalMin(value = "0.00", message = "The rating must be greater than 0")
     @DecimalMax(value = "10.00", message = "The rating can't be greater than 10")
