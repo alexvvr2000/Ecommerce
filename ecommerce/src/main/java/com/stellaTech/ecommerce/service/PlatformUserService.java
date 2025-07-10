@@ -1,7 +1,10 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.dto.mapper.PlatformUserMapper;
-import com.stellaTech.ecommerce.dto.platformUser.*;
+import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
@@ -32,10 +35,10 @@ public class PlatformUserService {
     @Transactional
     public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws InvalidInputException {
         PlatformUser persistedUser = getUserById(platformUserId);
-        if(!persistedUser.getPassword().equals(dto.getOldPassword())){
+        if (!persistedUser.getPassword().equals(dto.getOldPassword())) {
             throw new InvalidInputException("Incorrect password");
         }
-        if(!dto.getConfirmPassword().equals(dto.getNewPassword())){
+        if (!dto.getConfirmPassword().equals(dto.getNewPassword())) {
             throw new InvalidInputException("Passwords do not match");
         }
         PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(persistedUser, dto);
