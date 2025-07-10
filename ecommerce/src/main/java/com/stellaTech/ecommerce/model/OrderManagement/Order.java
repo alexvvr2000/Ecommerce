@@ -52,4 +52,10 @@ public class Order extends LogicallyDeletableEntity {
         BigDecimal subtotal = item.getProductPriceSnapshot().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
         totalAmount = totalAmount.add(subtotal);
     }
+
+    public void setOrderItems(Set<OrderItem> items) {
+        for (OrderItem orderItem : items) {
+            addOrderItem(orderItem);
+        }
+    }
 }

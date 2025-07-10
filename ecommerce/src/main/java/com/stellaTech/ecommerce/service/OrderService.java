@@ -5,7 +5,6 @@ import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
-import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
@@ -39,12 +38,8 @@ public class OrderService {
     @Transactional
     public Order createOrder(@Valid OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
         PlatformUser user = platformUserService.getUserById(dto.getPlatformUserId());
-        Order order = new Order(user);
-        for (OrderInsertDto.OrderItemInsertDto itemInsertDto : dto.getItems()) {
-            OrderItem item = orderMapper.createOrderItemEntity(itemInsertDto);
-            order.addOrderItem(item);
-        }
-        return orderRepository.save(order);
+        Order newOrder = orderMapper.createOrderEntity(dto);
+        return orderRepository.save(newOrder);
     }
 
     @Transactional(readOnly = true)
