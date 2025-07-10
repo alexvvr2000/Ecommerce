@@ -1,10 +1,12 @@
 package com.stellaTech.ecommerce.model.OrderManagement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.stellaTech.ecommerce.model.Product;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -18,33 +20,41 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @EqualsAndHashCode.Include
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false, updatable = false)
+    @JsonBackReference
     private Order order;
 
     @EqualsAndHashCode.Include
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private Product product;
 
-    @Column(nullable = false)
+    @Setter
+    @Column(nullable = false, updatable = false)
     private int quantity;
 
     @Embedded
-    private ProductPriceSnapshot purchasedPrice;
+    private ProductPriceSnapshot productPriceSnapshot;
 
-    @Column(nullable = false)
-    private BigDecimal subtotal;
+    protected OrderItem() {
+        this.productPriceSnapshot = new ProductPriceSnapshot(BigDecimal.ZERO);
+    }
 
     public OrderItem(@NonNull Product product, int quantity) {
         this.product = product;
-        this.purchasedPrice = new ProductPriceSnapshot(product.getPrice());
+        this.productPriceSnapshot = new ProductPriceSnapshot(product.getPrice());
         this.quantity = quantity;
-        calculateSubtotal();
     }
 
-    private void calculateSubtotal() {
-        this.subtotal = purchasedPrice.getPrice().multiply(BigDecimal.valueOf(quantity));
+    public void setProduct(@NonNull Product product) {
+        this.product = product;
+        this.productPriceSnapshot = new ProductPriceSnapshot(product.getPrice());
+    }
+
+    public BigDecimal calculateSubtotal() {
+        return productPriceSnapshot.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }
