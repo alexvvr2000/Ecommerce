@@ -41,7 +41,7 @@ public class PlatformUserService {
 
     @Transactional
     public PlatformUser createUser(PlatformUserInsertDto newUser) {
-        PlatformUser persistedUser = platformUserMapper.toEntity(newUser);
+        PlatformUser persistedUser = platformUserMapper.createPlatformUserEntity(newUser);
         return userRepository.save(persistedUser);
     }
 

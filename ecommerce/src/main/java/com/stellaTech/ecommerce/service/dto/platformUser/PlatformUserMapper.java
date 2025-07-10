@@ -6,7 +6,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public abstract class PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
-    public abstract PlatformUser toEntity(PlatformUserInsertDto platformUserInsertDto);
+    public abstract PlatformUser createPlatformUserEntity(PlatformUserInsertDto platformUserInsertDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "deleted", ignore = true)
