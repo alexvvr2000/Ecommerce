@@ -20,6 +20,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
     private ProductMapper productMapper;
 
     @Transactional
