@@ -11,13 +11,13 @@ import java.util.Set;
 @Value
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderInsertDto {
-    @EqualsAndHashCode.Include
     @NotNull
+    @EqualsAndHashCode.Include
     Long platformUserId;
 
-    @EqualsAndHashCode.Include
     @NotEmpty
     @NotNull
+    @EqualsAndHashCode.Include
     Set<OrderItemInsertDto> items;
 
     @Value
