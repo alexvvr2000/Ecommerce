@@ -4,6 +4,7 @@ import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserMapper;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
+import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
@@ -31,7 +32,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public void changePassword(@NotEmpty @NotNull String newPassword, @NotNull Long platformUserId){
+    public void changePassword(@NotEmpty @NotNull String newPassword, @NotNull Long platformUserId) throws InvalidInputException {
         PlatformUser persistedUser = getUserById(platformUserId);
         persistedUser.setPassword(newPassword);
         userRepository.save(persistedUser);

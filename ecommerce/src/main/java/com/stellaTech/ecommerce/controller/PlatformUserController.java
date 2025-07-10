@@ -39,12 +39,18 @@ public class PlatformUserController {
     }
 
     @PatchMapping("/users/{idUser}")
-    public ResponseEntity<?> partialUpdateUser(
+    public ResponseEntity<PlatformUser> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
             @NonNull @RequestBody PlatformUserPatchDto updatedFields
     ) {
         PlatformUser updatedUser = userService.patchPlatformUser(idUser, updatedFields);
-        return ResponseEntity.ok(updatedFields);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PatchMapping("/users/{idUser}/password")
+    public ResponseEntity<?> changePassword(@NonNull @PathVariable Long idUser, @NonNull @RequestBody String newPassword){
+        userService.changePassword(newPassword,idUser);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/users/{idUser}")

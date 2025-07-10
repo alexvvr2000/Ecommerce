@@ -28,9 +28,5 @@ public class PlatformUserUpdateDto {
 
     @NotEmpty
     @NotNull
-    String password;
-
-    @NotEmpty
-    @NotNull
     String rfc;
 }
