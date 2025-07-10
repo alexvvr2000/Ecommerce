@@ -4,6 +4,7 @@ import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserUpdateDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class PlatformUserController {
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<?> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUserPatchDto updatedFields
+            @NonNull @RequestBody PlatformUserUpdateDto updatedFields
     ) {
         PlatformUser updatedUser = userService.updateUserPartially(idUser, updatedFields);
         return ResponseEntity.ok(updatedFields);

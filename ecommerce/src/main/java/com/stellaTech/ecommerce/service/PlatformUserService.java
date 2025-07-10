@@ -5,6 +5,7 @@ import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserMapper;
 import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserUpdateDto;
 import com.stellaTech.ecommerce.service.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.service.specification.PlatformUserSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserPatchDto newUserValues) throws ResourceNotFoundException {
+    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserUpdateDto newUserValues) throws ResourceNotFoundException {
         PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
         return platformUserMapper.updatePlatformUserFromDto(oldPlatformUser, newUserValues);
     }
