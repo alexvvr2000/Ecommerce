@@ -9,9 +9,9 @@ public abstract class ProductMapper {
     public abstract Product createProductInstance(ProductInsertDto productInsertDto);
 
     @Mapping(target = "deleted", ignore = true)
-    public abstract Product updateProduct(@MappingTarget Product product, ProductInsertDto dto);
+    public abstract Product updateProductFromDto(@MappingTarget Product product, ProductUpdateDto dto);
 
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract Product patchProduct(@MappingTarget Product product, ProductPatchDto dto);
+    public abstract Product patchProductFromDto(@MappingTarget Product product, ProductPatchDto dto);
 }

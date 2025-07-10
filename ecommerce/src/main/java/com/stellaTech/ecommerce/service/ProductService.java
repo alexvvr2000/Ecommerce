@@ -6,6 +6,7 @@ import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.dto.product.ProductInsertDto;
 import com.stellaTech.ecommerce.service.dto.product.ProductMapper;
 import com.stellaTech.ecommerce.service.dto.product.ProductPatchDto;
+import com.stellaTech.ecommerce.service.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.service.repository.ProductRepository;
 import com.stellaTech.ecommerce.service.specification.ProductSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +29,16 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, ProductInsertDto updatedData) throws ResourceNotFoundException {
+    public Product updateEntireProduct(Long productId, ProductUpdateDto updatedData) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
-        Product updatedProduct = productMapper.updateProduct(persistedProduct, updatedData);
+        Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, updatedData);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
     public Product updateProductPartially(Long id, ProductPatchDto updatedFields) throws ResourceNotFoundException, InvalidInputException {
         Product persistedProduct = getProductById(id);
-        Product updatedProduct = productMapper.patchProduct(persistedProduct, updatedFields);
+        Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, updatedFields);
         return productRepository.save(updatedProduct);
     }
 
