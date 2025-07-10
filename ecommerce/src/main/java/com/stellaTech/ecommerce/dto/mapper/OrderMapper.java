@@ -19,10 +19,17 @@ public abstract class OrderMapper {
     @Autowired
     protected PlatformUserService platformUserService;
 
+    @Mapping(target = "totalAmount", ignore = true)
+    @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "orderDate", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "productList", source = "items")
     @Mapping(target = "platformUser", source = "platformUserId")
     public abstract Order createOrderEntity(OrderInsertDto dto);
 
+    @Mapping(target = "subtotal", ignore = true)
+    @Mapping(target = "purchasedPrice", ignore = true)
+    @Mapping(target = "order", ignore = true)
     @Mapping(target = "product", source = "productId")
     @Mapping(target = "quantity", source = "productCount")
     public abstract OrderItem createOrderItemEntity(OrderInsertDto.OrderItemInsertDto itemDto);

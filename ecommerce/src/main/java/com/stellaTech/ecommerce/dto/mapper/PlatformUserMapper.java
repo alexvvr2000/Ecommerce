@@ -12,13 +12,21 @@ public abstract class PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
     public abstract PlatformUser createPlatformUserEntity(PlatformUserInsertDto platformUserInsertDto);
 
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     public abstract PlatformUser updatePlatformUserFromDto(@MappingTarget PlatformUser entity, PlatformUserUpdateDto dto);
 
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract PlatformUser patchPlatformUserFromDto(@MappingTarget PlatformUser entity, PlatformUserPatchDto dto);
 
+    @Mapping(target = "rfc", ignore = true)
+    @Mapping(target = "phoneNumber", ignore = true)
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "curp", ignore = true)
     @Mapping(target = "password", source = "newPassword")
     public abstract PlatformUser patchPlatformUserPassword(@MappingTarget PlatformUser entity, PasswordChangeDto dto);
 }
