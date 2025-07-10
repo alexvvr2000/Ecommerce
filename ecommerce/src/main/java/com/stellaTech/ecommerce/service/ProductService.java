@@ -29,22 +29,22 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(Long productId, ProductUpdateDto updatedData) throws ResourceNotFoundException {
+    public Product updateProduct(Long productId, ProductUpdateDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
-        Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, updatedData);
+        Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, dto);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
-    public Product patchProduct(Long id, ProductPatchDto updatedFields) throws ResourceNotFoundException, InvalidInputException {
+    public Product patchProduct(Long id, ProductPatchDto dto) throws ResourceNotFoundException, InvalidInputException {
         Product persistedProduct = getProductById(id);
-        Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, updatedFields);
+        Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, dto);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
-    public Product createProduct(ProductInsertDto newProduct) {
-        Product persistedProduct = productMapper.createProductInstance(newProduct);
+    public Product createProduct(ProductInsertDto dto) {
+        Product persistedProduct = productMapper.createProductInstance(dto);
         return productRepository.save(persistedProduct);
     }
 

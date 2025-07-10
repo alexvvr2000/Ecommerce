@@ -34,18 +34,18 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> updateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUserUpdateDto updatedUser
+            @Valid @RequestBody PlatformUserUpdateDto platformUserUpdateDto
     ) {
-        PlatformUser savedUser = userService.updatePlatformUser(idUser, updatedUser);
+        PlatformUser savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
         return ResponseEntity.ok(savedUser);
     }
 
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUserPatchDto updatedFields
+            @Valid @RequestBody PlatformUserPatchDto platformUserPatchDto
     ) {
-        PlatformUser updatedUser = userService.patchPlatformUser(idUser, updatedFields);
+        PlatformUser updatedUser = userService.patchPlatformUser(idUser, platformUserPatchDto);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -62,7 +62,7 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public PlatformUser createUser(@NonNull @RequestBody PlatformUserInsertDto newUser) {
-        return userService.createUser(newUser);
+    public PlatformUser createUser(@Valid @RequestBody PlatformUserInsertDto platformUserInsertDto) {
+        return userService.createUser(platformUserInsertDto);
     }
 }

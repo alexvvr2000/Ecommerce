@@ -28,8 +28,8 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderInsertDto newOrder) {
-        Order persistedOrder = orderService.createOrder(newOrder);
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderInsertDto orderInsertDto) {
+        Order persistedOrder = orderService.createOrder(orderInsertDto);
         return ResponseEntity.ok(persistedOrder);
     }
 

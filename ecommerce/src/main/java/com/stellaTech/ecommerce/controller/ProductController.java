@@ -5,6 +5,7 @@ import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,18 +33,18 @@ public class ProductController {
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<Product> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @NonNull @RequestBody ProductUpdateDto updatedProduct
+            @Valid @RequestBody ProductUpdateDto productUpdateDto
     ) {
-        Product savedProduct = productService.updateProduct(idProduct, updatedProduct);
+        Product savedProduct = productService.updateProduct(idProduct, productUpdateDto);
         return ResponseEntity.ok(savedProduct);
     }
 
     @PatchMapping("/products/{idProduct}")
     public ResponseEntity<Product> partialUpdateUser(
             @NonNull @PathVariable Long idProduct,
-            @NonNull @RequestBody ProductPatchDto updatedFields
+            @Valid @RequestBody ProductPatchDto productPatchDto
     ) {
-        Product savedProduct = productService.patchProduct(idProduct, updatedFields);
+        Product savedProduct = productService.patchProduct(idProduct, productPatchDto);
         return ResponseEntity.ok(savedProduct);
     }
 
@@ -54,7 +55,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@NonNull @RequestBody ProductInsertDto newProduct) {
-        return productService.createProduct(newProduct);
+    public Product createProduct(@Valid @RequestBody ProductInsertDto productInsertDto) {
+        return productService.createProduct(productInsertDto);
     }
 }
