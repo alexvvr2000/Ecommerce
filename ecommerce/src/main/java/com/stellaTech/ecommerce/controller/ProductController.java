@@ -2,6 +2,7 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
+import com.stellaTech.ecommerce.service.dto.product.ProductInsertDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ProductController {
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<Product> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @NonNull @RequestBody Product updatedProduct
+            @NonNull @RequestBody ProductInsertDto updatedProduct
     ) {
         Product savedProduct = productService.updateEntireProduct(idProduct, updatedProduct);
         return ResponseEntity.ok(savedProduct);

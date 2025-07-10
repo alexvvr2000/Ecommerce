@@ -3,6 +3,8 @@ package com.stellaTech.ecommerce.service;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Product;
+import com.stellaTech.ecommerce.service.dto.product.ProductInsertDto;
+import com.stellaTech.ecommerce.service.dto.product.ProductMapper;
 import com.stellaTech.ecommerce.service.repository.ProductRepository;
 import com.stellaTech.ecommerce.service.specification.ProductSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    private ProductMapper productMapper;
+
     @Transactional
     public void logicalDeleteProduct(Long id) throws ResourceNotFoundException {
         Product product = getProductById(id);
@@ -25,16 +29,9 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, Product updatedProduct) throws ResourceNotFoundException {
-        Product existingProduct = getProductById(productId);
-
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setAverageRating(updatedProduct.getAverageRating());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setMdFormatDescription(updatedProduct.getMdFormatDescription());
-        existingProduct.setMainImageUrl(updatedProduct.getMainImageUrl());
-
-        return productRepository.save(existingProduct);
+    public Product updateEntireProduct(Long productId, ProductInsertDto updatedProduct) throws ResourceNotFoundException {
+        Product persistedProduct = getProductById(productId);
+        return productMapper.updateProductFromDto(persistedProduct, updatedProduct);
     }
 
     @Transactional
