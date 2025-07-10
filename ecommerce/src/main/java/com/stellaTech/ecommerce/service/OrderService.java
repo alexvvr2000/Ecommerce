@@ -5,8 +5,11 @@ import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
+import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
+import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +21,14 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private PlatformUserService platformUserService;
+
+    @Autowired
+    private ProductService productService;
 
     @Transactional
     public void logicallyDeleteOrder(Long id) throws ResourceNotFoundException {
@@ -27,9 +37,14 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
-        Order createdOrder = orderMapper.createOrderEntity(dto);
-        return orderRepository.save(createdOrder);
+    public Order createOrder(@Valid OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
+        PlatformUser user = platformUserService.getUserById(dto.getPlatformUserId());
+        Order order = new Order(user);
+        for (OrderInsertDto.OrderItemInsertDto itemInsertDto : dto.getItems()) {
+            OrderItem item = orderMapper.createOrderItemEntity(itemInsertDto);
+            order.addOrderItem(item);
+        }
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
