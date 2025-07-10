@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.order;
+package com.stellaTech.ecommerce.dto.order;
 
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;

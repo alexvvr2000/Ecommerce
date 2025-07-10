@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.platformUser;
+package com.stellaTech.ecommerce.dto.platformUser;
 
 import com.stellaTech.ecommerce.model.PlatformUser;
 import org.mapstruct.*;

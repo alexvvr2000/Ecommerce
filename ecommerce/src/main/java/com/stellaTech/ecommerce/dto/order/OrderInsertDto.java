@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.order;
+package com.stellaTech.ecommerce.dto.order;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.platformUser;
+package com.stellaTech.ecommerce.dto.platformUser;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,7 +8,7 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class PlatformUserInsertDto {
+public class PlatformUserUpdateDto {
     @EqualsAndHashCode.Include
     @Email
     @NotNull
@@ -30,5 +30,7 @@ public class PlatformUserInsertDto {
     @NotNull
     String password;
 
+    @NotEmpty
+    @NotNull
     String rfc;
 }

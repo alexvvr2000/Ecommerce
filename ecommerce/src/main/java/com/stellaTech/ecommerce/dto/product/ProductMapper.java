@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.product;
+package com.stellaTech.ecommerce.dto.product;
 
 import com.stellaTech.ecommerce.model.Product;
 import org.mapstruct.*;

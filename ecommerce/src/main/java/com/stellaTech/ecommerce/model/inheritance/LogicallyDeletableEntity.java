@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.model;
+package com.stellaTech.ecommerce.model.inheritance;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

@@ -2,9 +2,9 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserUpdateDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

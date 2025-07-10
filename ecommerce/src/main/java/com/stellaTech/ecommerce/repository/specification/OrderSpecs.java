@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.specification;
+package com.stellaTech.ecommerce.repository.specification;
 
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import org.springframework.data.jpa.domain.Specification;

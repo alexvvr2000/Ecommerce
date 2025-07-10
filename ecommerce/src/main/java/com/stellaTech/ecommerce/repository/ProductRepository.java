@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.repository;
+package com.stellaTech.ecommerce.repository;
 
 import com.stellaTech.ecommerce.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

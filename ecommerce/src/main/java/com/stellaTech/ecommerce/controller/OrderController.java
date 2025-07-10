@@ -2,7 +2,7 @@ package com.stellaTech.ecommerce.controller;
 
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.service.OrderService;
-import com.stellaTech.ecommerce.service.dto.order.OrderInsertDto;
+import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

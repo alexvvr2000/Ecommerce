@@ -2,12 +2,12 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserInsertDto;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserMapper;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserPatchDto;
-import com.stellaTech.ecommerce.service.dto.platformUser.PlatformUserUpdateDto;
-import com.stellaTech.ecommerce.service.repository.PlatformUserRepository;
-import com.stellaTech.ecommerce.service.specification.PlatformUserSpecs;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserMapper;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
+import com.stellaTech.ecommerce.repository.PlatformUserRepository;
+import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
