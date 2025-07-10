@@ -29,9 +29,10 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, ProductInsertDto updatedProduct) throws ResourceNotFoundException {
+    public Product updateEntireProduct(Long productId, ProductInsertDto updatedData) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
-        return productMapper.updateProductFromDto(persistedProduct, updatedProduct);
+        Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, updatedData);
+        return productRepository.save(updatedProduct);
     }
 
     @Transactional
