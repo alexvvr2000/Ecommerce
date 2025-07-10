@@ -10,5 +10,5 @@ public abstract class ProductMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "deleted", ignore = true)
-    public abstract Product updateProductFromDto(@MappingTarget Product product, ProductInsertDto dto);
+    public abstract Product updateProduct(@MappingTarget Product product, ProductInsertDto dto);
 }

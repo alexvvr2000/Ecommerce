@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,36 +30,13 @@ public class ProductService {
     @Transactional
     public Product updateEntireProduct(Long productId, ProductInsertDto updatedData) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
-        Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, updatedData);
+        Product updatedProduct = productMapper.updateProduct(persistedProduct, updatedData);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
     public Product updateProductPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException, InvalidInputException {
         Product product = getProductById(id);
-        updatedFields.forEach((key, value) -> {
-            switch (key) {
-                case "name":
-                    product.setName((String) value);
-                    break;
-                case "averageRating":
-                    try {
-                        product.setAverageRating(new BigDecimal(value.toString()));
-                    } catch (InvalidInputException e) {
-                        throw new InvalidInputException(e.getMessage());
-                    }
-                    break;
-                case "price":
-                    product.setPrice(new BigDecimal(value.toString()));
-                    break;
-                case "mdFormatDescription":
-                    product.setMdFormatDescription((String) value);
-                    break;
-                case "mainImageUrl":
-                    product.setMainImageUrl((String) value);
-                    break;
-            }
-        });
         return productRepository.save(product);
     }
 
