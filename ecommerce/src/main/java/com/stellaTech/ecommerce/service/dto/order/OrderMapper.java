@@ -20,11 +20,11 @@ public abstract class OrderMapper {
 
     @Mapping(target = "productList", source = "items")
     @Mapping(target = "platformUser", source = "platformUserId")
-    public abstract Order toOrder(OrderInsertDto dto);
+    public abstract Order createOrder(OrderInsertDto dto);
 
     @Mapping(target = "product", source = "productId")
     @Mapping(target = "quantity", source = "productCount")
-    public abstract OrderItem toOrderItem(OrderInsertDto.OrderItemInsertDto itemDto);
+    public abstract OrderItem createOrderItem(OrderInsertDto.OrderItemInsertDto itemDto);
 
     protected Product mapProductId(Long productId) {
         return productService.getProductById(productId);
