@@ -21,7 +21,7 @@ public class ProductController {
 
     @GetMapping("/products")
     public List<Product> getAllProducts() {
-        return productService.getAllActiveProducts();
+        return productService.getAllProducts();
     }
 
     @GetMapping("/products/{idProduct}")
@@ -34,7 +34,7 @@ public class ProductController {
             @NonNull @PathVariable Long idProduct,
             @NonNull @RequestBody ProductUpdateDto updatedProduct
     ) {
-        Product savedProduct = productService.updateEntireProduct(idProduct, updatedProduct);
+        Product savedProduct = productService.updateProduct(idProduct, updatedProduct);
         return ResponseEntity.ok(savedProduct);
     }
 
@@ -43,13 +43,13 @@ public class ProductController {
             @NonNull @PathVariable Long idProduct,
             @NonNull @RequestBody ProductPatchDto updatedFields
     ) {
-        Product savedProduct = productService.updateProductPartially(idProduct, updatedFields);
+        Product savedProduct = productService.patchProduct(idProduct, updatedFields);
         return ResponseEntity.ok(savedProduct);
     }
 
     @DeleteMapping("/products/{idProduct}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idProduct) {
-        productService.logicalDeleteProduct(idProduct);
+        productService.logicallyDeleteProduct(idProduct);
         return ResponseEntity.noContent().build();
     }
 

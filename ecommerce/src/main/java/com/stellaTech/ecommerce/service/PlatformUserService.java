@@ -22,21 +22,21 @@ public class PlatformUserService {
     private PlatformUserMapper platformUserMapper;
 
     @Transactional
-    public void logicalDeleteUser(Long id) throws ResourceNotFoundException {
+    public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
         userRepository.save(user);
     }
 
     @Transactional
-    public PlatformUser updateEntireUser(Long idUser, PlatformUserUpdateDto updatedData) throws ResourceNotFoundException {
+    public PlatformUser updatePlatformUser(Long idUser, PlatformUserUpdateDto updatedData) throws ResourceNotFoundException {
         PlatformUser existingUser = getUserById(idUser);
         PlatformUser updatedUser = platformUserMapper.updatePlatformUserFromDto(existingUser, updatedData);
         return userRepository.save(updatedUser);
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserPatchDto newUserValues) throws ResourceNotFoundException {
+    public PlatformUser patchPlatformUser(Long idUpdatedUser, PlatformUserPatchDto newUserValues) throws ResourceNotFoundException {
         PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
         PlatformUser newPlatformUser = platformUserMapper.patchPlatformUserFromDto(oldPlatformUser, newUserValues);
         return userRepository.save(newPlatformUser);
@@ -49,7 +49,7 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlatformUser> getAllActiveUsers() {
+    public List<PlatformUser> getAllPlatformUsers() {
         return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted());
     }
 

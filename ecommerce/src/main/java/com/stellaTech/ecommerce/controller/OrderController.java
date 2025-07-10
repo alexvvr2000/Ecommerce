@@ -19,7 +19,7 @@ public class OrderController {
 
     @GetMapping("/orders")
     public List<Order> getAllOrders() {
-        return orderService.getAllActiveOrders();
+        return orderService.getAllOrders();
     }
 
     @GetMapping("/orders/{orderId}")
@@ -35,7 +35,7 @@ public class OrderController {
 
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long orderId) {
-        orderService.logicalDeleteOrder(orderId);
+        orderService.logicallyDeleteOrder(orderId);
         return ResponseEntity.noContent().build();
     }
 }

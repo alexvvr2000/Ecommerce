@@ -23,20 +23,20 @@ public class ProductService {
     private ProductMapper productMapper;
 
     @Transactional
-    public void logicalDeleteProduct(Long id) throws ResourceNotFoundException {
+    public void logicallyDeleteProduct(Long id) throws ResourceNotFoundException {
         Product product = getProductById(id);
         product.setDeleted(true);
     }
 
     @Transactional
-    public Product updateEntireProduct(Long productId, ProductUpdateDto updatedData) throws ResourceNotFoundException {
+    public Product updateProduct(Long productId, ProductUpdateDto updatedData) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
         Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, updatedData);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
-    public Product updateProductPartially(Long id, ProductPatchDto updatedFields) throws ResourceNotFoundException, InvalidInputException {
+    public Product patchProduct(Long id, ProductPatchDto updatedFields) throws ResourceNotFoundException, InvalidInputException {
         Product persistedProduct = getProductById(id);
         Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, updatedFields);
         return productRepository.save(updatedProduct);
@@ -49,7 +49,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getAllActiveProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll(ProductSpecs.hasNotBeenDeleted());
     }
 

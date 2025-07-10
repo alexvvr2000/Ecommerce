@@ -21,7 +21,7 @@ public class OrderService {
     private OrderMapper orderMapper;
 
     @Transactional
-    public void logicalDeleteOrder(Long id) throws ResourceNotFoundException {
+    public void logicallyDeleteOrder(Long id) throws ResourceNotFoundException {
         Order order = getOrderById(id);
         order.setDeleted(true);
     }
@@ -33,7 +33,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Order> getAllActiveOrders() {
+    public List<Order> getAllOrders() {
         return orderRepository.findAll(OrderSpecs.isNotDeleted());
     }
 

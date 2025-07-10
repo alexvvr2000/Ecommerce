@@ -21,7 +21,7 @@ public class PlatformUserController {
 
     @GetMapping("/users")
     public List<PlatformUser> getAllUsers() {
-        return userService.getAllActiveUsers();
+        return userService.getAllPlatformUsers();
     }
 
     @GetMapping("/users/{idUser}")
@@ -34,7 +34,7 @@ public class PlatformUserController {
             @NonNull @PathVariable Long idUser,
             @NonNull @RequestBody PlatformUserUpdateDto updatedUser
     ) {
-        PlatformUser savedUser = userService.updateEntireUser(idUser, updatedUser);
+        PlatformUser savedUser = userService.updatePlatformUser(idUser, updatedUser);
         return ResponseEntity.ok(savedUser);
     }
 
@@ -43,13 +43,13 @@ public class PlatformUserController {
             @NonNull @PathVariable Long idUser,
             @NonNull @RequestBody PlatformUserPatchDto updatedFields
     ) {
-        PlatformUser updatedUser = userService.updateUserPartially(idUser, updatedFields);
+        PlatformUser updatedUser = userService.patchPlatformUser(idUser, updatedFields);
         return ResponseEntity.ok(updatedFields);
     }
 
     @DeleteMapping("/users/{idUser}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idUser) {
-        userService.logicalDeleteUser(idUser);
+        userService.logicallyDeleteUser(idUser);
         return ResponseEntity.noContent().build();
     }
 
