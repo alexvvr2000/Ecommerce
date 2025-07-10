@@ -8,7 +8,9 @@ public abstract class PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
     public abstract PlatformUser createPlatformUserEntity(PlatformUserInsertDto platformUserInsertDto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "deleted", ignore = true)
     public abstract PlatformUser updatePlatformUserFromDto(@MappingTarget PlatformUser entity, PlatformUserUpdateDto dto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract PlatformUser patchPlatformUserFromDto(@MappingTarget PlatformUser entity, PlatformUserPatchDto dto);
 }

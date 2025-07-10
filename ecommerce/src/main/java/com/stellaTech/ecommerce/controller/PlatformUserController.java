@@ -41,7 +41,7 @@ public class PlatformUserController {
     @PatchMapping("/users/{idUser}")
     public ResponseEntity<?> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUserUpdateDto updatedFields
+            @NonNull @RequestBody PlatformUserPatchDto updatedFields
     ) {
         PlatformUser updatedUser = userService.updateUserPartially(idUser, updatedFields);
         return ResponseEntity.ok(updatedFields);

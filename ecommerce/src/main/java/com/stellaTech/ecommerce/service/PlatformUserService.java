@@ -35,9 +35,9 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserUpdateDto newUserValues) throws ResourceNotFoundException {
+    public PlatformUser updateUserPartially(Long idUpdatedUser, PlatformUserPatchDto newUserValues) throws ResourceNotFoundException {
         PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
-        return platformUserMapper.updatePlatformUserFromDto(oldPlatformUser, newUserValues);
+        return platformUserMapper.patchPlatformUserFromDto(oldPlatformUser, newUserValues);
     }
 
     @Transactional
