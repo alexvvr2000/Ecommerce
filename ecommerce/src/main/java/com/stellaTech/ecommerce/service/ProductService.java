@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
-import com.stellaTech.ecommerce.dto.product.ProductMapper;
+import com.stellaTech.ecommerce.dto.mapper.ProductMapper;
 import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;

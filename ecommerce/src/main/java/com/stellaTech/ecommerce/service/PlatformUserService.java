@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.service;
 
+import com.stellaTech.ecommerce.dto.mapper.PlatformUserMapper;
 import com.stellaTech.ecommerce.dto.platformUser.*;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
@@ -7,7 +8,6 @@ import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

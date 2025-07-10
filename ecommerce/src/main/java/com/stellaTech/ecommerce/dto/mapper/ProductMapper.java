@@ -1,5 +1,8 @@
-package com.stellaTech.ecommerce.dto.product;
+package com.stellaTech.ecommerce.dto.mapper;
 
+import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
+import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
+import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.model.Product;
 import org.mapstruct.*;
 

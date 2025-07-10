@@ -1,5 +1,9 @@
-package com.stellaTech.ecommerce.dto.platformUser;
+package com.stellaTech.ecommerce.dto.mapper;
 
+import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
+import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import org.mapstruct.*;
 
