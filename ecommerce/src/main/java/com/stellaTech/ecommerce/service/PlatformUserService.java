@@ -29,9 +29,10 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updateEntireUser(Long idUser, PlatformUserInsertDto updatedUser) throws ResourceNotFoundException {
+    public PlatformUser updateEntireUser(Long idUser, PlatformUserUpdateDto updatedData) throws ResourceNotFoundException {
         PlatformUser existingUser = getUserById(idUser);
-        return userRepository.save(existingUser);
+        PlatformUser updatedUser = platformUserMapper.updatePlatformUserFromDto(existingUser, updatedData);
+        return userRepository.save(updatedUser);
     }
 
     @Transactional

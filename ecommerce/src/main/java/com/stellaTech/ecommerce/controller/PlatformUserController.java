@@ -32,7 +32,7 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUser> updateUser(
             @NonNull @PathVariable Long idUser,
-            @NonNull @RequestBody PlatformUserInsertDto updatedUser
+            @NonNull @RequestBody PlatformUserUpdateDto updatedUser
     ) {
         PlatformUser savedUser = userService.updateEntireUser(idUser, updatedUser);
         return ResponseEntity.ok(savedUser);
