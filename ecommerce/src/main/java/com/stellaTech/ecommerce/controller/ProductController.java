@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@NonNull @RequestBody Product newProduct) {
+    public Product createProduct(@NonNull @RequestBody ProductInsertDto newProduct) {
         return productService.createProduct(newProduct);
     }
 }

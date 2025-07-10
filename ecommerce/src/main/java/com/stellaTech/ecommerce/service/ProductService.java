@@ -42,8 +42,9 @@ public class ProductService {
     }
 
     @Transactional
-    public Product createProduct(Product newProduct) {
-        return productRepository.save(newProduct);
+    public Product createProduct(ProductInsertDto newProduct) {
+        Product persistedProduct = productMapper.createProductInstance(newProduct);
+        return productRepository.save(persistedProduct);
     }
 
     @Transactional(readOnly = true)
