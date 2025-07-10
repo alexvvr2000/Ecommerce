@@ -1,14 +1,12 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserMapper;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
+import com.stellaTech.ecommerce.dto.platformUser.*;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +30,13 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public void changePassword(@NotEmpty @NotNull String newPassword, @NotNull Long platformUserId) throws InvalidInputException {
+    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws InvalidInputException {
         PlatformUser persistedUser = getUserById(platformUserId);
-        persistedUser.setPassword(newPassword);
-        userRepository.save(persistedUser);
+        if(!persistedUser.getPassword().equals(dto.getOldPassword())){
+            throw new InvalidInputException("Incorrect password");
+        }
+        PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(persistedUser, dto);
+        userRepository.save(updatedPasswordUser);
     }
 
     @Transactional

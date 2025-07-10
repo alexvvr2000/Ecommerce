@@ -14,4 +14,7 @@ public abstract class PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract PlatformUser patchPlatformUserFromDto(@MappingTarget PlatformUser entity, PlatformUserPatchDto dto);
+
+    @Mapping(target = "password", source = "newPassword")
+    public abstract PlatformUser patchPlatformUserPassword(@MappingTarget PlatformUser entity, PasswordChangeDto dto);
 }

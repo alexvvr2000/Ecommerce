@@ -1,10 +1,12 @@
 package com.stellaTech.ecommerce.controller;
 
+import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +50,8 @@ public class PlatformUserController {
     }
 
     @PatchMapping("/users/{idUser}/password")
-    public ResponseEntity<?> changePassword(@NonNull @PathVariable Long idUser, @NonNull @RequestBody String newPassword){
-        userService.changePassword(newPassword,idUser);
+    public ResponseEntity<?> changePassword(@NonNull @PathVariable Long idUser, @Valid @RequestBody PasswordChangeDto passwordChangeDto) {
+        userService.changePassword(passwordChangeDto, idUser);
         return ResponseEntity.noContent().build();
     }
 
