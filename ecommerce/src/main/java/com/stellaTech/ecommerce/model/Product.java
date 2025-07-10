@@ -34,7 +34,7 @@ public class Product extends LogicallyDeletableEntity {
 
     @Setter
     @Column(name = "price", precision = 8, scale = 2, nullable = false)
-    private BigDecimal price;
+    private BigDecimal price = BigDecimal.ZERO;
 
     public Product(@NonNull String name, @NonNull BigDecimal price, String mdFormatDescription, String mainImageUrl) {
         this.setName(name);
