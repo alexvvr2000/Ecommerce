@@ -1,20 +1,21 @@
 package com.stellaTech.ecommerce.model.OrderManagement;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NoArgsConstructor
 @Entity
 @Table(name = "order", schema = "product_data")
 public class Order extends LogicallyDeletableEntity {
@@ -23,6 +24,7 @@ public class Order extends LogicallyDeletableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @EqualsAndHashCode.Include
     @ManyToOne
     @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
@@ -33,25 +35,21 @@ public class Order extends LogicallyDeletableEntity {
     @CreationTimestamp
     private Date orderDate;
 
-    @EqualsAndHashCode.Include
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderItem> orderItems;
+    @JsonManagedReference
+    private Set<OrderItem> orderItems = new HashSet<>();
 
-    @Column(nullable = false)
-    private BigDecimal totalAmount;
+    @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
+    private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    public Order(@NonNull Set<OrderItem> productList, @NonNull PlatformUser platformUser) throws InvalidInputException {
-        if (productList.isEmpty()) {
-            throw new InvalidInputException("Order must have at least one item");
-        }
-        this.orderItems = productList;
+    public Order(@NonNull PlatformUser platformUser) throws InvalidInputException {
         this.platformUser = platformUser;
-        totalAmount = calculateTotal();
     }
 
-    private BigDecimal calculateTotal() {
-        return orderItems.stream()
-                .map(OrderItem::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public void addOrderItem(OrderItem item) {
+        item.setOrder(this);
+        this.orderItems.add(item);
+        BigDecimal subtotal = item.getProductPriceSnapshot().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+        totalAmount = totalAmount.add(subtotal);
     }
 }
