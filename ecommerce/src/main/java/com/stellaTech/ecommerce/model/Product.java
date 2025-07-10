@@ -28,9 +28,11 @@ public class Product extends LogicallyDeletableEntity {
     @Column(name = "main_image_url")
     private String mainImageUrl;
 
+    @Setter
     @Column(name = "average_rating", precision = 4, scale = 2)
     private BigDecimal averageRating = null;
 
+    @Setter
     @Column(name = "price", precision = 8, scale = 2, nullable = false)
     private BigDecimal price;
 
@@ -39,20 +41,5 @@ public class Product extends LogicallyDeletableEntity {
         this.setPrice(price);
         this.setMdFormatDescription(mdFormatDescription);
         this.setMainImageUrl(mainImageUrl);
-    }
-
-    public void setAverageRating(@NonNull BigDecimal averageRating) throws InvalidInputException {
-        if (averageRating.compareTo(BigDecimal.ZERO) < 0 ||
-                averageRating.compareTo(new BigDecimal("10.00")) > 0) {
-            throw new InvalidInputException("Rating out of range");
-        }
-        this.averageRating = averageRating;
-    }
-
-    public void setPrice(BigDecimal price) throws InvalidInputException {
-        if (price.compareTo(new BigDecimal("0.01")) < 0) {
-            throw new InvalidInputException("Invalid price");
-        }
-        this.price = price;
     }
 }

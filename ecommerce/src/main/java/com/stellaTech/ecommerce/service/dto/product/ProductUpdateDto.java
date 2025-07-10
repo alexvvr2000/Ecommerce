@@ -1,9 +1,6 @@
 package com.stellaTech.ecommerce.service.dto.product;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -13,6 +10,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 public class ProductUpdateDto {
     @NotNull
+    @NotEmpty
     String name;
 
     @NotNull
@@ -21,12 +19,15 @@ public class ProductUpdateDto {
     BigDecimal price;
 
     @NotNull
+    @NotEmpty
     String mdFormatDescription;
 
     @NotNull
+    @NotEmpty
     String mainImageUrl;
 
     @NotNull
+    @NotEmpty
     @Digits(integer = 2, fraction = 2, message = "The rating must be 4 digits long; 2 for integers and 2 for decimals")
     @DecimalMin(value = "0.00", message = "The rating must be greater than 0")
     @DecimalMax(value = "10.00", message = "The rating can't be greater than 10")

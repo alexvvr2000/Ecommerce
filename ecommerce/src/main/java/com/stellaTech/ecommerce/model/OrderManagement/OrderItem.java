@@ -41,15 +41,8 @@ public class OrderItem {
     public OrderItem(@NonNull Product product, int quantity) {
         this.product = product;
         this.purchasedPrice = new ProductPriceSnapshot(product.getPrice());
-        this.quantity = validateQuantity(quantity);
+        this.quantity = quantity;
         calculateSubtotal();
-    }
-
-    private Integer validateQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new InvalidInputException("Quantity must be positive");
-        }
-        return quantity;
     }
 
     private void calculateSubtotal() {
