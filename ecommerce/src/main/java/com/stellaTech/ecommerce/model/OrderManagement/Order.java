@@ -1,8 +1,8 @@
 package com.stellaTech.ecommerce.model.OrderManagement;
 
 import com.stellaTech.ecommerce.exception.InvalidInputException;
-import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
