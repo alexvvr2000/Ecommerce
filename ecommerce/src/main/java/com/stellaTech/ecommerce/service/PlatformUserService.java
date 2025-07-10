@@ -8,6 +8,8 @@ import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,13 @@ public class PlatformUserService {
         PlatformUser user = getUserById(id);
         user.setDeleted(true);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(@NotEmpty @NotNull String newPassword, @NotNull Long platformUserId){
+        PlatformUser persistedUser = getUserById(platformUserId);
+        persistedUser.setPassword(newPassword);
+        userRepository.save(persistedUser);
     }
 
     @Transactional
