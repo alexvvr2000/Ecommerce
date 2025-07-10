@@ -3,13 +3,13 @@ package com.stellaTech.ecommerce.controller;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.ProductService;
 import com.stellaTech.ecommerce.service.dto.product.ProductInsertDto;
+import com.stellaTech.ecommerce.service.dto.product.ProductPatchDto;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,7 +40,7 @@ public class ProductController {
     @PatchMapping("/products/{idProduct}")
     public ResponseEntity<Product> partialUpdateUser(
             @NonNull @PathVariable Long idProduct,
-            @NonNull @RequestBody Map<String, Object> updatedFields
+            @NonNull @RequestBody ProductPatchDto updatedFields
     ) {
         Product savedProduct = productService.updateProductPartially(idProduct, updatedFields);
         return ResponseEntity.ok(savedProduct);

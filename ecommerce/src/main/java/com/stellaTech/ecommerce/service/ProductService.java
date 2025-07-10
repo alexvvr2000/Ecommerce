@@ -5,6 +5,7 @@ import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.Product;
 import com.stellaTech.ecommerce.service.dto.product.ProductInsertDto;
 import com.stellaTech.ecommerce.service.dto.product.ProductMapper;
+import com.stellaTech.ecommerce.service.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.service.repository.ProductRepository;
 import com.stellaTech.ecommerce.service.specification.ProductSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProductService {
@@ -35,9 +35,10 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProductPartially(Long id, Map<String, Object> updatedFields) throws ResourceNotFoundException, InvalidInputException {
-        Product product = getProductById(id);
-        return productRepository.save(product);
+    public Product updateProductPartially(Long id, ProductPatchDto updatedFields) throws ResourceNotFoundException, InvalidInputException {
+        Product persistedProduct = getProductById(id);
+        Product updatedProduct = productMapper.patchProduct(persistedProduct, updatedFields);
+        return productRepository.save(updatedProduct);
     }
 
     @Transactional
