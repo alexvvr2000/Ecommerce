@@ -49,21 +49,21 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updatePlatformUser(Long idUser, PlatformUserUpdateDto dto) throws ResourceNotFoundException {
+    public PlatformUser updatePlatformUser(Long idUser,@Valid PlatformUserUpdateDto dto) throws ResourceNotFoundException {
         PlatformUser existingUser = getUserById(idUser);
         PlatformUser updatedUser = platformUserMapper.updatePlatformUserFromDto(existingUser, dto);
         return userRepository.save(updatedUser);
     }
 
     @Transactional
-    public PlatformUser patchPlatformUser(Long idUpdatedUser, PlatformUserPatchDto dto) throws ResourceNotFoundException {
+    public PlatformUser patchPlatformUser(Long idUpdatedUser,@Valid PlatformUserPatchDto dto) throws ResourceNotFoundException {
         PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
         PlatformUser newPlatformUser = platformUserMapper.patchPlatformUserFromDto(oldPlatformUser, dto);
         return userRepository.save(newPlatformUser);
     }
 
     @Transactional
-    public PlatformUser createUser(PlatformUserInsertDto dto) {
+    public PlatformUser createUser(@Valid PlatformUserInsertDto dto) {
         PlatformUser persistedUser = platformUserMapper.createPlatformUserEntity(dto);
         return userRepository.save(persistedUser);
     }
