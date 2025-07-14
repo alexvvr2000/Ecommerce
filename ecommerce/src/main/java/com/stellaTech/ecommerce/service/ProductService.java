@@ -4,7 +4,6 @@ import com.stellaTech.ecommerce.dto.mapper.ProductMapper;
 import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
 import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
-import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
@@ -37,7 +36,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product patchProduct(Long id, ProductPatchDto dto) throws ResourceNotFoundException, InvalidInputException {
+    public Product patchProduct(Long id, ProductPatchDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(id);
         Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, dto);
         return productRepository.save(updatedProduct);

@@ -5,7 +5,6 @@ import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
-import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
@@ -34,16 +33,16 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws InvalidInputException {
+    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws IllegalArgumentException {
         PlatformUser user = getUserById(platformUserId);
         if (!user.getPassword().equals(dto.getOldPassword())) {
-            throw new InvalidInputException("Incorrect old password");
+            throw new IllegalArgumentException("Incorrect old password");
         }
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new InvalidInputException("New passwords do not match");
+            throw new IllegalArgumentException("New passwords do not match");
         }
         if (dto.getNewPassword().equals(user.getPassword())) {
-            throw new InvalidInputException("New password must be different from current password");
+            throw new IllegalArgumentException("New password must be different from current password");
         }
         PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(user, dto);
         userRepository.save(updatedPasswordUser);

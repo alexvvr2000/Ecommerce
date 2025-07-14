@@ -1,7 +1,6 @@
 package com.stellaTech.ecommerce.model.OrderManagement;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;
@@ -42,7 +41,7 @@ public class Order extends LogicallyDeletableEntity {
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    public Order(@NonNull PlatformUser platformUser) throws InvalidInputException {
+    public Order(@NonNull PlatformUser platformUser) {
         this.platformUser = platformUser;
     }
 

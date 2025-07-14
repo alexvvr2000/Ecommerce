@@ -3,7 +3,6 @@ package com.stellaTech.ecommerce.service;
 import com.stellaTech.ecommerce.dto.mapper.OrderMapper;
 import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
-import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.repository.OrderRepository;
@@ -36,7 +35,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderSelectDto createOrder(@Valid OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
+    public OrderSelectDto createOrder(@Valid OrderInsertDto dto) throws ResourceNotFoundException {
         Order newOrder = orderMapper.createOrderEntity(dto);
         Order persistedOrder = orderRepository.save(newOrder);
         return orderMapper.summaryOrder(persistedOrder);
