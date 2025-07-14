@@ -33,7 +33,7 @@ public abstract class OrderMapper {
 
     @Mapping(target = "orderId", source = "id")
     @Mapping(target = "totalPrice", source = "totalAmount")
-    @Mapping(target = "platformUserId", source = "platformUser")
+    @Mapping(target = "platformUserId", source = "platformUser.id")
     @Mapping(target = "items", source = "orderItems")
     public abstract OrderSelectDto summaryOrder(Order order);
 
@@ -43,15 +43,11 @@ public abstract class OrderMapper {
     @Mapping(target = "orderItemId", source = "id")
     public abstract OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem);
 
-    protected Product mapProductId(Long productId) {
+    protected Product getProductInstanceById(Long productId){
         return productService.getProductById(productId);
     }
 
-    protected PlatformUser mapPlatformUserId(Long platformUserId) {
+    protected PlatformUser getPlatformUserInstanceById(Long platformUserId){
         return platformUserService.getUserById(platformUserId);
-    }
-
-    protected Long getPlatformUserId(PlatformUser platformUser) {
-        return platformUser.getId();
     }
 }
