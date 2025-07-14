@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.service;
 import com.stellaTech.ecommerce.dto.mapper.OrderMapper;
 import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
+import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;

@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.exception;
+package com.stellaTech.ecommerce.exception.instance;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

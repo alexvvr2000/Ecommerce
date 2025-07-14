@@ -5,7 +5,7 @@ import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
 import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
+import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;

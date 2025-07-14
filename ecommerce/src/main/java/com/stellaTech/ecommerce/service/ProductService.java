@@ -4,7 +4,7 @@ import com.stellaTech.ecommerce.dto.mapper.ProductMapper;
 import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
 import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
-import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
+import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
