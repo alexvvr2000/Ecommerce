@@ -5,7 +5,7 @@ import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
 import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.model.Product;
+import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.ProductService;
 import org.mapstruct.Mapper;
@@ -36,7 +36,7 @@ public abstract class OrderMapper {
     @Mapping(target = "items", source = "orderItems")
     public abstract OrderSelectDto summaryOrder(Order order);
 
-    public OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem){
+    public OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem) {
         return new OrderSelectDto.OrderItemSelectDto(
                 orderItem.getId(),
                 orderItem.getProduct().getId(),
@@ -53,7 +53,7 @@ public abstract class OrderMapper {
         return platformUserService.getUserById(platformUserId);
     }
 
-    protected Long getPlatformUserId(PlatformUser platformUser){
+    protected Long getPlatformUserId(PlatformUser platformUser) {
         return platformUser.getId();
     }
 }

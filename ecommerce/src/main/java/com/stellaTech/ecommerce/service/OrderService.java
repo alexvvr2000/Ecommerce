@@ -6,7 +6,6 @@ import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
-import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import jakarta.validation.Valid;
@@ -59,7 +58,7 @@ public class OrderService {
         );
     }
 
-    public OrderSelectDto getOrderDtoById(Long id){
+    public OrderSelectDto getOrderDtoById(Long id) {
         Order persistedOrder = getOrderById(id);
         return orderMapper.summaryOrder(persistedOrder);
     }

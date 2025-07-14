@@ -6,7 +6,7 @@ import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.Product;
+import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import org.springframework.beans.factory.annotation.Autowired;

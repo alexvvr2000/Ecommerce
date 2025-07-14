@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.model.OrderManagement;
+package com.stellaTech.ecommerce.model.ProductManagement;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

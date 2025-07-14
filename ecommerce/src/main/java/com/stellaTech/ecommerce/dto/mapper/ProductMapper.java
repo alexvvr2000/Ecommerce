@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.dto.mapper;
 import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
 import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
 import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
-import com.stellaTech.ecommerce.model.Product;
+import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
