@@ -3,6 +3,7 @@ package com.stellaTech.ecommerce.controller;
 import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
 import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderInsertDto orderInsertDto) {
+    public ResponseEntity<?> createOrder(@NonNull @RequestBody @Valid OrderInsertDto orderInsertDto) {
         OrderSelectDto persistedOrder = orderService.createOrder(orderInsertDto);
         return ResponseEntity.ok(persistedOrder);
     }
