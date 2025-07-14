@@ -1,6 +1,8 @@
 package com.stellaTech.ecommerce.controller;
 
+import com.stellaTech.ecommerce.dto.mapper.OrderMapper;
 import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
+import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.service.OrderService;
 import lombok.NonNull;
@@ -18,18 +20,18 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/orders")
-    public List<Order> getAllOrders() {
+    public List<OrderSelectDto> getAllOrders() {
         return orderService.getAllOrders();
     }
 
     @GetMapping("/orders/{orderId}")
-    public Order getAllOrders(@NonNull @PathVariable Long orderId) {
-        return orderService.getOrderById(orderId);
+    public OrderSelectDto getOrderById(@NonNull @PathVariable Long orderId) {
+        return orderService.getOrderDtoById(orderId);
     }
 
     @PostMapping("/orders")
     public ResponseEntity<?> createOrder(@NonNull @RequestBody OrderInsertDto orderInsertDto) {
-        Order persistedOrder = orderService.createOrder(orderInsertDto);
+        OrderSelectDto persistedOrder = orderService.createOrder(orderInsertDto);
         return ResponseEntity.ok(persistedOrder);
     }
 

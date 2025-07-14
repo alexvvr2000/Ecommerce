@@ -14,11 +14,13 @@ import java.util.Set;
 public class OrderSelectDto {
     @NotNull
     @EqualsAndHashCode.Include
+    Long orderId;
+
+    @NotNull
     Long platformUserId;
 
     @NotEmpty
     @NotNull
-    @EqualsAndHashCode.Include
     Set<OrderItemSelectDto> items;
 
     @NotNull
@@ -27,7 +29,10 @@ public class OrderSelectDto {
     @Value
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class OrderItemSelectDto {
+        @NotNull
         @EqualsAndHashCode.Include
+        Long orderItemId;
+
         @NotNull
         Long productId;
 

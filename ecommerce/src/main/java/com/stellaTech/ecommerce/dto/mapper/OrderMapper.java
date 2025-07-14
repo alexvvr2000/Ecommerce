@@ -30,13 +30,15 @@ public abstract class OrderMapper {
     @Mapping(target = "quantity", source = "productCount")
     public abstract OrderItem createOrderItemEntity(OrderInsertDto.OrderItemInsertDto itemDto);
 
+    @Mapping(target = "orderId", source = "id")
     @Mapping(target = "totalPrice", source = "totalAmount")
     @Mapping(target = "platformUserId", source = "platformUser")
     @Mapping(target = "items", source = "orderItems")
-    public abstract OrderSelectDto overviewOfOrderEntity(Order order);
+    public abstract OrderSelectDto summaryOrder(Order order);
 
     public OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem){
         return new OrderSelectDto.OrderItemSelectDto(
+                orderItem.getId(),
                 orderItem.getProduct().getId(),
                 orderItem.getQuantity(),
                 orderItem.getProductPriceSnapshot().getPrice()

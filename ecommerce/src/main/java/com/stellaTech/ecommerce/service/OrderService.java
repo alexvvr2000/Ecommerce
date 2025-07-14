@@ -2,6 +2,7 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.dto.mapper.OrderMapper;
 import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
+import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.exception.InvalidInputException;
 import com.stellaTech.ecommerce.exception.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
@@ -36,19 +37,21 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(@Valid OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
-        PlatformUser user = platformUserService.getUserById(dto.getPlatformUserId());
+    public OrderSelectDto createOrder(@Valid OrderInsertDto dto) throws InvalidInputException, ResourceNotFoundException {
         Order newOrder = orderMapper.createOrderEntity(dto);
-        return orderRepository.save(newOrder);
+        Order persistedOrder = orderRepository.save(newOrder);
+        return orderMapper.summaryOrder(persistedOrder);
     }
 
     @Transactional(readOnly = true)
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll(OrderSpecs.isNotDeleted());
+    public List<OrderSelectDto> getAllOrders() {
+        return orderRepository.findAll(
+                OrderSpecs.isNotDeleted()
+        ).stream().map(orderMapper::summaryOrder).toList();
     }
 
     @Transactional(readOnly = true)
-    public Order getOrderById(Long id) throws ResourceNotFoundException {
+    private Order getOrderById(Long id) throws ResourceNotFoundException {
         return orderRepository.findOne(
                 OrderSpecs.hasNotBeenDeleted(id)
         ).orElseThrow(() ->
@@ -56,4 +59,8 @@ public class OrderService {
         );
     }
 
+    public OrderSelectDto getOrderDtoById(Long id){
+        Order persistedOrder = getOrderById(id);
+        return orderMapper.summaryOrder(persistedOrder);
+    }
 }
