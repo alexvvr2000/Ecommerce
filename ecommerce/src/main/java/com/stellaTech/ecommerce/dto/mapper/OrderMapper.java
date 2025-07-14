@@ -8,6 +8,7 @@ import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ public abstract class OrderMapper {
     @Mapping(target = "orderItems", source = "items")
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "platformUser", source = "platformUserId")
-    public abstract Order createOrderEntity(OrderInsertDto dto);
+    public abstract Order createOrderEntity(@Valid OrderInsertDto dto);
 
     @Mapping(target = "order", ignore = true)
     @Mapping(target = "product", source = "productId")
     @Mapping(target = "quantity", source = "productCount")
-    public abstract OrderItem createOrderItemEntity(OrderInsertDto.OrderItemInsertDto itemDto);
+    public abstract OrderItem createOrderItemEntity(@Valid OrderInsertDto.OrderItemInsertDto itemDto);
 
     @Mapping(target = "orderId", source = "id")
     @Mapping(target = "totalPrice", source = "totalAmount")

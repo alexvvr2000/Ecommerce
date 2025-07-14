@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.dto.order;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class OrderInsertDto {
     @NotEmpty
     @NotNull
     @EqualsAndHashCode.Include
+    @Valid
     Set<OrderItemInsertDto> items;
 
     @Value
