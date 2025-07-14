@@ -25,9 +25,6 @@ public class OrderService {
     @Autowired
     private PlatformUserService platformUserService;
 
-    @Autowired
-    private ProductService productService;
-
     @Transactional
     public void logicallyDeleteOrder(Long id) throws ResourceNotFoundException {
         Order order = getOrderById(id);
