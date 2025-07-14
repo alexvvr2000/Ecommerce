@@ -8,14 +8,14 @@ import jakarta.validation.Valid;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
-public abstract class ProductMapper {
+public interface ProductMapper {
     @Mapping(target = "deleted", ignore = true)
-    public abstract Product createProductInstance(@Valid ProductInsertDto productInsertDto);
+    Product createProductInstance(@Valid ProductInsertDto productInsertDto);
 
     @Mapping(target = "deleted", ignore = true)
-    public abstract Product updateProductFromDto(@MappingTarget Product product,@Valid ProductUpdateDto dto);
+    Product updateProductFromDto(@MappingTarget Product product,@Valid ProductUpdateDto dto);
 
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract Product patchProductFromDto(@MappingTarget Product product,@Valid ProductPatchDto dto);
+    Product patchProductFromDto(@MappingTarget Product product,@Valid ProductPatchDto dto);
 }
