@@ -9,18 +9,18 @@ import jakarta.validation.Valid;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
-public abstract class PlatformUserMapper {
+public interface PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
-    public abstract PlatformUser createPlatformUserEntity(@Valid PlatformUserInsertDto platformUserInsertDto);
+    PlatformUser createPlatformUserEntity(@Valid PlatformUserInsertDto platformUserInsertDto);
 
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "deleted", ignore = true)
-    public abstract PlatformUser updatePlatformUserFromDto(@MappingTarget PlatformUser entity,@Valid PlatformUserUpdateDto dto);
+    PlatformUser updatePlatformUserFromDto(@MappingTarget PlatformUser entity,@Valid PlatformUserUpdateDto dto);
 
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract PlatformUser patchPlatformUserFromDto(@MappingTarget PlatformUser entity,@Valid PlatformUserPatchDto dto);
+    PlatformUser patchPlatformUserFromDto(@MappingTarget PlatformUser entity,@Valid PlatformUserPatchDto dto);
 
     @Mapping(target = "rfc", ignore = true)
     @Mapping(target = "phoneNumber", ignore = true)
@@ -29,5 +29,5 @@ public abstract class PlatformUserMapper {
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "curp", ignore = true)
     @Mapping(target = "password", source = "newPassword")
-    public abstract PlatformUser patchPlatformUserPassword(@MappingTarget PlatformUser entity,@Valid PasswordChangeDto dto);
+    PlatformUser patchPlatformUserPassword(@MappingTarget PlatformUser entity,@Valid PasswordChangeDto dto);
 }
