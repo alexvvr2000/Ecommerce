@@ -40,6 +40,9 @@ public class OrderItem {
     @Embedded
     private ProductPriceSnapshot productPriceSnapshot;
 
+    @Column(nullable = false, updatable = false)
+    private BigDecimal subtotal;
+
     protected OrderItem() {
         this.productPriceSnapshot = new ProductPriceSnapshot(BigDecimal.ZERO);
     }
@@ -55,7 +58,8 @@ public class OrderItem {
         this.productPriceSnapshot = new ProductPriceSnapshot(product.getPrice());
     }
 
-    public BigDecimal calculateSubtotal() {
-        return productPriceSnapshot.getPrice().multiply(BigDecimal.valueOf(quantity));
+    @PrePersist
+    private void calculateSubtotal() {
+        this.subtotal = productPriceSnapshot.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }

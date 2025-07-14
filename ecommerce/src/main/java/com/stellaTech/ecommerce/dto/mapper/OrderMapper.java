@@ -37,14 +37,11 @@ public abstract class OrderMapper {
     @Mapping(target = "items", source = "orderItems")
     public abstract OrderSelectDto summaryOrder(Order order);
 
-    public OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem) {
-        return new OrderSelectDto.OrderItemSelectDto(
-                orderItem.getId(),
-                orderItem.getProduct().getId(),
-                orderItem.getQuantity(),
-                orderItem.getProductPriceSnapshot().getPrice()
-        );
-    }
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "productCount", source = "quantity")
+    @Mapping(target = "price", source = "productPriceSnapshot.price")
+    @Mapping(target = "orderItemId", source = "id")
+    public abstract OrderSelectDto.OrderItemSelectDto summaryOrderItem(OrderItem orderItem);
 
     protected Product mapProductId(Long productId) {
         return productService.getProductById(productId);

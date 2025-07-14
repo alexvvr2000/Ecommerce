@@ -30,14 +30,14 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(Long productId,@Valid ProductUpdateDto dto) throws ResourceNotFoundException {
+    public Product updateProduct(Long productId, @Valid ProductUpdateDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
         Product updatedProduct = productMapper.updateProductFromDto(persistedProduct, dto);
         return productRepository.save(updatedProduct);
     }
 
     @Transactional
-    public Product patchProduct(Long id,@Valid ProductPatchDto dto) throws ResourceNotFoundException {
+    public Product patchProduct(Long id, @Valid ProductPatchDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(id);
         Product updatedProduct = productMapper.patchProductFromDto(persistedProduct, dto);
         return productRepository.save(updatedProduct);

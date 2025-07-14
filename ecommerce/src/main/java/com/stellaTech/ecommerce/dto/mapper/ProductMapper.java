@@ -13,9 +13,9 @@ public interface ProductMapper {
     Product createProductInstance(@Valid ProductInsertDto productInsertDto);
 
     @Mapping(target = "deleted", ignore = true)
-    Product updateProductFromDto(@MappingTarget Product product,@Valid ProductUpdateDto dto);
+    Product updateProductFromDto(@MappingTarget Product product, @Valid ProductUpdateDto dto);
 
     @Mapping(target = "deleted", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Product patchProductFromDto(@MappingTarget Product product,@Valid ProductPatchDto dto);
+    Product patchProductFromDto(@MappingTarget Product product, @Valid ProductPatchDto dto);
 }
