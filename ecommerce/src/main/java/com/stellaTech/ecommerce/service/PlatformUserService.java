@@ -1,10 +1,6 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.dto.mapper.PlatformUserMapper;
-import com.stellaTech.ecommerce.dto.platformUser.PasswordChangeDto;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserInsertDto;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserPatchDto;
-import com.stellaTech.ecommerce.dto.platformUser.PlatformUserUpdateDto;
+import com.stellaTech.ecommerce.dto.PasswordChangeDto;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
@@ -21,9 +17,6 @@ import java.util.List;
 public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
-
-    @Autowired
-    private PlatformUserMapper platformUserMapper;
 
     @Transactional
     public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
@@ -44,8 +37,9 @@ public class PlatformUserService {
         if (dto.getNewPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("New password must be different from current password");
         }
-        PlatformUser updatedPasswordUser = platformUserMapper.patchPlatformUserPassword(user, dto);
-        userRepository.save(updatedPasswordUser);
+        PlatformUser persistedUser = getUserById(platformUserId);
+        persistedUser.setPassword(dto.getNewPassword());
+        userRepository.save(persistedUser);
     }
 
     @Transactional
