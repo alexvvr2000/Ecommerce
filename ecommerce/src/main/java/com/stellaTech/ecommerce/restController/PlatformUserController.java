@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.controller;
+package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.model.PlatformUser;

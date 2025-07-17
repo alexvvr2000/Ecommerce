@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.controller;
+package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
