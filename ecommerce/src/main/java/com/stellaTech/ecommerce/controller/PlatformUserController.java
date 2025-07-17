@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.controller;
 
-import com.stellaTech.ecommerce.dto.PlatformUserManagement.PasswordChangeDto;
+import com.stellaTech.ecommerce.model.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import jakarta.validation.Valid;

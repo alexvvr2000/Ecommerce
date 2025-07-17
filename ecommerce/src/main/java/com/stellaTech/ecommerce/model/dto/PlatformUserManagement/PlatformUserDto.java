@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.dto.PlatformUserManagement;
+package com.stellaTech.ecommerce.model.dto.PlatformUserManagement;
 
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
