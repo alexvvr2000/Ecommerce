@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.model.dataDto;
+package com.stellaTech.ecommerce.service.dataDto;
 
 import jakarta.validation.constraints.Min;
 import lombok.Data;

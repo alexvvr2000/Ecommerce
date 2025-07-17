@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.model.dataDto.PlatformUserManagement.PasswordChangeDto;
+import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
