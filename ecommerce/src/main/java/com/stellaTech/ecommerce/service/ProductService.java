@@ -1,9 +1,5 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.dto.mapper.ProductMapper;
-import com.stellaTech.ecommerce.dto.product.ProductInsertDto;
-import com.stellaTech.ecommerce.dto.product.ProductPatchDto;
-import com.stellaTech.ecommerce.dto.product.ProductUpdateDto;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
@@ -19,9 +15,6 @@ import java.util.List;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ProductMapper productMapper;
 
     @Transactional
     public void logicallyDeleteProduct(Long id) throws ResourceNotFoundException {

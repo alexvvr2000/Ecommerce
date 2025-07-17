@@ -1,8 +1,5 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.dto.mapper.OrderMapper;
-import com.stellaTech.ecommerce.dto.order.OrderInsertDto;
-import com.stellaTech.ecommerce.dto.order.OrderSelectDto;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.OrderManagement.Order;
 import com.stellaTech.ecommerce.repository.OrderRepository;
@@ -18,9 +15,6 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderMapper orderMapper;
 
     @Autowired
     private PlatformUserService platformUserService;
