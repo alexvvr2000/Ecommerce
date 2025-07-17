@@ -2,8 +2,10 @@ package com.stellaTech.ecommerce.dto.PlatformUserManagement;
 
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
+@Data
 public class PlatformUserDto {
     private String curp;
     private String fullName;
