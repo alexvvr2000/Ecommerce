@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 public class IdDtoResponse<C>{
-    int id;
+    Long id;
     @JsonUnwrapped
     C dto;
 }
