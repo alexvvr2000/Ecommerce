@@ -28,7 +28,6 @@ public class Product extends LogicallyDeletableEntity {
     @Column(name = "main_image_url")
     private String mainImageUrl;
 
-    @Setter
     @Column(name = "average_rating", precision = 4, scale = 2)
     private BigDecimal averageRating = null;
 
