@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.dto;
+package com.stellaTech.ecommerce.dto.PlatformUserManagement;
 
 import lombok.Value;
 
