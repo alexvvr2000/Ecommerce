@@ -33,7 +33,6 @@ public class OrderItem {
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private Product product;
 
-    @Setter
     @Column(nullable = false, updatable = false)
     private int quantity;
 
@@ -43,23 +42,18 @@ public class OrderItem {
     @Column(nullable = false, updatable = false)
     private BigDecimal subtotal;
 
-    protected OrderItem() {
-        this.productPriceSnapshot = new ProductPriceSnapshot(BigDecimal.ZERO);
-    }
-
     public OrderItem(@NonNull Product product, int quantity) {
         this.product = product;
         this.productPriceSnapshot = new ProductPriceSnapshot(product.getPrice());
+        this.setQuantity(quantity);
+    }
+
+    private void setQuantity(int quantity) {
         this.quantity = quantity;
+        this.subtotal = calculateSubtotal();
     }
 
-    public void setProduct(@NonNull Product product) {
-        this.product = product;
-        this.productPriceSnapshot = new ProductPriceSnapshot(product.getPrice());
-    }
-
-    @PrePersist
-    private void calculateSubtotal() {
-        this.subtotal = productPriceSnapshot.getPrice().multiply(BigDecimal.valueOf(quantity));
+    private BigDecimal calculateSubtotal() {
+        return productPriceSnapshot.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }
