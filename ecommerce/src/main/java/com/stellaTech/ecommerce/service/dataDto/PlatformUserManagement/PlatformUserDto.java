@@ -1,8 +1,8 @@
 package com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.stellaTech.ecommerce.service.dataDto.validationGroup.InsertUpdateCheck;
-import com.stellaTech.ecommerce.service.dataDto.validationGroup.PatchCheck;
+import com.stellaTech.ecommerce.service.dataDto.validationGroup.NonEmptyCheck;
+import com.stellaTech.ecommerce.service.dataDto.validationGroup.ForbiddenFieldCheck;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -14,18 +14,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlatformUserDto {
-    @NotNull(groups = InsertUpdateCheck.class)
+    @Null(groups = ForbiddenFieldCheck.class)
+    @NotNull(groups = NonEmptyCheck.class)
+    private Long id;
+
+    @NotNull(groups = NonEmptyCheck.class)
     private String curp;
-    @NotNull(groups = InsertUpdateCheck.class)
+
+    @NotNull(groups = NonEmptyCheck.class)
     private String fullName;
-    @NotNull(groups = InsertUpdateCheck.class)
+
+    @NotNull(groups = NonEmptyCheck.class)
     @Email
     private String email;
+
+    @NotNull(groups = NonEmptyCheck.class)
     private String phoneNumber;
-    @Null(groups = PatchCheck.class)
-    @NotNull(groups = InsertUpdateCheck.class)
+
+    @Null(groups = ForbiddenFieldCheck.class)
+    @NotNull(groups = NonEmptyCheck.class)
     @JsonIgnore
     private String password;
-    @NotNull(groups = InsertUpdateCheck.class)
+
+    @NotNull(groups = NonEmptyCheck.class)
     private String rfc;
 }
