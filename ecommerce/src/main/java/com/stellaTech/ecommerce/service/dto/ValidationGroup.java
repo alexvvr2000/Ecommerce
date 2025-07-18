@@ -4,6 +4,6 @@ public interface ValidationGroup {
     interface OnRead {
     }
 
-    interface OnChange {
+    interface OnInsert {
     }
 }
