@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.repository.specification;
 
-import com.stellaTech.ecommerce.model.ProductManagement.Product;
+import com.stellaTech.ecommerce.model.productManagement.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecs {

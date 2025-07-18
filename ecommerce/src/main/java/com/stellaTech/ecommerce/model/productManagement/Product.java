@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.model.ProductManagement;
+package com.stellaTech.ecommerce.model.productManagement;
 
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;

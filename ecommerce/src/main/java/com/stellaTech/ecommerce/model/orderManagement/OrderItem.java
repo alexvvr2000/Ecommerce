@@ -1,8 +1,8 @@
-package com.stellaTech.ecommerce.model.OrderManagement;
+package com.stellaTech.ecommerce.model.orderManagement;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.stellaTech.ecommerce.model.ProductManagement.Product;
-import com.stellaTech.ecommerce.model.ProductManagement.ProductPriceSnapshot;
+import com.stellaTech.ecommerce.model.productManagement.Product;
+import com.stellaTech.ecommerce.model.productManagement.ProductPriceSnapshot;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

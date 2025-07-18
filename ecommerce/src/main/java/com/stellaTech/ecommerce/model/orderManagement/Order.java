@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.model.OrderManagement;
+package com.stellaTech.ecommerce.model.orderManagement;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.stellaTech.ecommerce.model.PlatformUser;

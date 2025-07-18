@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.repository;
 
-import com.stellaTech.ecommerce.model.OrderManagement.Order;
+import com.stellaTech.ecommerce.model.orderManagement.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

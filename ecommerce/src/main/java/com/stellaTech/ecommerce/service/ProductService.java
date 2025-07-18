@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.ProductManagement.Product;
+import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import com.stellaTech.ecommerce.service.dataDto.ProductDto;

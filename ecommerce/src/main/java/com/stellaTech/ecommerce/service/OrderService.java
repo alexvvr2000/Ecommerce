@@ -1,10 +1,10 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.OrderManagement.Order;
-import com.stellaTech.ecommerce.model.OrderManagement.OrderItem;
+import com.stellaTech.ecommerce.model.orderManagement.Order;
+import com.stellaTech.ecommerce.model.orderManagement.OrderItem;
 import com.stellaTech.ecommerce.model.PlatformUser;
-import com.stellaTech.ecommerce.model.ProductManagement.Product;
+import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dataDto.OrderDto;
