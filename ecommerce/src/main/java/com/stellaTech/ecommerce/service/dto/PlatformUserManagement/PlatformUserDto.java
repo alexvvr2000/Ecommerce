@@ -30,8 +30,7 @@ public class PlatformUserDto {
     @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
     private String phoneNumber;
 
-    @Null(groups = ValidationGroup.OnInsert.class)
-    @NotNull(groups = ValidationGroup.OnRead.class)
+    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
     @JsonIgnore
     private String password;
 
