@@ -15,12 +15,16 @@ import java.util.List;
 
 @Data
 public class OrderDto<T extends OrderDto.OrderItemDto> {
-    @Null(groups = ValidationGroup.OnRead.class)
-    @NotNull(groups = ValidationGroup.OnInsert.class)
+    @Null(groups = ValidationGroup.OnInsert.class)
+    @NotNull(groups = ValidationGroup.OnRead.class)
     private Long id;
 
     @NotNull
     private Long platformUserId;
+
+    @Null(groups = ValidationGroup.OnInsert.class)
+    @NotNull(groups = ValidationGroup.OnRead.class)
+    private Long totalAmount;
 
     @NotEmpty
     @Singular
