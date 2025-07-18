@@ -1,4 +1,4 @@
 package com.stellaTech.ecommerce.service.dataDto.validationGroup;
 
-public interface PatchObject {
+public interface PatchCheck {
 }
