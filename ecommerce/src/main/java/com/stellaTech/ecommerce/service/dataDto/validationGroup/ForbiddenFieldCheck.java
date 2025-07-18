@@ -1,4 +1,4 @@
 package com.stellaTech.ecommerce.service.dataDto.validationGroup;
 
-public interface PatchCheck {
+public interface ForbiddenFieldCheck {
 }
