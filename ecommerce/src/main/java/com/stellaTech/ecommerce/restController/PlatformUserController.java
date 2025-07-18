@@ -3,10 +3,12 @@ package com.stellaTech.ecommerce.restController;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,14 +34,14 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUserDto> updateUser(
             @NonNull @PathVariable Long idUser,
-            @Valid @RequestBody PlatformUserDto platformUserUpdateDto
+            @Validated(ValidationGroup.OnInsert.class) @RequestBody PlatformUserDto platformUserUpdateDto
     ) {
         PlatformUserDto savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
         return ResponseEntity.ok(savedUser);
     }
 
     @PatchMapping("/users/{idUser}")
-    public ResponseEntity<PlatformUserDto> partialUpdateUser(
+    public ResponseEntity<PlatformUserDto> patchUser(
             @NonNull @PathVariable Long idUser,
             @Valid @RequestBody PlatformUserDto platformUserPatchDto
     ) {
@@ -60,7 +62,7 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<PlatformUserDto> createUser(@Valid @RequestBody PlatformUserDto platformUserInsertDto) {
+    public ResponseEntity<PlatformUserDto> createUser(@Validated({ValidationGroup.OnInsert.class}) @RequestBody PlatformUserDto platformUserInsertDto) {
         PlatformUserDto persistedUser = userService.createUser(platformUserInsertDto);
         return ResponseEntity.ok(persistedUser);
     }

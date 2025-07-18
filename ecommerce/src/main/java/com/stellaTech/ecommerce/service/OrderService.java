@@ -1,17 +1,18 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
+import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.orderManagement.Order;
 import com.stellaTech.ecommerce.model.orderManagement.OrderItem;
-import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
-import jakarta.validation.Valid;
+import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Valid OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
+    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Validated(ValidationGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
         Order newOrder = new Order(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {

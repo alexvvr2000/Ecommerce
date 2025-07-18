@@ -5,12 +5,14 @@ import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
+import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto updateProduct(Long productId, @Valid ProductDto dto) throws ResourceNotFoundException {
+    public ProductDto updateProduct(Long productId, @Validated(ValidationGroup.OnInsert.class) ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(false)
@@ -49,7 +51,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto createProduct(@Valid ProductDto dto) {
+    public ProductDto createProduct(@Validated(ValidationGroup.OnInsert.class) ProductDto dto) {
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(false)
                 .setMatchingStrategy(MatchingStrategies.STRICT);

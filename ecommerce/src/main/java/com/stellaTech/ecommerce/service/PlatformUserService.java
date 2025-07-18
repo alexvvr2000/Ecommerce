@@ -6,12 +6,14 @@ import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto updatePlatformUser(Long idUser, @Valid PlatformUserDto dto) throws ResourceNotFoundException {
+    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
         userRepository.save(persistedUser);
         return modelMapper.map(persistedUser, PlatformUserDto.class);
@@ -61,7 +63,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto createUser(@Valid PlatformUserDto dto) {
+    public PlatformUserDto createUser(@Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) {
         PlatformUser persistedUser = modelMapper.map(dto, PlatformUser.class);
         userRepository.save(persistedUser);
         return dto;

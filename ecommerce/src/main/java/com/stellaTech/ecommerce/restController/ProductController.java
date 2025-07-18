@@ -2,10 +2,12 @@ package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.ProductService;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
+import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public class ProductController {
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<ProductDto> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @Valid @RequestBody ProductDto productUpdateDto
+            @Validated(ValidationGroup.OnInsert.class) @RequestBody ProductDto productUpdateDto
     ) {
         ProductDto savedProduct = productService.updateProduct(idProduct, productUpdateDto);
         return ResponseEntity.ok(savedProduct);
