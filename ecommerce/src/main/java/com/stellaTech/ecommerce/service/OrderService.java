@@ -8,7 +8,6 @@ import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dataDto.OrderDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class OrderService {
     }
 
     @Transactional
-    public IdDtoResponse<OrderDto> createOrder(@Valid OrderDto dto) throws ResourceNotFoundException {
+    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Valid OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
         Order newOrder = new Order(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {
@@ -43,15 +42,15 @@ public class OrderService {
             newOrder.addOrderItem(newOrderItem);
         }
         orderRepository.save(newOrder);
-        return new IdDtoResponse<>(newOrder.getId(), orderSummary(newOrder).getDto());
+        return orderSummary(newOrder);
     }
 
-    private IdDtoResponse<OrderDto> orderSummary(Order order) {
-        OrderDto orderDto = new OrderDto();
+    private OrderDto<OrderDto.OrderItemSelectDto> orderSummary(Order order) {
+        OrderDto<OrderDto.OrderItemSelectDto> orderDto = new OrderDto<>();
         Long orderId = order.getId();
         orderDto.setPlatformUserId(orderId);
         for (OrderItem orderItem : order.getOrderItems()) {
-            OrderDto.OrderSelectDto orderSelectDto = new OrderDto.OrderSelectDto(
+            OrderDto.OrderItemSelectDto orderItemSelectDto = new OrderDto.OrderItemSelectDto(
                     orderItem.getId(),
                     orderItem.getOrder().getId(),
                     orderItem.getProduct().getId(),
@@ -59,13 +58,13 @@ public class OrderService {
                     orderItem.getProductPriceSnapshot().getPrice(),
                     orderItem.getSubtotal()
             );
-            orderDto.addItem(orderSelectDto);
+            orderDto.addItem(orderItemSelectDto);
         }
-        return new IdDtoResponse<>(orderId, orderDto);
+        return orderDto;
     }
 
     @Transactional(readOnly = true)
-    public List<IdDtoResponse<OrderDto>> getAllOrders() {
+    public List<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders() {
         return orderRepository.findAll(
                 OrderSpecs.isNotDeleted()
         ).stream().map(this::orderSummary).toList();
@@ -80,8 +79,8 @@ public class OrderService {
         );
     }
 
-    public OrderDto getOrderDtoById(Long id) {
+    public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) {
         Order persistedOrder = getOrderById(id);
-        return orderSummary(persistedOrder).getDto();
+        return orderSummary(persistedOrder);
     }
 }

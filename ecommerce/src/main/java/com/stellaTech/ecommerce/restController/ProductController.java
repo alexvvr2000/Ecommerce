@@ -2,7 +2,6 @@ package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.ProductService;
 import com.stellaTech.ecommerce.service.dataDto.ProductDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products")
-    public List<IdDtoResponse<ProductDto>> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         return productService.getAllProducts();
     }
 
@@ -54,8 +53,8 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<IdDtoResponse<ProductDto>> createProduct(@Valid @RequestBody ProductDto productInsertDto) {
-        IdDtoResponse<ProductDto> newProduct = productService.createProduct(productInsertDto);
+    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productInsertDto) {
+        ProductDto newProduct = productService.createProduct(productInsertDto);
         return ResponseEntity.ok(newProduct);
     }
 }

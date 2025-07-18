@@ -5,7 +5,6 @@ import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import com.stellaTech.ecommerce.service.dataDto.ProductDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -50,27 +49,22 @@ public class ProductService {
     }
 
     @Transactional
-    public IdDtoResponse<ProductDto> createProduct(@Valid ProductDto dto) {
+    public ProductDto createProduct(@Valid ProductDto dto) {
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(false)
                 .setMatchingStrategy(MatchingStrategies.STRICT);
         Product persistedProduct = modelMapper.map(dto, Product.class);
         productRepository.save(persistedProduct);
-        return new IdDtoResponse<>(persistedProduct.getId(), dto);
+        return dto;
     }
 
     @Transactional(readOnly = true)
-    public List<IdDtoResponse<ProductDto>> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(false)
                 .setMatchingStrategy(MatchingStrategies.STRICT);
         return productRepository.findAll(ProductSpecs.hasNotBeenDeleted()).stream().map(
-                currentProduct -> {
-                    ProductDto currentProductDto = modelMapper.map(currentProduct, ProductDto.class);
-                    ;
-                    Long currentId = currentProduct.getId();
-                    return new IdDtoResponse<>(currentId, currentProductDto);
-                }
+                currentProduct -> modelMapper.map(currentProduct, ProductDto.class)
         ).toList();
     }
 

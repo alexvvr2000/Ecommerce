@@ -2,7 +2,6 @@ package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.OrderService;
 import com.stellaTech.ecommerce.service.dataDto.OrderDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +18,18 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/orders")
-    public List<IdDtoResponse<OrderDto>> getAllOrders() {
+    public List<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders() {
         return orderService.getAllOrders();
     }
 
     @GetMapping("/orders/{orderId}")
-    public OrderDto getOrderById(@NonNull @PathVariable Long orderId) {
+    public OrderDto<OrderDto.OrderItemSelectDto> getOrderById(@NonNull @PathVariable Long orderId) {
         return orderService.getOrderDtoById(orderId);
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<IdDtoResponse<OrderDto>> createOrder(@NonNull @RequestBody @Valid OrderDto orderInsertDto) {
-        IdDtoResponse<OrderDto> persistedOrder = orderService.createOrder(orderInsertDto);
+    public ResponseEntity<OrderDto<OrderDto.OrderItemSelectDto>> createOrder(@NonNull @RequestBody @Valid OrderDto<OrderDto.OrderItemInsertDto> orderInsertDto) {
+        OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = orderService.createOrder(orderInsertDto);
         return ResponseEntity.ok(persistedOrder);
     }
 

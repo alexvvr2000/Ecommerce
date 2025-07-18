@@ -6,7 +6,6 @@ import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PlatformUserDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
@@ -18,9 +17,9 @@ import java.util.List;
 
 @Service
 public class PlatformUserService {
+    private final ModelMapper modelMapper = new ModelMapper();
     @Autowired
     private PlatformUserRepository userRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Transactional
     public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
@@ -62,20 +61,16 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public IdDtoResponse<PlatformUserDto> createUser(@Valid PlatformUserDto dto) {
+    public PlatformUserDto createUser(@Valid PlatformUserDto dto) {
         PlatformUser persistedUser = modelMapper.map(dto, PlatformUser.class);
         userRepository.save(persistedUser);
-        return new IdDtoResponse<>(persistedUser.getId(), dto);
+        return dto;
     }
 
     @Transactional(readOnly = true)
-    public List<IdDtoResponse<PlatformUserDto>> getAllPlatformUsers() {
+    public List<PlatformUserDto> getAllPlatformUsers() {
         return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted()).stream().map(
-                currentPlatformUser -> {
-                    Long currentPlatformUserId = currentPlatformUser.getId();
-                    PlatformUserDto platformUserDto = modelMapper.map(currentPlatformUser, PlatformUserDto.class);
-                    return new IdDtoResponse<>(currentPlatformUserId, platformUserDto);
-                }
+                currentPlatformUser -> modelMapper.map(currentPlatformUser, PlatformUserDto.class)
         ).toList();
     }
 

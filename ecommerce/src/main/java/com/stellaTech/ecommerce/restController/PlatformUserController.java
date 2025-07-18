@@ -3,7 +3,6 @@ package com.stellaTech.ecommerce.restController;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PlatformUserDto;
-import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class PlatformUserController {
     private PlatformUserService userService;
 
     @GetMapping("/users")
-    public List<IdDtoResponse<PlatformUserDto>> getAllUsers() {
+    public List<PlatformUserDto> getAllUsers() {
         return userService.getAllPlatformUsers();
     }
 
@@ -61,8 +60,8 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<IdDtoResponse<PlatformUserDto>> createUser(@Valid @RequestBody PlatformUserDto platformUserInsertDto) {
-        IdDtoResponse<PlatformUserDto> persistedUser = userService.createUser(platformUserInsertDto);
+    public ResponseEntity<PlatformUserDto> createUser(@Valid @RequestBody PlatformUserDto platformUserInsertDto) {
+        PlatformUserDto persistedUser = userService.createUser(platformUserInsertDto);
         return ResponseEntity.ok(persistedUser);
     }
 }
