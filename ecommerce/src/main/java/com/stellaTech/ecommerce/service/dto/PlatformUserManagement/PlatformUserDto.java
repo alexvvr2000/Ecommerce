@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.service.dto.PlatformUserManagement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.stellaTech.ecommerce.service.dto.validationGroup.ForbiddenFieldCheck;
+import com.stellaTech.ecommerce.service.dto.validationGroup.ForbiddenFieldChangeCheck;
 import com.stellaTech.ecommerce.service.dto.validationGroup.NonEmptyCheck;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlatformUserDto {
-    @Null(groups = ForbiddenFieldCheck.class)
+    @Null(groups = ForbiddenFieldChangeCheck.class)
     @NotNull(groups = NonEmptyCheck.class)
     private Long id;
 
@@ -31,7 +31,7 @@ public class PlatformUserDto {
     @NotNull(groups = NonEmptyCheck.class)
     private String phoneNumber;
 
-    @Null(groups = ForbiddenFieldCheck.class)
+    @Null(groups = ForbiddenFieldChangeCheck.class)
     @NotNull(groups = NonEmptyCheck.class)
     @JsonIgnore
     private String password;
