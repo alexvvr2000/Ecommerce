@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MapperConfig {
     @Bean
-    public ModelMapper defaultMapper() {
+    public ModelMapper defaultPropertyMapper() {
         return new ModelMapper();
     }
 
     @Bean
-    public ModelMapper patchMapper() {
-        ModelMapper mapper = defaultMapper();
+    public ModelMapper patchPropertyMapper() {
+        ModelMapper mapper = defaultPropertyMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
         return mapper;
     }
