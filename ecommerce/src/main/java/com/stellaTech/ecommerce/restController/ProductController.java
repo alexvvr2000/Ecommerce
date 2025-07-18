@@ -1,7 +1,8 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.model.ProductManagement.Product;
 import com.stellaTech.ecommerce.service.ProductService;
+import com.stellaTech.ecommerce.service.dataDto.ProductDto;
+import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +19,31 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products")
-    public List<Product> getAllProducts() {
+    public List<IdDtoResponse<ProductDto>> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/products/{idProduct}")
-    public Product getProduct(@NonNull @PathVariable Long idProduct) {
-        return productService.getProductById(idProduct);
+    public ResponseEntity<ProductDto> getProduct(@NonNull @PathVariable Long idProduct) {
+        ProductDto newProduct = productService.getProductDtoById(idProduct);
+        return ResponseEntity.ok(newProduct);
     }
 
     @PutMapping("/products/{idProduct}")
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<ProductDto> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @Valid @RequestBody ProductUpdateDto productUpdateDto
+            @Valid @RequestBody ProductDto productUpdateDto
     ) {
-        Product savedProduct = productService.updateProduct(idProduct, productUpdateDto);
+        ProductDto savedProduct = productService.updateProduct(idProduct, productUpdateDto);
         return ResponseEntity.ok(savedProduct);
     }
 
     @PatchMapping("/products/{idProduct}")
-    public ResponseEntity<Product> partialUpdateUser(
+    public ResponseEntity<ProductDto> partialUpdateUser(
             @NonNull @PathVariable Long idProduct,
-            @Valid @RequestBody ProductPatchDto productPatchDto
+            @Valid @RequestBody ProductDto productPatchDto
     ) {
-        Product savedProduct = productService.patchProduct(idProduct, productPatchDto);
+        ProductDto savedProduct = productService.patchProduct(idProduct, productPatchDto);
         return ResponseEntity.ok(savedProduct);
     }
 
@@ -52,7 +54,8 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@Valid @RequestBody ProductInsertDto productInsertDto) {
-        return productService.createProduct(productInsertDto);
+    public ResponseEntity<IdDtoResponse<ProductDto>> createProduct(@Valid @RequestBody ProductDto productInsertDto) {
+        IdDtoResponse<ProductDto> newProduct = productService.createProduct(productInsertDto);
+        return ResponseEntity.ok(newProduct);
     }
 }

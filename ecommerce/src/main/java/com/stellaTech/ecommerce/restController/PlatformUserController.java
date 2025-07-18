@@ -1,8 +1,9 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
-import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.service.PlatformUserService;
+import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
+import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,30 +20,31 @@ public class PlatformUserController {
     private PlatformUserService userService;
 
     @GetMapping("/users")
-    public List<PlatformUser> getAllUsers() {
+    public List<IdDtoResponse<PlatformUserDto>> getAllUsers() {
         return userService.getAllPlatformUsers();
     }
 
     @GetMapping("/users/{idUser}")
-    public PlatformUser getUser(@NonNull @PathVariable Long idUser) {
-        return userService.getUserById(idUser);
+    public ResponseEntity<PlatformUserDto> getUser(@NonNull @PathVariable Long idUser) {
+        PlatformUserDto persistedUser = userService.getUserDtoById(idUser);
+        return ResponseEntity.ok(persistedUser);
     }
 
     @PutMapping("/users/{idUser}")
-    public ResponseEntity<PlatformUser> updateUser(
+    public ResponseEntity<PlatformUserDto> updateUser(
             @NonNull @PathVariable Long idUser,
-            @Valid @RequestBody PlatformUserUpdateDto platformUserUpdateDto
+            @Valid @RequestBody PlatformUserDto platformUserUpdateDto
     ) {
-        PlatformUser savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
+        PlatformUserDto savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
         return ResponseEntity.ok(savedUser);
     }
 
     @PatchMapping("/users/{idUser}")
-    public ResponseEntity<PlatformUser> partialUpdateUser(
+    public ResponseEntity<PlatformUserDto> partialUpdateUser(
             @NonNull @PathVariable Long idUser,
-            @Valid @RequestBody PlatformUserPatchDto platformUserPatchDto
+            @Valid @RequestBody PlatformUserDto platformUserPatchDto
     ) {
-        PlatformUser updatedUser = userService.patchPlatformUser(idUser, platformUserPatchDto);
+        PlatformUserDto updatedUser = userService.patchPlatformUser(idUser, platformUserPatchDto);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -59,7 +61,8 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public PlatformUser createUser(@Valid @RequestBody PlatformUserInsertDto platformUserInsertDto) {
-        return userService.createUser(platformUserInsertDto);
+    public ResponseEntity<IdDtoResponse<PlatformUserDto>> createUser(@Valid @RequestBody PlatformUserDto platformUserInsertDto) {
+        IdDtoResponse<PlatformUserDto> persistedUser = userService.createUser(platformUserInsertDto);
+        return ResponseEntity.ok(persistedUser);
     }
 }

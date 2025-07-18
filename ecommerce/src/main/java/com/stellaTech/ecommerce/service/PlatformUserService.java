@@ -1,12 +1,15 @@
 package com.stellaTech.ecommerce.service;
 
-import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
+import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PasswordChangeDto;
+import com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.serviceDto.IdDtoResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.List;
 public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Transactional
     public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
@@ -43,36 +47,49 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUser updatePlatformUser(Long idUser, @Valid PlatformUserUpdateDto dto) throws ResourceNotFoundException {
-        PlatformUser existingUser = getUserById(idUser);
-        PlatformUser updatedUser = platformUserMapper.updatePlatformUserFromDto(existingUser, dto);
-        return userRepository.save(updatedUser);
+    public PlatformUserDto updatePlatformUser(Long idUser, @Valid PlatformUserDto dto) throws ResourceNotFoundException {
+        PlatformUser persistedUser = getUserById(idUser);
+        userRepository.save(persistedUser);
+        return modelMapper.map(persistedUser, PlatformUserDto.class);
     }
 
     @Transactional
-    public PlatformUser patchPlatformUser(Long idUpdatedUser, @Valid PlatformUserPatchDto dto) throws ResourceNotFoundException {
-        PlatformUser oldPlatformUser = getUserById(idUpdatedUser);
-        PlatformUser newPlatformUser = platformUserMapper.patchPlatformUserFromDto(oldPlatformUser, dto);
-        return userRepository.save(newPlatformUser);
+    public PlatformUserDto patchPlatformUser(Long idUser, @Valid PlatformUserDto dto) throws ResourceNotFoundException {
+        PlatformUser persistedUser = getUserById(idUser);
+        modelMapper.map(dto, persistedUser);
+        userRepository.save(persistedUser);
+        return modelMapper.map(persistedUser, PlatformUserDto.class);
     }
 
     @Transactional
-    public PlatformUser createUser(@Valid PlatformUserInsertDto dto) {
-        PlatformUser persistedUser = platformUserMapper.createPlatformUserEntity(dto);
-        return userRepository.save(persistedUser);
+    public IdDtoResponse<PlatformUserDto> createUser(@Valid PlatformUserDto dto) {
+        PlatformUser persistedUser = modelMapper.map(dto, PlatformUser.class);
+        userRepository.save(persistedUser);
+        return new IdDtoResponse<>(persistedUser.getId(), dto);
     }
 
     @Transactional(readOnly = true)
-    public List<PlatformUser> getAllPlatformUsers() {
-        return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted());
+    public List<IdDtoResponse<PlatformUserDto>> getAllPlatformUsers() {
+        return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted()).stream().map(
+                currentPlatformUser -> {
+                    Long currentPlatformUserId = currentPlatformUser.getId();
+                    PlatformUserDto platformUserDto = modelMapper.map(currentPlatformUser, PlatformUserDto.class);
+                    return new IdDtoResponse<>(currentPlatformUserId, platformUserDto);
+                }
+        ).toList();
     }
 
     @Transactional(readOnly = true)
-    public PlatformUser getUserById(Long id) throws ResourceNotFoundException {
+    protected PlatformUser getUserById(Long id) throws ResourceNotFoundException {
         return userRepository.findOne(
                 PlatformUserSpecs.activeUserById(id)
         ).orElseThrow(() ->
                 new ResourceNotFoundException("Active user with id " + id + " was not found")
         );
+    }
+
+    @Transactional(readOnly = true)
+    public PlatformUserDto getUserDtoById(Long id) throws ResourceNotFoundException {
+        return modelMapper.map(getUserById(id), PlatformUserDto.class);
     }
 }
