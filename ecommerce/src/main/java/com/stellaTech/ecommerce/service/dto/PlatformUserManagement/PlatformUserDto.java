@@ -1,8 +1,8 @@
-package com.stellaTech.ecommerce.service.dataDto.PlatformUserManagement;
+package com.stellaTech.ecommerce.service.dto.PlatformUserManagement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.stellaTech.ecommerce.service.dataDto.validationGroup.ForbiddenFieldCheck;
-import com.stellaTech.ecommerce.service.dataDto.validationGroup.NonEmptyCheck;
+import com.stellaTech.ecommerce.service.dto.validationGroup.ForbiddenFieldCheck;
+import com.stellaTech.ecommerce.service.dto.validationGroup.NonEmptyCheck;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;

@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.OrderService;
-import com.stellaTech.ecommerce.service.dataDto.OrderDto;
+import com.stellaTech.ecommerce.service.dto.OrderDto;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;

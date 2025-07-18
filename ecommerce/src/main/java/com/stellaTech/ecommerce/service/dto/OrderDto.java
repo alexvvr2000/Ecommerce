@@ -1,6 +1,6 @@
-package com.stellaTech.ecommerce.service.dataDto;
+package com.stellaTech.ecommerce.service.dto;
 
-import com.stellaTech.ecommerce.service.dataDto.validationGroup.NonEmptyCheck;
+import com.stellaTech.ecommerce.service.dto.validationGroup.NonEmptyCheck;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

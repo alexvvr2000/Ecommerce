@@ -7,7 +7,7 @@ import com.stellaTech.ecommerce.model.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
-import com.stellaTech.ecommerce.service.dataDto.OrderDto;
+import com.stellaTech.ecommerce.service.dto.OrderDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
