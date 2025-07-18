@@ -1,7 +1,9 @@
 package com.stellaTech.ecommerce.service.dto;
 
-import com.stellaTech.ecommerce.service.dto.validationGroup.NonEmptyCheck;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Singular;
@@ -10,12 +12,11 @@ import lombok.Value;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 public class OrderDto<T extends OrderDto.OrderItemDto> {
-    @Null(groups = Optional.class)
-    @NotNull(groups = NonEmptyCheck.class)
+    @Null(groups = ValidationGroup.OnRead.class)
+    @NotNull(groups = ValidationGroup.OnInsert.class)
     private Long id;
 
     @NotNull
@@ -23,6 +24,7 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
 
     @NotEmpty
     @Singular
+    @NotNull
     private List<T> orderItems = new ArrayList<>();
 
     public void addItem(T orderInsertDto) {
@@ -45,7 +47,7 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
         private Long productId;
 
         @Min(value = 1)
-        @NotBlank
+        @NotNull
         private Integer quantity;
 
         @Override
@@ -58,23 +60,23 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class OrderItemSelectDto implements OrderItemDto {
         @EqualsAndHashCode.Include
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         Long orderItemId;
 
         @EqualsAndHashCode.Include
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         Long orderId;
 
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         Long productId;
 
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         Integer quantity;
 
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         BigDecimal price;
 
-        @NotNull(groups = NonEmptyCheck.class)
+        @NotNull
         BigDecimal subtotal;
     }
 }
