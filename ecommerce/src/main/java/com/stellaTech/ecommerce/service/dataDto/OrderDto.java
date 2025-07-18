@@ -1,8 +1,7 @@
 package com.stellaTech.ecommerce.service.dataDto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.stellaTech.ecommerce.service.dataDto.validationGroup.NonEmptyCheck;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Singular;
@@ -11,34 +10,43 @@ import lombok.Value;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
-public class OrderDto {
-    private Long platformUserId;
+public class OrderDto<T extends OrderDto.OrderItemDto> {
+    @Null(groups = Optional.class)
+    @NotNull(groups = NonEmptyCheck.class)
+    private Long id;
+
     @NotNull
+    private Long platformUserId;
+
     @NotEmpty
     @Singular
-    private List<OrderItemDto> orderItems = new ArrayList<>();
+    private List<T> orderItems = new ArrayList<>();
 
-    public void addItem(OrderItemDto orderInsertDto) {
+    public void addItem(T orderInsertDto) {
         this.orderItems.add(orderInsertDto);
     }
 
     public interface OrderItemDto {
         Long getProductId();
 
-        int getQuantity();
+        Integer getQuantity();
 
         BigDecimal getPrice();
     }
 
     @Data
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-    public static class OrderInsertDto implements OrderItemDto {
+    public static class OrderItemInsertDto implements OrderItemDto {
+        @NotNull
         @EqualsAndHashCode.Include
         private Long productId;
+
         @Min(value = 1)
-        private int quantity;
+        @NotBlank
+        private Integer quantity;
 
         @Override
         public BigDecimal getPrice() throws RuntimeException {
@@ -48,14 +56,25 @@ public class OrderDto {
 
     @Value
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-    public static class OrderSelectDto implements OrderItemDto {
+    public static class OrderItemSelectDto implements OrderItemDto {
         @EqualsAndHashCode.Include
+        @NotNull(groups = NonEmptyCheck.class)
         Long orderItemId;
+
         @EqualsAndHashCode.Include
+        @NotNull(groups = NonEmptyCheck.class)
         Long orderId;
+
+        @NotNull(groups = NonEmptyCheck.class)
         Long productId;
-        int quantity;
+
+        @NotNull(groups = NonEmptyCheck.class)
+        Integer quantity;
+
+        @NotNull(groups = NonEmptyCheck.class)
         BigDecimal price;
+
+        @NotNull(groups = NonEmptyCheck.class)
         BigDecimal subtotal;
     }
 }
