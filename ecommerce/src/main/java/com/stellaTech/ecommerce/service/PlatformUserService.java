@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +20,16 @@ import java.util.List;
 
 @Service
 public class PlatformUserService {
-    private final ModelMapper modelMapper = new ModelMapper();
     @Autowired
     private PlatformUserRepository userRepository;
+
+    @Autowired
+    @Qualifier("persistPropertyMapper")
+    private ModelMapper persistPropertyManager;
+
+    @Autowired
+    @Qualifier("patchPropertyMapper")
+    private ModelMapper patchPropertyMapper;
 
     @Transactional
     public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
@@ -48,23 +56,24 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) throws ResourceNotFoundException {
+    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(ValidationGroup.OnUpdate.class) PlatformUserDto dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
+        persistPropertyManager.map(dto, persistedUser);
         userRepository.save(persistedUser);
-        return modelMapper.map(persistedUser, PlatformUserDto.class);
+        return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
     @Transactional
     public PlatformUserDto patchPlatformUser(Long idUser, @Valid PlatformUserDto dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
-        modelMapper.map(dto, persistedUser);
+        patchPropertyMapper.map(dto, persistedUser);
         userRepository.save(persistedUser);
-        return modelMapper.map(persistedUser, PlatformUserDto.class);
+        return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
     @Transactional
     public PlatformUserDto createUser(@Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) {
-        PlatformUser persistedUser = modelMapper.map(dto, PlatformUser.class);
+        PlatformUser persistedUser = persistPropertyManager.map(dto, PlatformUser.class);
         userRepository.save(persistedUser);
         return dto;
     }
@@ -72,7 +81,7 @@ public class PlatformUserService {
     @Transactional(readOnly = true)
     public List<PlatformUserDto> getAllPlatformUsers() {
         return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted()).stream().map(
-                currentPlatformUser -> modelMapper.map(currentPlatformUser, PlatformUserDto.class)
+                currentPlatformUser -> persistPropertyManager.map(currentPlatformUser, PlatformUserDto.class)
         ).toList();
     }
 
@@ -87,6 +96,6 @@ public class PlatformUserService {
 
     @Transactional(readOnly = true)
     public PlatformUserDto getUserDtoById(Long id) throws ResourceNotFoundException {
-        return modelMapper.map(getUserById(id), PlatformUserDto.class);
+        return persistPropertyManager.map(getUserById(id), PlatformUserDto.class);
     }
 }

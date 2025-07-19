@@ -1,7 +1,7 @@
 package com.stellaTech.ecommerce.model.orderManagement;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;
 import lombok.*;

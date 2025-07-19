@@ -34,7 +34,7 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUserDto> updateUser(
             @NonNull @PathVariable Long idUser,
-            @Validated(ValidationGroup.OnInsert.class) @RequestBody PlatformUserDto platformUserUpdateDto
+            @Validated(ValidationGroup.OnUpdate.class) @RequestBody PlatformUserDto platformUserUpdateDto
     ) {
         PlatformUserDto savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
         return ResponseEntity.ok(savedUser);

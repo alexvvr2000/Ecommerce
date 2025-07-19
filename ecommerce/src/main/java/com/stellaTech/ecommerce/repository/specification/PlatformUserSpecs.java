@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.repository.specification;
 
-import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import org.springframework.data.jpa.domain.Specification;
 
 public class PlatformUserSpecs {

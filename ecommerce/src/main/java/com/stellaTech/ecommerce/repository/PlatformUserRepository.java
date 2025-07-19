@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.repository;
 
-import com.stellaTech.ecommerce.model.PlatformUser;
+import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
