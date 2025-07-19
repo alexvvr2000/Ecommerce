@@ -29,8 +29,8 @@ public class PlatformUserDto {
     @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String phoneNumber;
 
-    @Null(groups = ValidationGroup.OnUpdate.class)
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
+    @Null(groups = {ValidationGroup.OnUpdate.class, ValidationGroup.OnRead.class})
+    @NotNull(groups = ValidationGroup.OnInsert.class)
     private String password;
 
     private String rfc;
