@@ -1,19 +1,23 @@
 package com.stellaTech.ecommerce.service.dto;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MapperConfig {
     @Bean
-    public ModelMapper defaultPropertyMapper() {
-        return new ModelMapper();
+    public ModelMapper persistPropertyMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(false);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return modelMapper;
     }
 
     @Bean
     public ModelMapper patchPropertyMapper() {
-        ModelMapper mapper = defaultPropertyMapper();
+        ModelMapper mapper = persistPropertyMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
         return mapper;
     }
