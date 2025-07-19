@@ -6,4 +6,8 @@ public interface ValidationGroup {
 
     interface OnInsert {
     }
+
+    interface OnUpdate {
+
+    }
 }
