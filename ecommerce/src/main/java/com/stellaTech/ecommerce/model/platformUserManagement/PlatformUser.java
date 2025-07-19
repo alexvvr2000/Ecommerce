@@ -33,9 +33,6 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
     @Setter
     @Column(name = "rfc", unique = true)
     private String rfc;
@@ -46,13 +43,5 @@ public class PlatformUser extends LogicallyDeletableEntity {
         this.setEmail(email);
         this.setPhoneNumber(phoneNumber);
         this.setRfc(rfc);
-        this.setPassword(password);
-    }
-
-    public void setPassword(@NonNull String password) throws IllegalArgumentException {
-        if (password.equals(this.password)) {
-            throw new IllegalArgumentException("The password is the same as the previous one");
-        }
-        this.password = password;
     }
 }
