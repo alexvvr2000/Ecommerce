@@ -11,22 +11,22 @@ import java.math.BigDecimal;
 @Data
 public class ProductDto {
     @Null(groups = ValidationGroup.OnInsert.class)
-    @NotNull(groups = ValidationGroup.OnRead.class)
+    @NotNull(groups = {ValidationGroup.OnRead.class})
     private Long id;
 
     @NotBlank
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
+    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String name;
 
     @NotBlank
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
+    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String mdFormatDescription;
 
     @NotBlank
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
+    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String mainImageUrl;
 
     @Min(value = 0)
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class})
+    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private BigDecimal price;
 }
