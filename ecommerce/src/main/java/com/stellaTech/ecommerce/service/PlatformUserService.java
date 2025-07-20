@@ -2,6 +2,8 @@ package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
+import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUserPassword;
+import com.stellaTech.ecommerce.repository.PlatformUserPasswordRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
@@ -17,11 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
+
+    @Autowired
+    private PlatformUserPasswordRepository userPasswordRepository;
 
     @Autowired
     @Qualifier("persistPropertyMapper")
@@ -39,20 +45,19 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws IllegalArgumentException {
-        PlatformUser user = getUserById(platformUserId);
-        if (!user.getPassword().equals(dto.getOldPassword())) {
+    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws IllegalArgumentException, ResourceNotFoundException {
+        PlatformUserPassword password = getPasswordByUserId(platformUserId);
+        if (!password.getPassword().equals(dto.getOldPassword())) {
             throw new IllegalArgumentException("Incorrect old password");
         }
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
             throw new IllegalArgumentException("New passwords do not match");
         }
-        if (dto.getNewPassword().equals(user.getPassword())) {
+        if (dto.getNewPassword().equals(password.getPassword())) {
             throw new IllegalArgumentException("New password must be different from current password");
         }
-        PlatformUser persistedUser = getUserById(platformUserId);
-        persistedUser.setPassword(dto.getNewPassword());
-        userRepository.save(persistedUser);
+        password.setPassword(dto.getNewPassword());
+        userPasswordRepository.save(password);
     }
 
     @Transactional
@@ -75,7 +80,7 @@ public class PlatformUserService {
     public PlatformUserDto createUser(@Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) {
         PlatformUser persistedUser = persistPropertyManager.map(dto, PlatformUser.class);
         userRepository.save(persistedUser);
-        return dto;
+        return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
     @Transactional(readOnly = true)
@@ -92,6 +97,17 @@ public class PlatformUserService {
         ).orElseThrow(() ->
                 new ResourceNotFoundException("Active user with id " + id + " was not found")
         );
+    }
+
+    @Transactional(readOnly = true)
+    protected PlatformUserPassword getPasswordByUserId(Long platformUserId) throws ResourceNotFoundException {
+        Optional<PlatformUserPassword> passwordObject = userPasswordRepository.findOne(
+                PlatformUserSpecs.activeUserPasswordById(platformUserId)
+        );
+        if (passwordObject.isEmpty()) {
+            throw new ResourceNotFoundException("The user whose password was searched was not found");
+        }
+        return passwordObject.get();
     }
 
     @Transactional(readOnly = true)
