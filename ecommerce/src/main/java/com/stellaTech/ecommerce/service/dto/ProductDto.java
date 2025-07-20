@@ -1,7 +1,6 @@
 package com.stellaTech.ecommerce.service.dto;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
@@ -14,15 +13,12 @@ public class ProductDto {
     @NotNull(groups = {ValidationGroup.OnRead.class})
     private Long id;
 
-    @NotBlank
     @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String name;
 
-    @NotBlank
     @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String mdFormatDescription;
 
-    @NotBlank
     @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
     private String mainImageUrl;
 
