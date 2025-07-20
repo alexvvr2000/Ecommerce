@@ -1,12 +1,12 @@
 package com.stellaTech.ecommerce.model.platformUserManagement;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "platform_user_password", schema = "user_data")
 public class PlatformUserPassword {
@@ -16,19 +16,25 @@ public class PlatformUserPassword {
     private Long id;
 
     @Setter
-    @OneToOne(optional = false, mappedBy = "platform_user_password", cascade = CascadeType.REMOVE)
+    @NotNull
+    @OneToOne(optional = false)
     @JoinColumn(name = "platform_user_id", nullable = false, updatable = false, unique = true)
     private PlatformUser platformUser;
 
+    @NotNull
     @Column(name = "password", nullable = false)
     private String password;
 
     public PlatformUserPassword(PlatformUser platformUser, String newPassword) throws IllegalArgumentException {
         this.setPassword(newPassword);
-        this.setPlatformUser(platformUser);
+        this.platformUser = platformUser;
     }
 
-    public void setPassword(String newPassword) {
+    public void setPassword(@NonNull String newPassword) throws IllegalArgumentException {
+        if (this.password == null) {
+            this.password = newPassword;
+            return;
+        }
         if (this.password.equals(newPassword)) {
             throw new IllegalArgumentException("The password is the same as the old one");
         }
