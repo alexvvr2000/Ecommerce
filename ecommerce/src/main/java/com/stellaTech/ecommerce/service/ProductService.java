@@ -8,8 +8,8 @@ import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -18,9 +18,16 @@ import java.util.List;
 
 @Service
 public class ProductService {
-    private final ModelMapper modelMapper = new ModelMapper();
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    @Qualifier("persistPropertyMapper")
+    private ModelMapper persistPropertyManager;
+
+    @Autowired
+    @Qualifier("patchPropertyMapper")
+    private ModelMapper patchPropertyMapper;
 
     @Transactional
     public void logicallyDeleteProduct(Long id) throws ResourceNotFoundException {
@@ -29,44 +36,32 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto updateProduct(Long productId, @Validated(ValidationGroup.OnInsert.class) ProductDto dto) throws ResourceNotFoundException {
+    public ProductDto updateProduct(Long productId, @Validated(ValidationGroup.OnUpdate.class) ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(false)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
-        modelMapper.map(dto, persistedProduct);
+        persistPropertyManager.map(dto, persistedProduct);
         productRepository.save(persistedProduct);
-        return modelMapper.map(persistedProduct, ProductDto.class);
+        return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
     @Transactional
     public ProductDto patchProduct(Long id, @Valid ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(id);
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(true)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
-        modelMapper.map(dto, persistedProduct);
+        patchPropertyMapper.map(dto, persistedProduct);
         productRepository.save(persistedProduct);
-        return modelMapper.map(persistedProduct, ProductDto.class);
+        return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
     @Transactional
     public ProductDto createProduct(@Validated(ValidationGroup.OnInsert.class) ProductDto dto) {
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(false)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
-        Product persistedProduct = modelMapper.map(dto, Product.class);
+        Product persistedProduct = persistPropertyManager.map(dto, Product.class);
         productRepository.save(persistedProduct);
-        return dto;
+        return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
     @Transactional(readOnly = true)
     public List<ProductDto> getAllProducts() {
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(false)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
         return productRepository.findAll(ProductSpecs.hasNotBeenDeleted()).stream().map(
-                currentProduct -> modelMapper.map(currentProduct, ProductDto.class)
+                currentProduct -> persistPropertyManager.map(currentProduct, ProductDto.class)
         ).toList();
     }
 
@@ -81,9 +76,6 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDto getProductDtoById(Long id) throws ResourceNotFoundException {
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(false)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(getProductById(id), ProductDto.class);
+        return persistPropertyManager.map(getProductById(id), ProductDto.class);
     }
 }
