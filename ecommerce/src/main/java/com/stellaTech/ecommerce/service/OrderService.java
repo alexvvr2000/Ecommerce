@@ -46,7 +46,7 @@ public class OrderService {
         return orderSummary(newOrder);
     }
 
-    private OrderDto<OrderDto.OrderItemSelectDto> orderSummary(Order order) {
+    protected OrderDto<OrderDto.OrderItemSelectDto> orderSummary(Order order) {
         OrderDto<OrderDto.OrderItemSelectDto> orderDto = new OrderDto<>();
         Long orderId = order.getId();
         orderDto.setPlatformUserId(orderId);
