@@ -33,7 +33,7 @@ public class ProductController {
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<ProductDto> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @Validated(ValidationGroup.OnInsert.class) @RequestBody ProductDto productUpdateDto
+            @Validated(ValidationGroup.OnUpdate.class) @RequestBody ProductDto productUpdateDto
     ) {
         ProductDto savedProduct = productService.updateProduct(idProduct, productUpdateDto);
         return ResponseEntity.ok(savedProduct);
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productInsertDto) {
+    public ResponseEntity<ProductDto> createProduct(@Validated(ValidationGroup.OnInsert.class) @RequestBody ProductDto productInsertDto) {
         ProductDto newProduct = productService.createProduct(productInsertDto);
         return ResponseEntity.ok(newProduct);
     }
