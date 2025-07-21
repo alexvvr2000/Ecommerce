@@ -16,8 +16,8 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
 @Entity
-@Table(name = "order", schema = "product_data")
-public class Order extends LogicallyDeletableEntity {
+@Table(name = "customer_order", schema = "product_data")
+public class CustomerOrder extends LogicallyDeletableEntity {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,27 +34,27 @@ public class Order extends LogicallyDeletableEntity {
     @CreationTimestamp
     private Date orderDate;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private Set<OrderItem> orderItems = new HashSet<>();
+    private Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
 
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    public Order(@NonNull PlatformUser platformUser) {
+    public CustomerOrder(@NonNull PlatformUser platformUser) {
         this.platformUser = platformUser;
     }
 
-    public void addOrderItem(OrderItem item) {
-        item.setOrder(this);
-        this.orderItems.add(item);
+    public void addCustomerOrderItem(CustomerOrderItem item) {
+        item.setCustomerOrder(this);
+        this.customerOrderItems.add(item);
         BigDecimal itemSubtotal = item.getSubtotal();
         totalAmount = totalAmount.add(itemSubtotal);
     }
 
-    public void setOrderItems(Set<OrderItem> items) {
-        for (OrderItem orderItem : items) {
-            addOrderItem(orderItem);
+    public void setCustomerOrderItems(Set<CustomerOrderItem> items) {
+        for (CustomerOrderItem customerOrderItem : items) {
+            addCustomerOrderItem(customerOrderItem);
         }
     }
 }

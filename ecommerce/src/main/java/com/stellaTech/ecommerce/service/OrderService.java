@@ -1,8 +1,8 @@
 package com.stellaTech.ecommerce.service;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
-import com.stellaTech.ecommerce.model.orderManagement.Order;
-import com.stellaTech.ecommerce.model.orderManagement.OrderItem;
+import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
+import com.stellaTech.ecommerce.model.orderManagement.CustomerOrderItem;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
@@ -29,35 +29,36 @@ public class OrderService {
 
     @Transactional
     public void logicallyDeleteOrder(Long id) throws ResourceNotFoundException {
-        Order order = getOrderById(id);
-        order.setDeleted(true);
+        CustomerOrder customerOrder = getOrderById(id);
+        customerOrder.setDeleted(true);
     }
 
     @Transactional
     public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Validated(ValidationGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
-        Order newOrder = new Order(persistedUser);
+        CustomerOrder newCustomerOrder = new CustomerOrder(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {
             Product persistedProduct = productService.getProductById(currentItemDto.getProductId());
-            OrderItem newOrderItem = new OrderItem(persistedProduct, currentItemDto.getQuantity());
-            newOrder.addOrderItem(newOrderItem);
+            CustomerOrderItem newCustomerOrderItem = new CustomerOrderItem(persistedProduct, currentItemDto.getQuantity());
+            newCustomerOrder.addCustomerOrderItem(newCustomerOrderItem);
         }
-        orderRepository.save(newOrder);
-        return orderSummary(newOrder);
+        orderRepository.save(newCustomerOrder);
+        return orderSummary(newCustomerOrder);
     }
 
-    protected OrderDto<OrderDto.OrderItemSelectDto> orderSummary(Order order) {
+    protected OrderDto<OrderDto.OrderItemSelectDto> orderSummary(CustomerOrder customerOrder) {
         OrderDto<OrderDto.OrderItemSelectDto> orderDto = new OrderDto<>();
-        Long orderId = order.getId();
-        orderDto.setPlatformUserId(orderId);
-        for (OrderItem orderItem : order.getOrderItems()) {
+        orderDto.setPlatformUserId(customerOrder.getPlatformUser().getId());
+        orderDto.setId(customerOrder.getId());
+        orderDto.setTotalAmount(customerOrder.getTotalAmount());
+        for (CustomerOrderItem customerOrderItem : customerOrder.getCustomerOrderItems()) {
             OrderDto.OrderItemSelectDto orderItemSelectDto = new OrderDto.OrderItemSelectDto(
-                    orderItem.getId(),
-                    orderItem.getOrder().getId(),
-                    orderItem.getProduct().getId(),
-                    orderItem.getQuantity(),
-                    orderItem.getProductPriceSnapshot().getPrice(),
-                    orderItem.getSubtotal()
+                    customerOrderItem.getId(),
+                    customerOrderItem.getCustomerOrder().getId(),
+                    customerOrderItem.getProduct().getId(),
+                    customerOrderItem.getQuantity(),
+                    customerOrderItem.getProductPriceSnapshot().getPrice(),
+                    customerOrderItem.getSubtotal()
             );
             orderDto.addItem(orderItemSelectDto);
         }
@@ -72,7 +73,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    protected Order getOrderById(Long id) throws ResourceNotFoundException {
+    protected CustomerOrder getOrderById(Long id) throws ResourceNotFoundException {
         return orderRepository.findOne(
                 OrderSpecs.hasNotBeenDeleted(id)
         ).orElseThrow(() ->
@@ -81,7 +82,7 @@ public class OrderService {
     }
 
     public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) {
-        Order persistedOrder = getOrderById(id);
-        return orderSummary(persistedOrder);
+        CustomerOrder persistedCustomerOrder = getOrderById(id);
+        return orderSummary(persistedCustomerOrder);
     }
 }
