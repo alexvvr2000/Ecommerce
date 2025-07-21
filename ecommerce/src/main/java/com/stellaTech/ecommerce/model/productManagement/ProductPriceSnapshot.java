@@ -2,11 +2,14 @@ package com.stellaTech.ecommerce.model.productManagement;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Embeddable
 @Getter
@@ -15,11 +18,15 @@ public class ProductPriceSnapshot {
     @Column(name = "purchased_price", nullable = false, precision = 8, scale = 2, updatable = false)
     private BigDecimal price = BigDecimal.ZERO;
 
+    @CreationTimestamp
     @Column(name = "price_valid_at", nullable = false, updatable = false)
-    private LocalDateTime validAt;
+    private Date validAt;
 
     public ProductPriceSnapshot(Product product) {
+        this.setPrice(product);
+    }
+
+    public void setPrice(Product product) {
         this.price = product.getPrice();
-        this.validAt = LocalDateTime.now();
     }
 }
