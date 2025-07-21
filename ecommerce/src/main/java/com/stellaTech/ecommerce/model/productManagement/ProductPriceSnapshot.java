@@ -18,8 +18,8 @@ public class ProductPriceSnapshot {
     @Column(name = "price_valid_at", nullable = false, updatable = false)
     private LocalDateTime validAt;
 
-    public ProductPriceSnapshot(BigDecimal currentPrice) {
-        this.price = currentPrice;
+    public ProductPriceSnapshot(Product product) {
+        this.price = product.getPrice();
         this.validAt = LocalDateTime.now();
     }
 }
