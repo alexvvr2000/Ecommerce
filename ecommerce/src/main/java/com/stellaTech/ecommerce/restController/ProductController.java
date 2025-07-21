@@ -6,11 +6,13 @@ import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -20,8 +22,10 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products")
-    public List<ProductDto> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<ProductDto> getAllProducts(
+            @SortDefault("id")
+            @NonNull final Pageable pageable) {
+        return productService.getAllProductsPaginated(pageable);
     }
 
     @GetMapping("/products/{idProduct}")

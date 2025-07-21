@@ -7,14 +7,15 @@ import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -59,10 +60,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAll(ProductSpecs.hasNotBeenDeleted()).stream().map(
-                currentProduct -> persistPropertyManager.map(currentProduct, ProductDto.class)
-        ).toList();
+    public Page<ProductDto> getAllProductsPaginated(@NonNull Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(ProductSpecs.hasNotBeenDeleted(), pageable);
+        return productPage.map(product -> persistPropertyManager.map(product, ProductDto.class));
     }
 
     @Transactional(readOnly = true)
