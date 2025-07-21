@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.model.productManagement.ProductPriceSnapshot;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class CustomerOrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Setter
     @EqualsAndHashCode.Include
     @ManyToOne
@@ -26,13 +28,15 @@ public class CustomerOrderItem {
     @JsonBackReference
     private CustomerOrder customerOrder;
 
+    @NotNull
     @EqualsAndHashCode.Include
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private Product product;
 
+    @NotNull
     @Column(nullable = false, updatable = false)
-    private int quantity;
+    private Integer quantity;
 
     @Embedded
     private ProductPriceSnapshot productPriceSnapshot;
@@ -40,17 +44,17 @@ public class CustomerOrderItem {
     @Column(nullable = false, updatable = false)
     private BigDecimal subtotal;
 
-    public CustomerOrderItem(@NonNull Product product, int quantity) {
+    public CustomerOrderItem(@NonNull Product product, @NonNull Integer quantity) {
         this.setProduct(product);
         this.setQuantity(quantity);
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(@NonNull Product product) {
         this.product = product;
         this.productPriceSnapshot = new ProductPriceSnapshot(product);
     }
 
-    public void setQuantity(int quantity) throws RuntimeException {
+    public void setQuantity(@NonNull Integer quantity) throws RuntimeException {
         if (this.product == null) {
             throw new RuntimeException("Before setting the quantity you must set the product first");
         }
