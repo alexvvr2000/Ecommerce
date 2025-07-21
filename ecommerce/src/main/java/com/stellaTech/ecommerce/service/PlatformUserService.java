@@ -11,9 +11,12 @@ import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserD
 import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -84,10 +87,11 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlatformUserDto> getAllPlatformUsers() {
-        return userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted()).stream().map(
+    public Page<PlatformUserDto> getAllPlatformUsers(@NonNull Pageable pageable) {
+        Page<PlatformUser> users = userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted(), pageable);
+        return users.map(
                 currentPlatformUser -> persistPropertyManager.map(currentPlatformUser, PlatformUserDto.class)
-        ).toList();
+        );
     }
 
     @Transactional(readOnly = true)

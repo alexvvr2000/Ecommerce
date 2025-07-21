@@ -7,6 +7,9 @@ import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +24,11 @@ public class PlatformUserController {
     private PlatformUserService userService;
 
     @GetMapping("/users")
-    public List<PlatformUserDto> getAllUsers() {
-        return userService.getAllPlatformUsers();
+    public Page<PlatformUserDto> getAllUsers(
+            @SortDefault("id")
+            @NonNull final Pageable pageable
+    ) {
+        return userService.getAllPlatformUsers(pageable);
     }
 
     @GetMapping("/users/{idUser}")
