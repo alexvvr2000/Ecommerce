@@ -9,7 +9,10 @@ import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -66,10 +69,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders() {
+    public Page<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders(@NonNull Pageable pageable) {
         return orderRepository.findAll(
-                OrderSpecs.isNotDeleted()
-        ).stream().map(this::orderSummary).toList();
+                OrderSpecs.isNotDeleted(), pageable
+        ).map(this::orderSummary);
     }
 
     @Transactional(readOnly = true)

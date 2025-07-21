@@ -5,6 +5,8 @@ import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ValidationGroup;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/orders")
-    public List<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders() {
-        return orderService.getAllOrders();
+    public Page<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders(Pageable pageable) {
+        return orderService.getAllOrders(pageable);
     }
 
     @GetMapping("/orders/{orderId}")
