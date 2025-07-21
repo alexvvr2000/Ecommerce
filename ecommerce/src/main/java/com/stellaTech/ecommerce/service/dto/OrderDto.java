@@ -24,7 +24,7 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
 
     @Null(groups = ValidationGroup.OnInsert.class)
     @NotNull(groups = ValidationGroup.OnRead.class)
-    private Long totalAmount;
+    private BigDecimal totalAmount;
 
     @NotEmpty
     @Singular
