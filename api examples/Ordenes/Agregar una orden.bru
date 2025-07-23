@@ -1,0 +1,26 @@
+meta {
+  name: Agregar una orden
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/v1/orders
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "platformUserId": 1,
+    "orderItems": [
+      {
+        "productId": 1,
+        "quantity": 3
+      },{
+        "productId": 2,
+        "quantity": 2
+      }
+    ]
+  }
+}

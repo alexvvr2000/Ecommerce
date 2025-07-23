@@ -1,0 +1,19 @@
+meta {
+  name: Cambiar contraseña
+  type: http
+  seq: 6
+}
+
+patch {
+  url: http://localhost:8080/api/v1/users/7/password
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "oldPassword": "321",
+    "newPassword": "123",
+    "confirmNewPassword": "123"
+  }
+}

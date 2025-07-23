@@ -1,0 +1,21 @@
+meta {
+  name: Cambiar todos los campos de producto
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:8080/api/v1/products/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Premium",
+    "averageRating": 4.5,
+    "price": 999.99,
+    "mdFormatDescription": "**Características principales:**\n- Pantalla 6.5\" AMOLED\n- 128GB almacenamiento",
+    "mainImageUrl": "https://ejemplo.com/images/smartphone.jpg"
+  }
+}

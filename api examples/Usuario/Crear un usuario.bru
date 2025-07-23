@@ -1,0 +1,22 @@
+meta {
+  name: Crear un usuario
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/v1/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "curp": "asdf",
+    "fullName": "ajreklwrj",
+    "email": "bz@example.com",
+    "phoneNumber": "34a633243",
+    "password": "123",
+    "rfc": "fjskadlñ"
+  }
+}

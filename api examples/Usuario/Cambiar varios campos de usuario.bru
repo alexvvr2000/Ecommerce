@@ -1,0 +1,18 @@
+meta {
+  name: Cambiar varios campos de usuario
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:8080/api/v1/users/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "curp": "111111111111111111",
+    "rfc": "342633243"
+  }
+}
