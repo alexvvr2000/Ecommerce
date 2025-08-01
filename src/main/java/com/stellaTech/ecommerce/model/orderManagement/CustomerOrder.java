@@ -1,6 +1,7 @@
 package com.stellaTech.ecommerce.model.orderManagement;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.stellaTech.ecommerce.exception.instance.InvalidProductQuantity;
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import jakarta.persistence.*;
@@ -39,8 +40,8 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @CreationTimestamp
     private Date orderDate;
 
-    @NotEmpty
     @Valid
+    @NotEmpty
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
@@ -63,6 +64,13 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     public void setCustomerOrderItems(Set<CustomerOrderItem> items) {
         for (CustomerOrderItem customerOrderItem : items) {
             addCustomerOrderItem(customerOrderItem);
+        }
+    }
+
+    @PrePersist
+    private void validAmountOfProducts() throws InvalidProductQuantity{
+        if(this.customerOrderItems.isEmpty()){
+            throw new InvalidProductQuantity("Each order has to have at least one item");
         }
     }
 }
