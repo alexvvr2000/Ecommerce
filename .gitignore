@@ -23,15 +23,6 @@
 hs_err_pid*
 replay_pid*
 
-# idea files
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/shelf/
-.idea/datasources.xml
-.idea/dataSources.local.xml
-.idea/sonarlint/
-*.iml
-
 # compilation files
 ecommerce/target/
 **/target/
@@ -43,3 +34,47 @@ out/*
 
 # private files
 env.properties
+
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+env-*.yml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.ipr
+
+# idea files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/shelf/
+.idea/datasources.xml
+.idea/dataSources.local.xml
+.idea/sonarlint/
+*.iml
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
