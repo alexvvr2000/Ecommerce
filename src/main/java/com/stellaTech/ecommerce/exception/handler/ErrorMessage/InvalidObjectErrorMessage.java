@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Value
 public class InvalidObjectErrorMessage extends ErrorMessage {
     @Singular
@@ -20,8 +19,7 @@ public class InvalidObjectErrorMessage extends ErrorMessage {
             String errorName,
             LocalDate date,
             String message,
-            @Singular List<InvalidFieldMessage<?>> invalidFields
-    ) {
+            @Singular List<InvalidFieldMessage<?>> invalidFields) {
         super(errorName, date, message);
         this.invalidFields = invalidFields;
     }

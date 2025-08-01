@@ -17,11 +17,4 @@ public class ErrorMessage implements Serializable {
     String errorName;
     LocalDate date;
     String message;
-
-    @Builder
-    public ErrorMessage(String errorName, LocalDate date, String message) {
-        this.errorName = errorName;
-        this.date = date;
-        this.message = message;
-    }
 }
