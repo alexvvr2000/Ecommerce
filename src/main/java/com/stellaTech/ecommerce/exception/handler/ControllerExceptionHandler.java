@@ -1,20 +1,23 @@
 package com.stellaTech.ecommerce.exception.handler;
 
+import com.stellaTech.ecommerce.exception.handler.ErrorMessage.ErrorMessage;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ControllerExceptionHandler {
     @ExceptionHandler(value = {ResourceNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> resourceNotFoundException(ResourceNotFoundException exception, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 exception.getClass().getName(),
@@ -25,6 +28,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ResponseEntity<ErrorMessage> notValidArgumentException(MethodArgumentNotValidException exception, WebRequest request) {
         List<String> listOfErrors = exception.getBindingResult().getAllErrors().stream().map(
                 objectError -> ((FieldError) objectError).getField()
