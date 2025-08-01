@@ -53,6 +53,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @OneToOne(mappedBy = "platformUser", cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     private PlatformUserPassword platformUserPassword;
 
+    @Builder
     public PlatformUser(@NonNull String curp, @NonNull String fullName, @NonNull String email, @NonNull String phoneNumber, @NonNull String password, String rfc) {
         this.setCurp(curp);
         this.setFullName(fullName);

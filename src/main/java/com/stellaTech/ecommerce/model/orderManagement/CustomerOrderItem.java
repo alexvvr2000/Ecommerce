@@ -45,6 +45,7 @@ public class CustomerOrderItem {
     @Column(nullable = false, updatable = false)
     private BigDecimal subtotal;
 
+    @Builder
     public CustomerOrderItem(@NonNull Product product, @NonNull Integer quantity) {
         this.setProduct(product);
         this.setQuantity(quantity);

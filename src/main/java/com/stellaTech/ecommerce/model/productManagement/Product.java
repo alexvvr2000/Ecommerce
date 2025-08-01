@@ -31,13 +31,14 @@ public class Product extends LogicallyDeletableEntity {
     private String mainImageUrl;
 
     @Column(name = "average_rating", precision = 4, scale = 2)
-    private BigDecimal averageRating = null;
+    private BigDecimal averageRating;
 
     @NotNull
     @Setter
     @Column(name = "price", precision = 8, scale = 2, nullable = false)
     private BigDecimal price = BigDecimal.ZERO;
 
+    @Builder
     public Product(@NonNull String name, @NonNull BigDecimal price, String mdFormatDescription, String mainImageUrl) {
         this.setName(name);
         this.setPrice(price);

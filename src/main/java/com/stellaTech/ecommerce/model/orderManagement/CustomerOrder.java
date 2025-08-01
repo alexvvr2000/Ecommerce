@@ -44,14 +44,17 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @NotEmpty
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
+    @Singular
+    private final Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
 
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    public CustomerOrder(@NonNull PlatformUser platformUser) {
-        this.platformUser = platformUser;
+    @Builder
+    public CustomerOrder(@NonNull PlatformUser platformUser, @Singular Set<CustomerOrderItem> customerOrderItems) {
+        this.setPlatformUser(platformUser);
+        this.setCustomerOrderItems(customerOrderItems);
     }
 
     public void addCustomerOrderItem(CustomerOrderItem item) {

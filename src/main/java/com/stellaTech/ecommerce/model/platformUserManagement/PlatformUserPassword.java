@@ -26,9 +26,10 @@ public class PlatformUserPassword {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Builder
     public PlatformUserPassword(PlatformUser platformUser, String newPassword) throws IllegalArgumentException {
         this.setPassword(newPassword);
-        this.platformUser = platformUser;
+        this.setPlatformUser(platformUser);
     }
 
     public void setPassword(@NonNull String newPassword) throws RepeatedUserPassword {
