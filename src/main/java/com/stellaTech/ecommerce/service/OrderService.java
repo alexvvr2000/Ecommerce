@@ -8,7 +8,7 @@ import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
-import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Validated(ValidationGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
+    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Validated(NullCheckGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
         CustomerOrder newCustomerOrder = new CustomerOrder(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {

@@ -5,7 +5,7 @@ import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
-import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto updateProduct(Long productId, @Validated(ValidationGroup.OnUpdate.class) ProductDto dto) throws ResourceNotFoundException {
+    public ProductDto updateProduct(Long productId, @Validated(NullCheckGroup.OnUpdate.class) ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = getProductById(productId);
         persistPropertyManager.map(dto, persistedProduct);
         productRepository.save(persistedProduct);
@@ -53,7 +53,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto createProduct(@Validated(ValidationGroup.OnInsert.class) ProductDto dto) {
+    public ProductDto createProduct(@Validated(NullCheckGroup.OnInsert.class) ProductDto dto) {
         Product persistedProduct = persistPropertyManager.map(dto, Product.class);
         productRepository.save(persistedProduct);
         return persistPropertyManager.map(persistedProduct, ProductDto.class);

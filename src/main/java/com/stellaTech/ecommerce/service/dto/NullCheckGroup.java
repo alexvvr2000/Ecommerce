@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.service.dto;
 
-public interface ValidationGroup {
+public interface NullCheckGroup {
     interface OnRead {
     }
 

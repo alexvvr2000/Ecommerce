@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.restController;
 import com.stellaTech.ecommerce.service.PlatformUserService;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
-import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class PlatformUserController {
     @PutMapping("/users/{idUser}")
     public ResponseEntity<PlatformUserDto> updateUser(
             @NonNull @PathVariable Long idUser,
-            @Validated(ValidationGroup.OnUpdate.class) @RequestBody PlatformUserDto platformUserUpdateDto
+            @Validated(NullCheckGroup.OnUpdate.class) @RequestBody PlatformUserDto platformUserUpdateDto
     ) {
         PlatformUserDto savedUser = userService.updatePlatformUser(idUser, platformUserUpdateDto);
         log.info("Updated user with id {}", idUser);
@@ -74,7 +74,7 @@ public class PlatformUserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<PlatformUserDto> createUser(@Validated({ValidationGroup.OnInsert.class}) @RequestBody PlatformUserDto platformUserInsertDto) {
+    public ResponseEntity<PlatformUserDto> createUser(@Validated({NullCheckGroup.OnInsert.class}) @RequestBody PlatformUserDto platformUserInsertDto) {
         PlatformUserDto persistedUser = userService.createUser(platformUserInsertDto);
         log.info("New user with id {}", persistedUser.getId());
         return ResponseEntity.ok(persistedUser);

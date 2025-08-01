@@ -8,7 +8,7 @@ import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
-import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
@@ -63,7 +63,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(ValidationGroup.OnUpdate.class) PlatformUserDto dto) throws ResourceNotFoundException {
+    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(NullCheckGroup.OnUpdate.class) PlatformUserDto dto) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
         persistPropertyManager.map(dto, persistedUser);
         userRepository.save(persistedUser);
@@ -79,7 +79,7 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto createUser(@Validated(ValidationGroup.OnInsert.class) PlatformUserDto dto) {
+    public PlatformUserDto createUser(@Validated(NullCheckGroup.OnInsert.class) PlatformUserDto dto) {
         PlatformUser persistedUser = persistPropertyManager.map(dto, PlatformUser.class);
         userRepository.save(persistedUser);
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);

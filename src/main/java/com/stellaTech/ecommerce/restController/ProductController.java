@@ -2,7 +2,7 @@ package com.stellaTech.ecommerce.restController;
 
 import com.stellaTech.ecommerce.service.ProductService;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
-import com.stellaTech.ecommerce.service.dto.ValidationGroup;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class ProductController {
     @PutMapping("/products/{idProduct}")
     public ResponseEntity<ProductDto> updateProduct(
             @NonNull @PathVariable Long idProduct,
-            @Validated(ValidationGroup.OnUpdate.class) @RequestBody ProductDto productUpdateDto
+            @Validated(NullCheckGroup.OnUpdate.class) @RequestBody ProductDto productUpdateDto
     ) {
         ProductDto savedProduct = productService.updateProduct(idProduct, productUpdateDto);
         log.info("Updated product with id {}", idProduct);
@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductDto> createProduct(@Validated(ValidationGroup.OnInsert.class) @RequestBody ProductDto productInsertDto) {
+    public ResponseEntity<ProductDto> createProduct(@Validated(NullCheckGroup.OnInsert.class) @RequestBody ProductDto productInsertDto) {
         ProductDto newProduct = productService.createProduct(productInsertDto);
         log.info("Created product with id {}", newProduct.getId());
         return ResponseEntity.ok(newProduct);

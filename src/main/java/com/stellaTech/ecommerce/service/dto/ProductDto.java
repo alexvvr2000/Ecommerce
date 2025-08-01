@@ -9,20 +9,20 @@ import java.math.BigDecimal;
 
 @Data
 public class ProductDto {
-    @Null(groups = ValidationGroup.OnInsert.class)
-    @NotNull(groups = {ValidationGroup.OnRead.class})
+    @Null(groups = NullCheckGroup.OnInsert.class)
+    @NotNull(groups = {NullCheckGroup.OnRead.class})
     private Long id;
 
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
+    @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private String name;
 
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
+    @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private String mdFormatDescription;
 
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
+    @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private String mainImageUrl;
 
     @Min(value = 0)
-    @NotNull(groups = {ValidationGroup.OnInsert.class, ValidationGroup.OnRead.class, ValidationGroup.OnUpdate.class})
+    @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private BigDecimal price;
 }
