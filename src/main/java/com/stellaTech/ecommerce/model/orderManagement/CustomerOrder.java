@@ -68,8 +68,8 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     }
 
     @PrePersist
-    private void validAmountOfProducts() throws InvalidProductQuantity{
-        if(this.customerOrderItems.isEmpty()){
+    private void validAmountOfProducts() throws InvalidProductQuantity {
+        if (this.customerOrderItems.isEmpty()) {
             throw new InvalidProductQuantity("Each order has to have at least one item");
         }
     }
