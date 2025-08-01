@@ -35,35 +35,45 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(@Validated(NullCheckGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto) throws ResourceNotFoundException {
+    public OrderDto<OrderDto.OrderItemSelectDto> createOrder(
+            @Validated(NullCheckGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto
+    ) throws ResourceNotFoundException {
         PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
-        CustomerOrder newCustomerOrder = new CustomerOrder(persistedUser);
+        CustomerOrder.CustomerOrderBuilder customerOrderBuilder = CustomerOrder.builder()
+                .platformUser(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {
             Product persistedProduct = productService.getProductById(currentItemDto.getProductId());
-            CustomerOrderItem newCustomerOrderItem = new CustomerOrderItem(persistedProduct, currentItemDto.getQuantity());
-            newCustomerOrder.addCustomerOrderItem(newCustomerOrderItem);
+            CustomerOrderItem newCustomerOrderItem = CustomerOrderItem.builder()
+                    .product(persistedProduct)
+                    .quantity(currentItemDto.getQuantity())
+                    .build();
+            customerOrderBuilder.customerOrderItem(newCustomerOrderItem);
         }
-        orderRepository.save(newCustomerOrder);
-        return orderSummary(newCustomerOrder);
+        CustomerOrder newCustomerOrderInstance = customerOrderBuilder.build();
+        orderRepository.save(newCustomerOrderInstance);
+        return orderSummary(newCustomerOrderInstance);
     }
 
-    protected OrderDto<OrderDto.OrderItemSelectDto> orderSummary(CustomerOrder customerOrder) {
-        OrderDto<OrderDto.OrderItemSelectDto> orderDto = new OrderDto<>();
-        orderDto.setPlatformUserId(customerOrder.getPlatformUser().getId());
-        orderDto.setId(customerOrder.getId());
-        orderDto.setTotalAmount(customerOrder.getTotalAmount());
+    protected OrderDto<OrderDto.OrderItemSelectDto> orderSummary(
+            CustomerOrder customerOrder
+    ) {
+        OrderDto.OrderDtoBuilder<OrderDto.OrderItemSelectDto> orderDtoBuilder = OrderDto
+                .<OrderDto.OrderItemSelectDto>builder()
+                .id(customerOrder.getId())
+                .platformUserId(customerOrder.getPlatformUser().getId())
+                .totalAmount(customerOrder.getTotalAmount());
         for (CustomerOrderItem customerOrderItem : customerOrder.getCustomerOrderItems()) {
-            OrderDto.OrderItemSelectDto orderItemSelectDto = new OrderDto.OrderItemSelectDto(
-                    customerOrderItem.getId(),
-                    customerOrderItem.getCustomerOrder().getId(),
-                    customerOrderItem.getProduct().getId(),
-                    customerOrderItem.getQuantity(),
-                    customerOrderItem.getProductPriceSnapshot().getPrice(),
-                    customerOrderItem.getSubtotal()
-            );
-            orderDto.addItem(orderItemSelectDto);
+            OrderDto.OrderItemSelectDto orderItemSelectDto = OrderDto.OrderItemSelectDto.builder()
+                    .orderItemId(customerOrderItem.getId())
+                    .orderId(customerOrderItem.getCustomerOrder().getId())
+                    .productId(customerOrderItem.getProduct().getId())
+                    .quantity(customerOrderItem.getQuantity())
+                    .price(customerOrderItem.getProductPriceSnapshot().getPrice())
+                    .subtotal(customerOrderItem.getSubtotal())
+                    .build();
+            orderDtoBuilder.orderItem(orderItemSelectDto);
         }
-        return orderDto;
+        return orderDtoBuilder.build();
     }
 
     @Transactional(readOnly = true)
