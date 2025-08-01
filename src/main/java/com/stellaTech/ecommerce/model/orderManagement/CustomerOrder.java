@@ -22,31 +22,27 @@ import java.util.Set;
 @Entity
 @Table(name = "customer_order", schema = "product_data")
 public class CustomerOrder extends LogicallyDeletableEntity {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    @Setter
-    @EqualsAndHashCode.Include
-    @ManyToOne
-    @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
-    private PlatformUser platformUser;
-
-    @NotNull
-    @EqualsAndHashCode.Include
-    @Column(name = "purchased_date", updatable = false, nullable = false)
-    @CreationTimestamp
-    private Date orderDate;
-
     @Valid
     @NotEmpty
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
     @JsonManagedReference
     @Singular
     private final Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
-
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
+    @Setter
+    @EqualsAndHashCode.Include
+    @ManyToOne
+    @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
+    private PlatformUser platformUser;
+    @NotNull
+    @EqualsAndHashCode.Include
+    @Column(name = "purchased_date", updatable = false, nullable = false)
+    @CreationTimestamp
+    private Date orderDate;
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;

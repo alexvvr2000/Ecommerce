@@ -47,7 +47,9 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public void changePassword(@Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId) throws IllegalArgumentException, ResourceNotFoundException {
+    public void changePassword(
+            @Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId
+    ) throws IllegalArgumentException, ResourceNotFoundException {
         PlatformUserPassword password = getPasswordByUserId(platformUserId);
         if (!password.getPassword().equals(dto.getOldPassword())) {
             throw new IllegalArgumentException("Incorrect old password");
@@ -63,7 +65,9 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto updatePlatformUser(Long idUser, @Validated(NullCheckGroup.OnUpdate.class) PlatformUserDto dto) throws ResourceNotFoundException {
+    public PlatformUserDto updatePlatformUser(
+            Long idUser, @Validated(NullCheckGroup.OnUpdate.class) PlatformUserDto dto
+    ) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
         persistPropertyManager.map(dto, persistedUser);
         userRepository.save(persistedUser);
@@ -71,7 +75,9 @@ public class PlatformUserService {
     }
 
     @Transactional
-    public PlatformUserDto patchPlatformUser(Long idUser, @Valid PlatformUserDto dto) throws ResourceNotFoundException {
+    public PlatformUserDto patchPlatformUser(
+            Long idUser, @Valid PlatformUserDto dto
+    ) throws ResourceNotFoundException {
         PlatformUser persistedUser = getUserById(idUser);
         patchPropertyMapper.map(dto, persistedUser);
         userRepository.save(persistedUser);
