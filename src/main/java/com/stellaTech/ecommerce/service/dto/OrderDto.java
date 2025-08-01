@@ -4,36 +4,30 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Singular;
-import lombok.Value;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Value
+@Builder
 public class OrderDto<T extends OrderDto.OrderItemDto> {
     @Null(groups = NullCheckGroup.OnInsert.class, message = "The id is handled automatically by the system")
     @NotNull(groups = NullCheckGroup.OnRead.class)
-    private Long id;
+    Long id;
 
     @NotNull(message = "The platform user id must not be empty")
-    private Long platformUserId;
+    Long platformUserId;
 
     @Null(groups = NullCheckGroup.OnInsert.class, message = "The price is handled by the system")
     @NotNull(groups = NullCheckGroup.OnRead.class)
-    private BigDecimal totalAmount;
+    BigDecimal totalAmount;
 
     @NotEmpty(message = "An order must have 1 or more items")
     @Singular
     @NotNull
-    private List<T> orderItems = new ArrayList<>();
-
-    public void addItem(T orderInsertDto) {
-        this.orderItems.add(orderInsertDto);
-    }
+    List<T> orderItems;
 
     public interface OrderItemDto {
         Long getProductId();
@@ -43,16 +37,17 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
         BigDecimal getPrice();
     }
 
-    @Data
+    @Value
+    @Builder
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class OrderItemInsertDto implements OrderItemDto {
         @NotNull
         @EqualsAndHashCode.Include
-        private Long productId;
+        Long productId;
 
         @Min(value = 1, message = "The item amount must be 1 or more")
         @NotNull
-        private Integer quantity;
+        Integer quantity;
 
         @Override
         public BigDecimal getPrice() throws RuntimeException {
@@ -61,6 +56,7 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
     }
 
     @Value
+    @Builder
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class OrderItemSelectDto implements OrderItemDto {
         @EqualsAndHashCode.Include
