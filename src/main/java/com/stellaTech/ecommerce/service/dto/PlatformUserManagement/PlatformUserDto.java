@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlatformUserDto {
-    @Null(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
+    @Null(
+            groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class},
+            message = "The id is handled automatically by the system"
+    )
     @NotNull(groups = NullCheckGroup.OnRead.class)
     private Long id;
 

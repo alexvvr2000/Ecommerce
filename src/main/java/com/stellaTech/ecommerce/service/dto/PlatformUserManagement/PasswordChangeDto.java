@@ -5,12 +5,12 @@ import lombok.Value;
 
 @Value
 public class PasswordChangeDto {
-    @NotBlank
+    @NotBlank(message = "You must introduce a new password")
     String newPassword;
 
-    @NotBlank
+    @NotBlank(message = "The password confirmation field is empty")
     String confirmNewPassword;
 
-    @NotBlank
+    @NotBlank(message = "The old password field is empty")
     String oldPassword;
 }

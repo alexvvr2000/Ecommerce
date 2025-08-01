@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 public class ProductDto {
-    @Null(groups = NullCheckGroup.OnInsert.class)
+    @Null(groups = NullCheckGroup.OnInsert.class, message = "The id is handled by the system")
     @NotNull(groups = {NullCheckGroup.OnRead.class})
     private Long id;
 
@@ -22,7 +22,7 @@ public class ProductDto {
     @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private String mainImageUrl;
 
-    @Min(value = 0)
+    @Min(value = 0, message = "The price must be 0 or positive")
     @NotNull(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class})
     private BigDecimal price;
 }

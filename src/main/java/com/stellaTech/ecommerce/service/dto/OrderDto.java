@@ -15,18 +15,18 @@ import java.util.List;
 
 @Data
 public class OrderDto<T extends OrderDto.OrderItemDto> {
-    @Null(groups = NullCheckGroup.OnInsert.class)
+    @Null(groups = NullCheckGroup.OnInsert.class, message = "The id is handled automatically by the system")
     @NotNull(groups = NullCheckGroup.OnRead.class)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "The platform user id must not be empty")
     private Long platformUserId;
 
-    @Null(groups = NullCheckGroup.OnInsert.class)
+    @Null(groups = NullCheckGroup.OnInsert.class, message = "The price is handled by the system")
     @NotNull(groups = NullCheckGroup.OnRead.class)
     private BigDecimal totalAmount;
 
-    @NotEmpty
+    @NotEmpty(message = "An order must have 1 or more items")
     @Singular
     @NotNull
     private List<T> orderItems = new ArrayList<>();
@@ -50,7 +50,7 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
         @EqualsAndHashCode.Include
         private Long productId;
 
-        @Min(value = 1)
+        @Min(value = 1, message = "The item amount must be 1 or more")
         @NotNull
         private Integer quantity;
 
