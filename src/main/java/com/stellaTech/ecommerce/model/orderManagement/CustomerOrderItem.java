@@ -1,6 +1,7 @@
 package com.stellaTech.ecommerce.model.orderManagement;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.stellaTech.ecommerce.exception.instance.InvalidProductQuantity;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.model.productManagement.ProductPriceSnapshot;
 import jakarta.persistence.*;
@@ -54,9 +55,9 @@ public class CustomerOrderItem {
         this.productPriceSnapshot = new ProductPriceSnapshot(product);
     }
 
-    public void setQuantity(@NonNull Integer quantity) throws RuntimeException {
+    public void setQuantity(@NonNull Integer quantity) throws InvalidProductQuantity {
         if (this.product == null) {
-            throw new RuntimeException("Before setting the quantity you must set the product first");
+            throw new InvalidProductQuantity("Before setting the quantity you must set the product first");
         }
         this.quantity = quantity;
         this.subtotal = calculateSubtotal();
