@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.model.platformUserManagement;
 
+import com.stellaTech.ecommerce.exception.instance.RepeatedUserPassword;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -30,13 +31,13 @@ public class PlatformUserPassword {
         this.platformUser = platformUser;
     }
 
-    public void setPassword(@NonNull String newPassword) throws IllegalArgumentException {
+    public void setPassword(@NonNull String newPassword) throws RepeatedUserPassword {
         if (this.password == null) {
             this.password = newPassword;
             return;
         }
         if (this.password.equals(newPassword)) {
-            throw new IllegalArgumentException("The password is the same as the old one");
+            throw new RepeatedUserPassword("The password is the same as the old one");
         }
         this.password = newPassword;
     }
