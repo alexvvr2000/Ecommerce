@@ -6,9 +6,9 @@ import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUserPasswor
 import com.stellaTech.ecommerce.repository.PlatformUserPasswordRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
+import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
