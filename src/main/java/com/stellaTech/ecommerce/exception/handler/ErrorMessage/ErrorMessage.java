@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.exception.handler;
+package com.stellaTech.ecommerce.exception.handler.ErrorMessage;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
