@@ -20,7 +20,7 @@ public class InvalidObjectErrorMessage extends ErrorMessage {
     @EqualsAndHashCode
     public static class InvalidFieldMessage<T> {
         String fieldName;
-        String Message;
+        String message;
         T rejectedValue;
     }
 }
