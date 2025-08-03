@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,8 @@ public class PlatformUserDto {
     @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
     private String phoneNumber;
 
-    @Null(groups = {NullCheckGroup.OnRead.class})
-    @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
+    @Null(groups = {NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class, Default.class})
+    @NotBlank(groups = {NullCheckGroup.OnInsert.class})
     private String password;
 
     private String rfc;
