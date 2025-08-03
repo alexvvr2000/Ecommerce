@@ -70,7 +70,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<InvalidObjectErrorMessage> notValidArgumentException(
             MethodArgumentNotValidException exception, WebRequest request
     ) {
-        InvalidObjectErrorMessage.InvalidObjectErrorMessageBuilder message = InvalidObjectErrorMessage.builder()
+        InvalidObjectErrorMessage.InvalidObjectErrorMessageBuilder<?, ?> message = InvalidObjectErrorMessage.builder()
                 .errorName(exception.getClass().getName())
                 .message("Many fields in the request were not valid")
                 .date(LocalDate.now());

@@ -1,14 +1,14 @@
 package com.stellaTech.ecommerce.exception.handler.ErrorMessage;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.NonFinal;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Builder
+@SuperBuilder
 @Value
 @NonFinal
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
