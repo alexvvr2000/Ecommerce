@@ -1,5 +1,7 @@
 package com.stellaTech.ecommerce.service;
 
+import com.stellaTech.ecommerce.exception.instance.InvalidPasswordField;
+import com.stellaTech.ecommerce.exception.instance.RepeatedUserPassword;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUserPassword;
@@ -49,16 +51,16 @@ public class PlatformUserService {
     @Transactional
     public void changePassword(
             @Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId
-    ) throws IllegalArgumentException, ResourceNotFoundException {
+    ) throws ResourceNotFoundException, RepeatedUserPassword, InvalidPasswordField {
         PlatformUserPassword password = getPasswordByUserId(platformUserId);
         if (!password.getPassword().equals(dto.getOldPassword())) {
-            throw new IllegalArgumentException("Incorrect old password");
+            throw new InvalidPasswordField("Incorrect old password");
         }
         if (!dto.getNewPassword().equals(dto.getConfirmNewPassword())) {
-            throw new IllegalArgumentException("New passwords do not match");
+            throw new InvalidPasswordField("New passwords do not match");
         }
         if (dto.getNewPassword().equals(password.getPassword())) {
-            throw new IllegalArgumentException("New password must be different from current password");
+            throw new InvalidPasswordField("New password must be different from current password");
         }
         password.setPassword(dto.getNewPassword());
         userPasswordRepository.save(password);
