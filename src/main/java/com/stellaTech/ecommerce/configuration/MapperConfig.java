@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto;
+package com.stellaTech.ecommerce.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
