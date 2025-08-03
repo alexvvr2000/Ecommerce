@@ -28,7 +28,7 @@ public class ControllerExceptionHandler {
                 .date(LocalDate.now())
                 .message(exception.getMessage())
                 .build();
-        ResponseEntity<ErrorMessage> responseEntity = new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
+        ResponseEntity<ErrorMessage> responseEntity = new ResponseEntity<>(message, status);
         log.error(responseEntity.toString());
         return responseEntity;
     }
