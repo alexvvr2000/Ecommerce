@@ -34,7 +34,10 @@ public class PlatformUserDto {
     @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
     private String phoneNumber;
 
-    @Null(groups = {NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class, Default.class})
+    @Null(
+            groups = {NullCheckGroup.OnRead.class, NullCheckGroup.OnUpdate.class, Default.class},
+            message = "Use the respective endpoint for changing the password"
+    )
     @NotBlank(groups = {NullCheckGroup.OnInsert.class})
     private String password;
 
