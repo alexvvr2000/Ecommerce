@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ public class PlatformUserDto {
     @NotNull(groups = NullCheckGroup.OnRead.class)
     private Long id;
 
-    @NotBlank(groups = {NullCheckGroup.OnInsert.class ,NullCheckGroup.OnUpdate.class})
+    @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
     private String curp;
 
     @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
