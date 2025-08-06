@@ -9,7 +9,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@Table(name = "platform_user_password", schema = "user_data")
+@Table(name = "platform_user_password")
 public class PlatformUserPassword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
