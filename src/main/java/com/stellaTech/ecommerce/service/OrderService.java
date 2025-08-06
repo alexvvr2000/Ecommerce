@@ -88,7 +88,7 @@ public class OrderService {
         return orderRepository.findOne(
                 OrderSpecs.hasNotBeenDeleted(id)
         ).orElseThrow(() ->
-                new ResourceNotFoundException("Active product with id " + id + " was not found")
+                new ResourceNotFoundException("Active order with id " + id + " was not found")
         );
     }
 
