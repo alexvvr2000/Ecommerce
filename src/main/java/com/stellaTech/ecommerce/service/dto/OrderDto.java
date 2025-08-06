@@ -59,13 +59,11 @@ public class OrderDto<T extends OrderDto.OrderItemDto> {
 
     @Value
     @Builder
-    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+    @EqualsAndHashCode
     public static class OrderItemSelectDto implements OrderItemDto {
-        @EqualsAndHashCode.Include
         @NotNull
         Long orderItemId;
 
-        @EqualsAndHashCode.Include
         @NotNull
         Long orderId;
 
