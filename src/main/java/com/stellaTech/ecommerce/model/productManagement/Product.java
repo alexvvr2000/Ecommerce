@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "product", schema = "product_data")
+@Table(name = "product")
 public class Product extends LogicallyDeletableEntity {
     @EqualsAndHashCode.Include
     @Id

@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -20,7 +19,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
 @Entity
-@Table(name = "customer_order", schema = "product_data")
+@Table(name = "customer_order")
 public class CustomerOrder extends LogicallyDeletableEntity {
     @Valid
     @NotEmpty
@@ -41,8 +40,7 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @NotNull
     @EqualsAndHashCode.Include
     @Column(name = "purchased_date", updatable = false, nullable = false)
-    @CreationTimestamp
-    private Date orderDate;
+    private Date orderDate = new Date();
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;

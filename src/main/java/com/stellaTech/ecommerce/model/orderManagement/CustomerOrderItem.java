@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
 @Entity
-@Table(name = "order_items", schema = "product_data")
+@Table(name = "order_items")
 public class CustomerOrderItem {
     @EqualsAndHashCode.Include
     @Id

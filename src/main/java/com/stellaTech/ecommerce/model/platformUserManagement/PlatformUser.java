@@ -9,7 +9,7 @@ import lombok.*;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
-@Table(name = "platform_user", schema = "user_data")
+@Table(name = "platform_user")
 public class PlatformUser extends LogicallyDeletableEntity {
     @Getter
     @EqualsAndHashCode.Include
