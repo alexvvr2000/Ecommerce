@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback
-public class OrderServiceTests {
+public class OrderServiceIntegrationTests {
     protected final Faker faker = new Faker(new Locale("es-MX"));
     protected final DataGenerationService.numberRange productCreationRange = DataGenerationService.numberRange.builder()
             .minAmount(1)
