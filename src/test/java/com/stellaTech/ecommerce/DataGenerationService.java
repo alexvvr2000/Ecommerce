@@ -26,16 +26,16 @@ import java.util.Locale;
 @Rollback
 @Service
 public class DataGenerationService {
-    private static final Faker faker = new Faker(new Locale("es-MX"));
+    protected final Faker faker = new Faker(new Locale("es-MX"));
 
     @Autowired
-    private OrderService orderServiceImp;
+    protected OrderService orderServiceImp;
 
     @Autowired
-    private PlatformUserService platformUserServiceImp;
+    protected PlatformUserService platformUserServiceImp;
 
     @Autowired
-    private ProductService productServiceImp;
+    protected ProductService productServiceImp;
 
     public @Validated(NullCheckGroup.OnInsert.class) PlatformUserDto createInsertUserDto() {
         return PlatformUserDto.builder()
@@ -109,10 +109,10 @@ public class DataGenerationService {
     public @Valid OrderDto<OrderDto.OrderItemSelectDto> createPersistedOrder(
             int itemAmount,
             @Validated(NullCheckGroup.OnRead.class) PlatformUserDto user,
-            numberRange itemAmountRange
+            numberRange itemSelectionRange
     ) {
         OrderDto<OrderDto.OrderItemInsertDto> newOrder = createInsertDtoOrder(
-                itemAmount, user, itemAmountRange
+                itemAmount, user, itemSelectionRange
         );
         return orderServiceImp.createOrder(newOrder);
     }
