@@ -1,5 +1,6 @@
 package com.stellaTech.ecommerce.service.dto;
 
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;

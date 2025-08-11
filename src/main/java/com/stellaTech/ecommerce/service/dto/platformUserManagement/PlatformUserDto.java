@@ -1,6 +1,6 @@
-package com.stellaTech.ecommerce.service.dto.PlatformUserManagement;
+package com.stellaTech.ecommerce.service.dto.platformUserManagement;
 
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

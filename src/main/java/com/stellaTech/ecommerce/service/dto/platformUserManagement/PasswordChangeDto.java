@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto.PlatformUserManagement;
+package com.stellaTech.ecommerce.service.dto.platformUserManagement;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Value;
