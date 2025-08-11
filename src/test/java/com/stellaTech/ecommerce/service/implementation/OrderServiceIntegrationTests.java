@@ -7,23 +7,26 @@ import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
 import com.stellaTech.ecommerce.service.generics.OrderService;
+import com.stellaTech.ecommerce.service.generics.PlatformUserService;
 import com.stellaTech.ecommerce.service.generics.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class OrderServiceIntegrationTests {
     protected final Faker faker = new Faker(new Locale("es-MX"));
     protected final DataGenerationService.numberRange productCreationRange = DataGenerationService.numberRange.builder()
@@ -45,19 +48,38 @@ public class OrderServiceIntegrationTests {
     protected OrderService orderService;
     @Autowired
     protected ProductService productService;
+    @Autowired
+    protected PlatformUserService platformUserService;
+
+    private List<ProductDto> generateRandomProductList(int itemAmount) {
+        List<ProductDto> list = new ArrayList<>();
+        for (int i = 0; i < itemAmount; i += 1) {
+            ProductDto newProduct = productService.createProduct(
+                    dataGenerationService.createInsertProductDto()
+            );
+            list.add(
+                    newProduct
+            );
+        }
+        return list;
+    }
+
+    private OrderDto<OrderDto.OrderItemSelectDto> createPersistedOrder() {
+        PlatformUserDto randomUser = platformUserService.createUser(
+                dataGenerationService.createInsertUserDto()
+        );
+        OrderDto<OrderDto.OrderItemInsertDto> newOrder = dataGenerationService.createInsertDtoOrder(
+                generateRandomProductList(randomItemAmount), orderItemAmountRange, randomUser
+        );
+        return orderService.createOrder(newOrder);
+    }
 
     @Test
     void createOrderWithValidData() {
-        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
-        OrderDto<OrderDto.OrderItemInsertDto> newOrder = dataGenerationService.createInsertDtoOrder(
-                randomItemAmount, randomUser, orderItemAmountRange
-        );
-
-        OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = orderService.createOrder(newOrder);
+        OrderDto<OrderDto.OrderItemSelectDto> newOrder = createPersistedOrder();
         OrderDto<OrderDto.OrderItemSelectDto> savedOrder = orderService.getOrderDtoById(
-                persistedOrder.getId()
+                newOrder.getId()
         );
-
         BigDecimal expectedPrice = savedOrder.getOrderItems()
                 .stream().map(currentItem -> {
                     BigDecimal storedPrice = currentItem.getPrice();
@@ -71,7 +93,6 @@ public class OrderServiceIntegrationTests {
                 .orElseThrow(
                         () -> new IllegalArgumentException("The item price snapshots are not saved correctly")
                 );
-
         assertNotNull(savedOrder);
         assertEquals(savedOrder.getId(), newOrder.getPlatformUserId());
         assertEquals(savedOrder.getTotalAmount(), expectedPrice);
@@ -79,12 +100,7 @@ public class OrderServiceIntegrationTests {
 
     @Test
     void getOrderDtoByIdWhenOrderExists() {
-        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
-        OrderDto<OrderDto.OrderItemInsertDto> validOrder = dataGenerationService.createInsertDtoOrder(
-                randomItemAmount, randomUser, orderItemAmountRange
-        );
-        OrderDto<OrderDto.OrderItemSelectDto> savedOrder = orderService.createOrder(validOrder);
-
+        OrderDto<OrderDto.OrderItemSelectDto> savedOrder = createPersistedOrder();
         assertNotNull(savedOrder);
         assertEquals(
                 orderService.getOrderDtoById(savedOrder.getId()),
@@ -94,18 +110,12 @@ public class OrderServiceIntegrationTests {
 
     @Test
     void deleteOrderFromDatabase() {
-        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
-        OrderDto<OrderDto.OrderItemSelectDto> persistedOrderToDelete = dataGenerationService.createPersistedOrder(
-                randomItemAmount, randomUser, orderItemAmountRange
-        );
+        OrderDto<OrderDto.OrderItemSelectDto> persistedOrderToDelete = createPersistedOrder();
         Long persistedOrderId = persistedOrderToDelete.getId();
-        assertEquals(orderService.getOrderDtoById(randomUser.getId()), persistedOrderToDelete);
+        assertEquals(orderService.getOrderDtoById(persistedOrderId), persistedOrderToDelete);
 
         for (int i = 0; i < orderCreationLimit; i += 1) {
-            PlatformUserDto randomPageUser = dataGenerationService.createPersistedUser();
-            dataGenerationService.createPersistedOrder(
-                    randomItemAmount, randomPageUser, orderItemAmountRange
-            );
+            createPersistedOrder();
         }
 
         orderService.logicallyDeleteById(persistedOrderToDelete.getId());
