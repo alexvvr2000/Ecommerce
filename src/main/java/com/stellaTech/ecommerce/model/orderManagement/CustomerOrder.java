@@ -27,6 +27,10 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @JsonManagedReference
     @Singular
     private final Set<CustomerOrderItem> customerOrderItems = new HashSet<>();
+    @NotNull
+    @EqualsAndHashCode.Include
+    @Column(name = "purchased_date", updatable = false, nullable = false)
+    private final Date orderDate = new Date();
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +41,6 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @ManyToOne
     @JoinColumn(name = "platform_user_id", updatable = false, nullable = false)
     private PlatformUser platformUser;
-    @NotNull
-    @EqualsAndHashCode.Include
-    @Column(name = "purchased_date", updatable = false, nullable = false)
-    private Date orderDate = new Date();
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;
