@@ -1,8 +1,8 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
-import com.stellaTech.ecommerce.service.order.OrderService;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.generics.OrderService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class OrderController {
 
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long orderId) {
-        orderService.logicallyDeleteOrder(orderId);
+        orderService.logicallyDeleteById(orderId);
         log.info("Deleted order with id {}", orderId);
         return ResponseEntity.noContent().build();
     }

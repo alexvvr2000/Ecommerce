@@ -1,8 +1,8 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
-import com.stellaTech.ecommerce.service.product.ProductService;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.generics.ProductService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,7 @@ public class ProductController {
 
     @DeleteMapping("/products/{idProduct}")
     public ResponseEntity<?> logicalDeletePlatformUser(@NonNull @PathVariable Long idProduct) {
-        productService.logicallyDeleteProduct(idProduct);
+        productService.logicallyDeleteById(idProduct);
         log.info("Deleted product with id {}", idProduct);
         return ResponseEntity.noContent().build();
     }
