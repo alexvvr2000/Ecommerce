@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.order;
+package com.stellaTech.ecommerce.service.implementation;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
@@ -6,11 +6,14 @@ import com.stellaTech.ecommerce.model.orderManagement.CustomerOrderItem;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
+import com.stellaTech.ecommerce.repository.PlatformUserRepository;
+import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
-import com.stellaTech.ecommerce.service.platformUser.PlatformUserService;
-import com.stellaTech.ecommerce.service.product.ProductService;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.generics.OrderService;
+import com.stellaTech.ecommerce.service.generics.PlatformUserService;
+import com.stellaTech.ecommerce.service.generics.ProductService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,9 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
-public class OrderService {
+public class OrderServiceImp implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private PlatformUserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private PlatformUserService platformUserService;
@@ -31,8 +40,8 @@ public class OrderService {
     private ProductService productService;
 
     @Transactional
-    public void logicallyDeleteOrder(Long id) throws ResourceNotFoundException {
-        CustomerOrder customerOrder = getOrderById(id);
+    public void logicallyDeleteById(Long id) throws ResourceNotFoundException {
+        CustomerOrder customerOrder = this.orderRepository.getOrderById(id);
         customerOrder.setDeleted(true);
     }
 
@@ -40,11 +49,11 @@ public class OrderService {
     public OrderDto<OrderDto.OrderItemSelectDto> createOrder(
             @Validated(NullCheckGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto
     ) throws ResourceNotFoundException {
-        PlatformUser persistedUser = platformUserService.getUserById(dto.getPlatformUserId());
+        PlatformUser persistedUser = this.userRepository.getUserById(dto.getPlatformUserId());
         CustomerOrder.CustomerOrderBuilder customerOrderBuilder = CustomerOrder.builder()
                 .platformUser(persistedUser);
         for (OrderDto.OrderItemDto currentItemDto : dto.getOrderItems()) {
-            Product persistedProduct = productService.getProductById(currentItemDto.getProductId());
+            Product persistedProduct = this.productRepository.getProductById(currentItemDto.getProductId());
             CustomerOrderItem newCustomerOrderItem = CustomerOrderItem.builder()
                     .product(persistedProduct)
                     .quantity(currentItemDto.getQuantity())
@@ -85,17 +94,8 @@ public class OrderService {
         ).map(this::orderSummary);
     }
 
-    @Transactional(readOnly = true)
-    protected CustomerOrder getOrderById(Long id) throws ResourceNotFoundException {
-        return orderRepository.findOne(
-                OrderSpecs.hasNotBeenDeleted(id)
-        ).orElseThrow(() ->
-                new ResourceNotFoundException("Active order with id " + id + " was not found")
-        );
-    }
-
-    public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) {
-        CustomerOrder persistedCustomerOrder = getOrderById(id);
+    public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) throws ResourceNotFoundException {
+        CustomerOrder persistedCustomerOrder = this.orderRepository.getOrderById(id);
         return orderSummary(persistedCustomerOrder);
     }
 }

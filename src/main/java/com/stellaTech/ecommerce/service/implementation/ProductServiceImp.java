@@ -1,11 +1,12 @@
-package com.stellaTech.ecommerce.service.product;
+package com.stellaTech.ecommerce.service.implementation;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.repository.specification.ProductSpecs;
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.generics.ProductService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
-public class ProductService {
+public class ProductServiceImp implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
@@ -31,14 +32,14 @@ public class ProductService {
     private ModelMapper patchPropertyMapper;
 
     @Transactional
-    public void logicallyDeleteProduct(Long id) throws ResourceNotFoundException {
-        Product product = getProductById(id);
+    public void logicallyDeleteById(Long id) throws ResourceNotFoundException {
+        Product product = this.productRepository.getProductById(id);
         product.setDeleted(true);
     }
 
     @Transactional
     public ProductDto updateProduct(Long productId, @Validated(NullCheckGroup.OnUpdate.class) ProductDto dto) throws ResourceNotFoundException {
-        Product persistedProduct = getProductById(productId);
+        Product persistedProduct = this.productRepository.getProductById(productId);
         persistPropertyManager.map(dto, persistedProduct);
         productRepository.save(persistedProduct);
         return persistPropertyManager.map(persistedProduct, ProductDto.class);
@@ -46,7 +47,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto patchProduct(Long id, @Valid ProductDto dto) throws ResourceNotFoundException {
-        Product persistedProduct = getProductById(id);
+        Product persistedProduct = this.productRepository.getProductById(id);
         patchPropertyMapper.map(dto, persistedProduct);
         productRepository.save(persistedProduct);
         return persistPropertyManager.map(persistedProduct, ProductDto.class);
@@ -66,16 +67,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product getProductById(Long id) throws ResourceNotFoundException {
-        return productRepository.findOne(
-                ProductSpecs.activeProductById(id)
-        ).orElseThrow(() ->
-                new ResourceNotFoundException("Active product with id " + id + " was not found")
-        );
-    }
-
-    @Transactional(readOnly = true)
     public ProductDto getProductDtoById(Long id) throws ResourceNotFoundException {
-        return persistPropertyManager.map(getProductById(id), ProductDto.class);
+        return persistPropertyManager.map(this.productRepository.getProductById(id), ProductDto.class);
     }
 }

@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.platformUser;
+package com.stellaTech.ecommerce.service.implementation;
 
 import com.stellaTech.ecommerce.exception.instance.InvalidPasswordField;
 import com.stellaTech.ecommerce.exception.instance.RepeatedUserPassword;
@@ -8,9 +8,10 @@ import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUserPasswor
 import com.stellaTech.ecommerce.repository.PlatformUserPasswordRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.specification.PlatformUserSpecs;
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
-import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
-import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.dto.platformUserManagement.PasswordChangeDto;
+import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.generics.PlatformUserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
@@ -23,10 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Optional;
-
 @Service
-public class PlatformUserService {
+public class PlatformUserServiceImp implements PlatformUserService {
     @Autowired
     private PlatformUserRepository userRepository;
 
@@ -42,8 +41,8 @@ public class PlatformUserService {
     private ModelMapper patchPropertyMapper;
 
     @Transactional
-    public void logicallyDeleteUser(Long id) throws ResourceNotFoundException {
-        PlatformUser user = getUserById(id);
+    public void logicallyDeleteById(Long id) throws ResourceNotFoundException {
+        PlatformUser user = this.userRepository.getUserById(id);
         user.setDeleted(true);
         userRepository.save(user);
     }
@@ -52,7 +51,7 @@ public class PlatformUserService {
     public void changePassword(
             @Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId
     ) throws ResourceNotFoundException, RepeatedUserPassword, InvalidPasswordField {
-        PlatformUserPassword password = getPasswordByUserId(platformUserId);
+        PlatformUserPassword password = this.userPasswordRepository.getPasswordByUserId(platformUserId);
         if (!password.getPassword().equals(dto.getOldPassword())) {
             throw new InvalidPasswordField("Incorrect old password");
         }
@@ -70,7 +69,7 @@ public class PlatformUserService {
     public PlatformUserDto updatePlatformUser(
             Long idUser, @Validated(NullCheckGroup.OnUpdate.class) PlatformUserDto dto
     ) throws ResourceNotFoundException {
-        PlatformUser persistedUser = getUserById(idUser);
+        PlatformUser persistedUser = this.userRepository.getUserById(idUser);
         persistPropertyManager.map(dto, persistedUser);
         userRepository.save(persistedUser);
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
@@ -80,7 +79,7 @@ public class PlatformUserService {
     public PlatformUserDto patchPlatformUser(
             Long idUser, @Valid PlatformUserDto dto
     ) throws ResourceNotFoundException {
-        PlatformUser persistedUser = getUserById(idUser);
+        PlatformUser persistedUser = this.userRepository.getUserById(idUser);
         patchPropertyMapper.map(dto, persistedUser);
         userRepository.save(persistedUser);
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
@@ -102,27 +101,7 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    public PlatformUser getUserById(Long id) throws ResourceNotFoundException {
-        return userRepository.findOne(
-                PlatformUserSpecs.activeUserById(id)
-        ).orElseThrow(() ->
-                new ResourceNotFoundException("Active user with id " + id + " was not found")
-        );
-    }
-
-    @Transactional(readOnly = true)
-    private PlatformUserPassword getPasswordByUserId(Long platformUserId) throws ResourceNotFoundException {
-        Optional<PlatformUserPassword> passwordObject = userPasswordRepository.findOne(
-                PlatformUserSpecs.activeUserPasswordById(platformUserId)
-        );
-        if (passwordObject.isEmpty()) {
-            throw new ResourceNotFoundException("The user whose password was searched was not found");
-        }
-        return passwordObject.get();
-    }
-
-    @Transactional(readOnly = true)
     public PlatformUserDto getUserDtoById(Long id) throws ResourceNotFoundException {
-        return persistPropertyManager.map(getUserById(id), PlatformUserDto.class);
+        return persistPropertyManager.map(this.userRepository.getUserById(id), PlatformUserDto.class);
     }
 }
