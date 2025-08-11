@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.dto;
+package com.stellaTech.ecommerce.service.dto.checkGroup;
 
 public interface NullCheckGroup {
     interface OnRead {
