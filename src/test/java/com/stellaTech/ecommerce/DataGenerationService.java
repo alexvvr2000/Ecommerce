@@ -1,13 +1,13 @@
 package com.stellaTech.ecommerce;
 
 import com.github.javafaker.Faker;
-import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
-import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
-import com.stellaTech.ecommerce.service.order.OrderService;
-import com.stellaTech.ecommerce.service.platformUser.PlatformUserService;
-import com.stellaTech.ecommerce.service.product.ProductService;
+import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
+import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.generics.OrderService;
+import com.stellaTech.ecommerce.service.generics.PlatformUserService;
+import com.stellaTech.ecommerce.service.generics.ProductService;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Value;
@@ -29,13 +29,13 @@ public class DataGenerationService {
     private static final Faker faker = new Faker(new Locale("es-MX"));
 
     @Autowired
-    private OrderService orderService;
+    private OrderService orderServiceImp;
 
     @Autowired
-    private PlatformUserService platformUserService;
+    private PlatformUserService platformUserServiceImp;
 
     @Autowired
-    private ProductService productService;
+    private ProductService productServiceImp;
 
     public @Validated(NullCheckGroup.OnInsert.class) PlatformUserDto createInsertUserDto() {
         return PlatformUserDto.builder()
@@ -49,7 +49,7 @@ public class DataGenerationService {
 
     public @Validated(NullCheckGroup.OnRead.class) PlatformUserDto createPersistedUser() {
         PlatformUserDto newUser = createInsertUserDto();
-        return platformUserService.createUser(newUser);
+        return platformUserServiceImp.createUser(newUser);
     }
 
     public @Validated(NullCheckGroup.OnInsert.class) ProductDto createInsertProductDto() {
@@ -63,7 +63,7 @@ public class DataGenerationService {
 
     public @Validated(NullCheckGroup.OnRead.class) ProductDto createPersistedProduct() {
         ProductDto newProduct = createInsertProductDto();
-        return productService.createProduct(newProduct);
+        return productServiceImp.createProduct(newProduct);
     }
 
     public @Valid OrderDto.OrderItemInsertDto createInsertDtoOrderItem(
@@ -114,7 +114,7 @@ public class DataGenerationService {
         OrderDto<OrderDto.OrderItemInsertDto> newOrder = createInsertDtoOrder(
                 itemAmount, user, itemAmountRange
         );
-        return orderService.createOrder(newOrder);
+        return orderServiceImp.createOrder(newOrder);
     }
 
     @Value
