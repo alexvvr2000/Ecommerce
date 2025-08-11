@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.ProductService;
+import com.stellaTech.ecommerce.service.product.ProductService;
 import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import jakarta.validation.Valid;

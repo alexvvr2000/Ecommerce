@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service;
+package com.stellaTech.ecommerce.service.order;
 
 import com.stellaTech.ecommerce.DataGenerationTesting;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;

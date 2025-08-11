@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service;
+package com.stellaTech.ecommerce.service.platformUser;
 
 import com.stellaTech.ecommerce.exception.instance.InvalidPasswordField;
 import com.stellaTech.ecommerce.exception.instance.RepeatedUserPassword;
@@ -102,7 +102,7 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    protected PlatformUser getUserById(Long id) throws ResourceNotFoundException {
+    public PlatformUser getUserById(Long id) throws ResourceNotFoundException {
         return userRepository.findOne(
                 PlatformUserSpecs.activeUserById(id)
         ).orElseThrow(() ->
@@ -111,7 +111,7 @@ public class PlatformUserService {
     }
 
     @Transactional(readOnly = true)
-    protected PlatformUserPassword getPasswordByUserId(Long platformUserId) throws ResourceNotFoundException {
+    private PlatformUserPassword getPasswordByUserId(Long platformUserId) throws ResourceNotFoundException {
         Optional<PlatformUserPassword> passwordObject = userPasswordRepository.findOne(
                 PlatformUserSpecs.activeUserPasswordById(platformUserId)
         );

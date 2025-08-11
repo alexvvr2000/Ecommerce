@@ -1,9 +1,9 @@
 package com.stellaTech.ecommerce;
 
 import com.github.javafaker.Faker;
-import com.stellaTech.ecommerce.service.OrderService;
-import com.stellaTech.ecommerce.service.PlatformUserService;
-import com.stellaTech.ecommerce.service.ProductService;
+import com.stellaTech.ecommerce.service.order.OrderService;
+import com.stellaTech.ecommerce.service.platformUser.PlatformUserService;
+import com.stellaTech.ecommerce.service.product.ProductService;
 import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
@@ -52,7 +52,7 @@ public class DataGenerationTesting {
     protected @Validated(NullCheckGroup.OnInsert.class) ProductDto createInsertProductDto() {
         return ProductDto.builder()
                 .name(faker.commerce().productName())
-                .mdFormatDescription("**" + faker.lorem().paragraph() + "**")
+                .mdFormatDescription("**%.100s**".formatted(faker.lorem().paragraph()))
                 .mainImageUrl(faker.internet().image())
                 .price(new BigDecimal(faker.commerce().price().replace(",", ".")))
                 .build();

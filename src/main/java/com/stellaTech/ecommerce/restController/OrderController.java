@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.OrderService;
+import com.stellaTech.ecommerce.service.order.OrderService;
 import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import lombok.NonNull;

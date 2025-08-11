@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service;
+package com.stellaTech.ecommerce.service.product;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.productManagement.Product;
@@ -66,7 +66,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    protected Product getProductById(Long id) throws ResourceNotFoundException {
+    public Product getProductById(Long id) throws ResourceNotFoundException {
         return productRepository.findOne(
                 ProductSpecs.activeProductById(id)
         ).orElseThrow(() ->

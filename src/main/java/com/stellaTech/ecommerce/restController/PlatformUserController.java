@@ -1,6 +1,6 @@
 package com.stellaTech.ecommerce.restController;
 
-import com.stellaTech.ecommerce.service.PlatformUserService;
+import com.stellaTech.ecommerce.service.platformUser.PlatformUserService;
 import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PasswordChangeDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;

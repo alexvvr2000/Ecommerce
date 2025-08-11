@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service;
+package com.stellaTech.ecommerce.service.order;
 
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
@@ -7,6 +7,8 @@ import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
+import com.stellaTech.ecommerce.service.platformUser.PlatformUserService;
+import com.stellaTech.ecommerce.service.product.ProductService;
 import com.stellaTech.ecommerce.service.dto.NullCheckGroup;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import lombok.NonNull;
