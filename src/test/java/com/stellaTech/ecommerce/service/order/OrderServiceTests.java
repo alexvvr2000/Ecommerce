@@ -1,31 +1,52 @@
 package com.stellaTech.ecommerce.service.order;
 
-import com.stellaTech.ecommerce.DataGenerationTesting;
+import com.github.javafaker.Faker;
+import com.stellaTech.ecommerce.DataGenerationService;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.PlatformUserManagement.PlatformUserDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
+import com.stellaTech.ecommerce.service.product.ProductService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OrderServiceTests extends DataGenerationTesting {
-    private final int MAXIMUM_ITEM_AMOUNT = 10;
-    private final int MINIMAL_ITEM_AMOUNT = 1;
-    private final int MINIMAL_ORDER_ITEM_AMOUNT = 1;
-    private final int MAXIMUM_ORDER_ITEM_AMOUNT = 10;
-    private final OrderItemAmountRange orderItemAmountRange = OrderItemAmountRange.builder()
-            .minOrderItemAmount(MINIMAL_ORDER_ITEM_AMOUNT)
-            .maxOrderItemAmount(MAXIMUM_ORDER_ITEM_AMOUNT)
+@SpringBootTest
+@ActiveProfiles("dev")
+@Transactional
+@Rollback
+public class OrderServiceTests {
+    protected static final Faker faker = new Faker(new Locale("es-MX"));
+    private final DataGenerationService.numberRange productCreationRange = DataGenerationService.numberRange.builder()
+            .minAmount(1)
+            .maxAmount(10)
             .build();
+    private final DataGenerationService.numberRange orderItemAmountRange = DataGenerationService.numberRange.builder()
+            .minAmount(1)
+            .maxAmount(10)
+            .build();
+    private final int randomItemAmount = faker.number().numberBetween(
+            productCreationRange.getMinAmount(), productCreationRange.getMaxAmount()
+    );
+    @Autowired
+    private DataGenerationService dataGenerationService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ProductService productService;
 
     @Test
     void createOrder_WithValidData() {
-        PlatformUserDto randomUser = createPersistedUser();
-        int randomItemAmount = faker.number().numberBetween(MINIMAL_ITEM_AMOUNT, MAXIMUM_ITEM_AMOUNT);
-        OrderDto<OrderDto.OrderItemInsertDto> newOrder = createInsertDtoOrder(
+        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
+        OrderDto<OrderDto.OrderItemInsertDto> newOrder = dataGenerationService.createInsertDtoOrder(
                 randomItemAmount, randomUser, orderItemAmountRange
         );
         OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = orderService.createOrder(newOrder);
@@ -36,10 +57,10 @@ public class OrderServiceTests extends DataGenerationTesting {
                 .stream().map(currentItem -> {
                     BigDecimal storedPrice = currentItem.getPrice();
                     Long productId = currentItem.getProductId();
+                    Integer storedAmount = currentItem.getQuantity();
                     ProductDto storedProduct = productService.getProductDtoById(productId);
                     assertEquals(storedProduct.getPrice(), storedPrice);
                     assertEquals(productId, storedProduct.getId());
-                    Integer storedAmount = currentItem.getQuantity();
                     return storedPrice.multiply(BigDecimal.valueOf(storedAmount));
                 }).reduce(BigDecimal::add)
                 .orElseThrow(
@@ -52,9 +73,8 @@ public class OrderServiceTests extends DataGenerationTesting {
 
     @Test
     void getOrderDtoById_WhenOrderExists() {
-        PlatformUserDto randomUser = createPersistedUser();
-        int randomItemAmount = faker.number().numberBetween(MINIMAL_ITEM_AMOUNT, MAXIMUM_ITEM_AMOUNT);
-        OrderDto<OrderDto.OrderItemInsertDto> validOrder = createInsertDtoOrder(
+        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
+        OrderDto<OrderDto.OrderItemInsertDto> validOrder = dataGenerationService.createInsertDtoOrder(
                 randomItemAmount, randomUser, orderItemAmountRange
         );
         OrderDto<OrderDto.OrderItemSelectDto> savedOrder = orderService.createOrder(validOrder);
@@ -67,9 +87,8 @@ public class OrderServiceTests extends DataGenerationTesting {
 
     @Test
     void deleteOrderFromDatabase() {
-        PlatformUserDto randomUser = createPersistedUser();
-        int randomItemAmount = faker.number().numberBetween(MINIMAL_ITEM_AMOUNT, MAXIMUM_ITEM_AMOUNT);
-        OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = createPersistedOrder(
+        PlatformUserDto randomUser = dataGenerationService.createPersistedUser();
+        OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = dataGenerationService.createPersistedOrder(
                 randomItemAmount, randomUser, orderItemAmountRange
         );
         Long orderId = persistedOrder.getId();
