@@ -39,7 +39,7 @@ public class OrderServiceIntegrationTests {
     @Autowired
     protected ProductService productService;
 
-    private OrderDto<OrderDto.OrderItemSelectDto> createPersistedOrder(PlatformUserDto userDto, Long orderId, DataGenerationService.NumberRange productListSizeRange) {
+    private OrderDto<OrderDto.OrderItemSelectDto> createPersistedOrder(long userId, Long orderId, DataGenerationService.NumberRange productListSizeRange) {
         List<ProductDto> productDtoList = dataGenerationService.createValidListProductDto(
                 amountListProductDto, productListSizeRange
         );
@@ -47,16 +47,17 @@ public class OrderServiceIntegrationTests {
                 productDtoList.stream().map(
                         productDto -> productService.createProduct(productDto)
                 ).toList(),
-                orderItemAmountRange, userDto, orderId
+                orderItemAmountRange, userId, orderId
         );
         return orderService.createOrder(newOrder);
     }
 
     @Test
     void createOrderWithValidData() {
-        PlatformUserDto platformUserDto =  dataGenerationService.createValidPlatformUserDto(testUserId);
+        PlatformUserDto userDto = dataGenerationService.createValidPlatformUserDto(testUserId);
+        PlatformUserDto persistedUser = platformUserService.createUser(userDto);
         OrderDto<OrderDto.OrderItemSelectDto> newOrder = createPersistedOrder(
-                platformUserService.createUser(platformUserDto),
+                persistedUser.getId(),
                 testOrderId,
                 orderItemAmountRange
         );
@@ -84,8 +85,9 @@ public class OrderServiceIntegrationTests {
     @Test
     void getOrderDtoByIdWhenOrderExists() {
         PlatformUserDto userDto = dataGenerationService.createValidPlatformUserDto(testUserId);
+        PlatformUserDto persistedUser = platformUserService.createUser(userDto);
         OrderDto<OrderDto.OrderItemSelectDto> savedOrder = createPersistedOrder(
-                platformUserService.createUser(userDto),
+                persistedUser.getId(),
                 testOrderId,
                 orderItemAmountRange
         );
@@ -99,8 +101,9 @@ public class OrderServiceIntegrationTests {
     @Test
     void deleteOrderFromDatabase() {
         PlatformUserDto userDto = dataGenerationService.createValidPlatformUserDto(testUserId);
+        PlatformUserDto persistedUser = platformUserService.createUser(userDto);
         OrderDto<OrderDto.OrderItemSelectDto> persistedOrderToDelete = createPersistedOrder(
-                platformUserService.createUser(userDto),
+                persistedUser.getId(),
                 testOrderId,
                 orderItemAmountRange
         );
