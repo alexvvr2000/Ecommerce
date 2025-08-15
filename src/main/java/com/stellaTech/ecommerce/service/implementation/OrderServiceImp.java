@@ -12,8 +12,6 @@ import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
 import com.stellaTech.ecommerce.service.generics.OrderService;
-import com.stellaTech.ecommerce.service.generics.PlatformUserService;
-import com.stellaTech.ecommerce.service.generics.ProductService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,12 +30,6 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private PlatformUserService platformUserService;
-
-    @Autowired
-    private ProductService productService;
 
     @Transactional
     public void logicallyDeleteById(Long id) throws ResourceNotFoundException {
