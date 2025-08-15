@@ -8,13 +8,16 @@ import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -49,6 +52,37 @@ public class OrderServiceUnitTest {
     @InjectMocks
     protected OrderServiceImp orderService;
 
+    protected boolean persistedItemsAreEqual(
+            @Valid List<ProductDto> productDtoList,
+            @Valid OrderDto<OrderDto.OrderItemSelectDto> validOrderDto
+    ) {
+        List<Long> persistedProductIds = validOrderDto.getOrderItems().stream()
+                .map(OrderDto.OrderItemSelectDto::getProductId)
+                .sorted()
+                .toList();
+        List<Long> insertedProductIds = productDtoList.stream()
+                .map(ProductDto::getId)
+                .sorted()
+                .toList();
+
+        assertEquals(persistedProductIds, insertedProductIds);
+
+        BigDecimal totalPrice = validOrderDto.getOrderItems().stream()
+                .map(item -> {
+                    ProductDto originalProduct = productDtoList.stream()
+                            .filter(product -> Objects.equals(product.getId(), item.getProductId()))
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException(
+                                    "Product not found for ID: " + item.getProductId()));
+                    assertEquals(originalProduct.getPrice(), item.getPrice());
+                    BigDecimal subtotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                    assertEquals(subtotal, item.getSubtotal());
+                    return subtotal;
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalPrice.equals(validOrderDto.getTotalAmount());
+    }
+
     @Test
     void createOrderWithValidData() throws NoSuchFieldException, IllegalAccessException {
         List<ProductDto> productDtoList = dataGenerationService.createValidListProductDto(
@@ -74,7 +108,13 @@ public class OrderServiceUnitTest {
                 productDtoList, orderItemQuantityRange, userData.getId(), testOrderId
         );
         OrderDto<OrderDto.OrderItemSelectDto> result = orderService.createOrder(validOrderDto);
-        assertEquals(result.getOrderItems().size(), productDtoList.size());
+
+        assertNotNull(result);
+        assertSame(result.getPlatformUserId(), userData.getId());
+        result.getOrderItems().forEach(
+                item -> assertEquals(item.getOrderId(), result.getId())
+        );
+        assertTrue(persistedItemsAreEqual(productDtoList, result));
     }
 
     @Test
@@ -86,12 +126,16 @@ public class OrderServiceUnitTest {
                 productDtoList, orderItemQuantityRange, testUserId, testOrderId
         );
 
-        CustomerOrder mockOrder = dataGenerationService.createCustomerOrderModel(validOrderDto);
+        CustomerOrder mockOrder = dataGenerationService.createCustomerOrderModel(validOrderDto, productDtoList);
         when(orderRepository.getOrderById(testOrderId)).thenReturn(mockOrder);
 
         OrderDto<OrderDto.OrderItemSelectDto> result = orderService.getOrderDtoById(testOrderId);
         assertNotNull(result);
-        assertEquals(result.getOrderItems().size(), productDtoList.size());
+        assertSame(result.getPlatformUserId(), validOrderDto.getId());
+        result.getOrderItems().forEach(
+                item -> assertEquals(item.getOrderId(), result.getId())
+        );
+        assertTrue(persistedItemsAreEqual(productDtoList, result));
     }
 
     @Test
