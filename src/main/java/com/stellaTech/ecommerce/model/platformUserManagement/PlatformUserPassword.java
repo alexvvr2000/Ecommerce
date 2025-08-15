@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "platform_user_password")
 public class PlatformUserPassword {

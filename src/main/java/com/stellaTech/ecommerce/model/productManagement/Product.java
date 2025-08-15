@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "product")
 public class Product extends LogicallyDeletableEntity {
     @EqualsAndHashCode.Include

@@ -9,6 +9,7 @@ import lombok.*;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "platform_user")
 public class PlatformUser extends LogicallyDeletableEntity {
     @Getter

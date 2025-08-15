@@ -18,6 +18,7 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customer_order")
 public class CustomerOrder extends LogicallyDeletableEntity {
@@ -45,7 +46,7 @@ public class CustomerOrder extends LogicallyDeletableEntity {
     @Column(name = "total_amount", nullable = false, precision = 20, scale = 2, updatable = false)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Builder
+    @Builder(toBuilder = true)
     public CustomerOrder(@NonNull PlatformUser platformUser, @Singular Set<CustomerOrderItem> customerOrderItems) {
         this.setPlatformUser(platformUser);
         this.setCustomerOrderItems(customerOrderItems);
