@@ -11,19 +11,26 @@ import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserD
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
+@Slf4j
 @Service
 public class DataGenerationService {
     protected final Faker faker = new Faker(new Locale("es-MX"));
-    protected final ModelMapper propertyMapper = new ModelMapper();
+
+    protected final ModelMapper getPropertyMapper() {
+        ModelMapper propertyMapper = new ModelMapper();
+        propertyMapper.getConfiguration().setSkipNullEnabled(false);
+        propertyMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return propertyMapper;
+    }
 
     public @Valid PlatformUserDto createValidPlatformUserDto(
             Long newUserId
@@ -50,10 +57,18 @@ public class DataGenerationService {
                 .build();
     }
 
-    public @Valid List<ProductDto> createValidListProductDto(int productAmount, NumberRange productIdRange) {
+    public @Valid List<ProductDto> createValidListProductDto(int productAmount, NumberRange productIdRange) throws IllegalArgumentException {
+        if (productAmount > productIdRange.maxAmount) {
+            throw new IllegalArgumentException("The id range upper limit must be greater or equal to " + productAmount);
+        }
         List<ProductDto> productDtoList = new ArrayList<>();
+        Set<Long> usedIds = new HashSet<>();
         for (int i = 0; i < productAmount; i += 1) {
-            long productId = faker.number().numberBetween(productIdRange.getMinAmount(), productIdRange.getMaxAmount());
+            long productId;
+            do {
+                productId = faker.number().numberBetween(productIdRange.getMinAmount(), productIdRange.getMaxAmount());
+            } while (usedIds.contains(productId));
+            usedIds.add(productId);
             productDtoList.add(createValidProductDto(productId));
         }
         return productDtoList;
@@ -72,7 +87,7 @@ public class DataGenerationService {
             @Valid List<ProductDto> productDtoList,
             NumberRange itemAmountRange,
             long userId,
-            Long orderId
+            long orderId
     ) {
         List<OrderDto.OrderItemInsertDto> orderItems = new ArrayList<>();
         for (ProductDto newProduct : productDtoList) {
@@ -91,28 +106,27 @@ public class DataGenerationService {
                 .build();
     }
 
-
-    public PlatformUser createPlatformUserModel(
+    public @Valid PlatformUser createPlatformUserModel(
             @Valid PlatformUserDto baseData
     ) throws NoSuchFieldException, IllegalAccessException {
-        PlatformUser newUser = propertyMapper.map(baseData, PlatformUser.class);
+        PlatformUser newUser = getPropertyMapper().map(baseData, PlatformUser.class);
         Field idField = PlatformUser.class.getDeclaredField("id");
         idField.setAccessible(true);
         idField.set(newUser, baseData.getId());
         return newUser;
     }
 
-    public Product createProductModel(
-            ProductDto baseData
+    public @Valid Product createProductModel(
+            @Valid ProductDto baseData
     ) throws NoSuchFieldException, IllegalAccessException {
-        Product newProduct = propertyMapper.map(baseData, Product.class);
+        Product newProduct = getPropertyMapper().map(baseData, Product.class);
         Field idField = Product.class.getDeclaredField("id");
         idField.setAccessible(true);
         idField.set(newProduct, baseData.getId());
         return newProduct;
     }
 
-    public CustomerOrderItem createCustomerOrderItemModel(
+    public @Valid CustomerOrderItem createCustomerOrderItemModel(
             Product productData, Integer productQuantity
     ) {
         return CustomerOrderItem.builder()
@@ -121,17 +135,14 @@ public class DataGenerationService {
                 .build();
     }
 
-    public CustomerOrder createCustomerOrderModel(
-            OrderDto<OrderDto.OrderItemInsertDto> baseData
+    public @Valid CustomerOrder createCustomerOrderModel(
+            @Valid OrderDto<OrderDto.OrderItemInsertDto> baseData
     ) throws NoSuchFieldException, IllegalAccessException {
-        CustomerOrder baseCustomerOrder = new CustomerOrder();
-        Field idField = CustomerOrder.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        idField.set(baseCustomerOrder, baseData.getId());
-        PlatformUserDto platformUserDto = createValidPlatformUserDto(
-                baseData.getPlatformUserId()
-        );
-        return baseCustomerOrder.toBuilder()
+        PlatformUserDto userMockData = createValidPlatformUserDto(baseData.getPlatformUserId());
+        CustomerOrder baseCustomerOrder = CustomerOrder.builder()
+                .platformUser(
+                        createPlatformUserModel(userMockData)
+                )
                 .customerOrderItems(baseData.getOrderItems().stream().map(currentOrderItem -> {
                     try {
                         Product currentProductModel = createProductModel(
@@ -144,8 +155,11 @@ public class DataGenerationService {
                         throw new RuntimeException(e);
                     }
                 }).toList())
-                .platformUser(createPlatformUserModel(platformUserDto))
                 .build();
+        Field idField = CustomerOrder.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(baseCustomerOrder, baseData.getId());
+        return baseCustomerOrder;
     }
 
     @Data
