@@ -99,7 +99,7 @@ public class OrderServiceIntegrationTests {
     }
 
     @Test
-    void deleteOrderFromDatabase() {
+    void logicallyDeleteByIdWhenOrderExists() {
         PlatformUserDto userDto = dataGenerationService.createValidPlatformUserDto(testUserId);
         PlatformUserDto persistedUser = platformUserService.createUser(userDto);
         OrderDto<OrderDto.OrderItemSelectDto> persistedOrderToDelete = createPersistedOrder(
