@@ -9,9 +9,10 @@ import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 
-@Slf4j
 @Service
 public class DataGenerationService {
     protected final Faker faker = new Faker(new Locale("es-MX"));
@@ -147,6 +147,36 @@ public class DataGenerationService {
                     try {
                         Product currentProductModel = createProductModel(
                                 createValidProductDto(currentOrderItem.getProductId())
+                        );
+                        return createCustomerOrderItemModel(
+                                currentProductModel, currentOrderItem.getQuantity()
+                        );
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList())
+                .build();
+        Field idField = CustomerOrder.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(baseCustomerOrder, baseData.getId());
+        return baseCustomerOrder;
+    }
+
+    public @Valid CustomerOrder createCustomerOrderModel(
+            @Valid OrderDto<OrderDto.OrderItemInsertDto> baseData, @NonNull @NotEmpty List<ProductDto> productDtoList
+    ) throws NoSuchFieldException, IllegalAccessException {
+        PlatformUserDto userMockData = createValidPlatformUserDto(baseData.getPlatformUserId());
+        CustomerOrder baseCustomerOrder = CustomerOrder.builder()
+                .platformUser(
+                        createPlatformUserModel(userMockData)
+                )
+                .customerOrderItems(baseData.getOrderItems().stream().map(currentOrderItem -> {
+                    try {
+                        ProductDto newDto = productDtoList.stream()
+                                .filter(dto -> currentOrderItem.getProductId().equals(dto.getId()))
+                                .findFirst().orElseThrow();
+                        Product currentProductModel = createProductModel(
+                                newDto
                         );
                         return createCustomerOrderItemModel(
                                 currentProductModel, currentOrderItem.getQuantity()
