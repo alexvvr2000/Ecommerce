@@ -5,16 +5,15 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Singular;
-import lombok.Value;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Value
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDto<T extends OrderDto.OrderItemDto> {
     @Null(groups = NullCheckGroup.OnInsert.class, message = "The id is handled automatically by the system")
     @NotNull(groups = NullCheckGroup.OnRead.class)
