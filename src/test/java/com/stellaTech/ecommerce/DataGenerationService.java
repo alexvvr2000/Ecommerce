@@ -71,7 +71,7 @@ public class DataGenerationService {
     public @Valid OrderDto<OrderDto.OrderItemInsertDto> createValidOrderDto(
             @Valid List<ProductDto> productDtoList,
             NumberRange itemAmountRange,
-            @Valid PlatformUserDto user,
+            long userId,
             Long orderId
     ) {
         List<OrderDto.OrderItemInsertDto> orderItems = new ArrayList<>();
@@ -86,7 +86,7 @@ public class DataGenerationService {
         return OrderDto
                 .<OrderDto.OrderItemInsertDto>builder()
                 .id(orderId)
-                .platformUserId(user.getId())
+                .platformUserId(userId)
                 .orderItems(orderItems)
                 .build();
     }
@@ -103,12 +103,12 @@ public class DataGenerationService {
     }
 
     public Product createProductModel(
-            ProductDto baseData, Long productId
+            ProductDto baseData
     ) throws NoSuchFieldException, IllegalAccessException {
         Product newProduct = propertyMapper.map(baseData, Product.class);
         Field idField = Product.class.getDeclaredField("id");
         idField.setAccessible(true);
-        idField.set(newProduct, productId);
+        idField.set(newProduct, baseData.getId());
         return newProduct;
     }
 
@@ -127,7 +127,7 @@ public class DataGenerationService {
         CustomerOrder baseCustomerOrder = new CustomerOrder();
         Field idField = CustomerOrder.class.getDeclaredField("id");
         idField.setAccessible(true);
-        idField.set(baseData, baseData.getId());
+        idField.set(baseCustomerOrder, baseData.getId());
         PlatformUserDto platformUserDto = createValidPlatformUserDto(
                 baseData.getPlatformUserId()
         );
@@ -135,7 +135,7 @@ public class DataGenerationService {
                 .customerOrderItems(baseData.getOrderItems().stream().map(currentOrderItem -> {
                     try {
                         Product currentProductModel = createProductModel(
-                                createValidProductDto(currentOrderItem.getProductId()), currentOrderItem.getProductId()
+                                createValidProductDto(currentOrderItem.getProductId())
                         );
                         return createCustomerOrderItemModel(
                                 currentProductModel, currentOrderItem.getQuantity()
