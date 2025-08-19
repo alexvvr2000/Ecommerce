@@ -59,7 +59,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
             throw new InvalidPasswordField("New passwords do not match");
         }
         if (dto.getNewPassword().equals(password.getPassword())) {
-            throw new InvalidPasswordField("New password must be different from current password");
+            throw new RepeatedUserPassword("New password must be different from current password");
         }
         password.setPassword(dto.getNewPassword());
         userPasswordRepository.save(password);
