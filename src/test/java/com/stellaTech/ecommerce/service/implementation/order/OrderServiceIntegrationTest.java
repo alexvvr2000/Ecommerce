@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.implementation;
+package com.stellaTech.ecommerce.service.implementation.order;
 
 import com.stellaTech.ecommerce.DataGenerationService;
 import com.stellaTech.ecommerce.exception.instance.ResourceNotFoundException;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class OrderServiceIntegrationTests {
+public class OrderServiceIntegrationTest {
     protected final DataGenerationService.NumberRange orderItemAmountRange = DataGenerationService.NumberRange.builder()
             .minAmount(1)
             .maxAmount(10)

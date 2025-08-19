@@ -1,4 +1,4 @@
-package com.stellaTech.ecommerce.service.implementation;
+package com.stellaTech.ecommerce.service.implementation.order;
 
 import com.stellaTech.ecommerce.DataGenerationService;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
@@ -8,6 +8,7 @@ import com.stellaTech.ecommerce.repository.ProductRepository;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.ProductDto;
 import com.stellaTech.ecommerce.service.dto.platformUserManagement.PlatformUserDto;
+import com.stellaTech.ecommerce.service.implementation.OrderServiceImp;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
