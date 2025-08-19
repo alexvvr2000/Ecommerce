@@ -33,15 +33,13 @@ out/*
 /mavenHomeManager.xml
 
 # private files
-env.properties
+env-*.properties
 
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
-env-*.yml
 
 ### STS ###
 .apt_generated
