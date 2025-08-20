@@ -150,7 +150,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <testFilesDirectory>${project.basedir}/src/test/jmeter</testFilesDirectory>
+                    <testFilesDirectory>jmeter</testFilesDirectory>
                     <propertiesUser>
                         <user.classpath>${project.build.outputDirectory}</user.classpath>
                     </propertiesUser>
