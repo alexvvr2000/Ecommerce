@@ -78,7 +78,6 @@ public class OrderServiceIntegrationTest {
                         () -> new IllegalArgumentException("The item price snapshots are not saved correctly")
                 );
         assertNotNull(savedOrder);
-        assertEquals(savedOrder.getId(), newOrder.getPlatformUserId());
         assertEquals(savedOrder.getTotalAmount(), expectedPrice);
     }
 
