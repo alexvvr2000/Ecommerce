@@ -2,6 +2,7 @@ package com.stellaTech.ecommerce.model.platformUserManagement;
 
 import com.stellaTech.ecommerce.model.inheritance.LogicallyDeletableEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -36,6 +37,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Getter
     @EqualsAndHashCode.Include
     @Setter
+    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 

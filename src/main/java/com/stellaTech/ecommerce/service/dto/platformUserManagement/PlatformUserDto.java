@@ -30,7 +30,6 @@ public class PlatformUserDto {
     private String fullName;
 
     @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
-    @Email
     private String email;
 
     @NotBlank(groups = {NullCheckGroup.OnInsert.class, NullCheckGroup.OnUpdate.class})
