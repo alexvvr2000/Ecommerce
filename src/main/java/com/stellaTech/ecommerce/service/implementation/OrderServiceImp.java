@@ -5,6 +5,7 @@ import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrderItem;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
+import com.stellaTech.ecommerce.repository.OrderItemRepository;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
 import com.stellaTech.ecommerce.repository.ProductRepository;
@@ -21,11 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderServiceImp implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private PlatformUserRepository userRepository;
@@ -37,8 +45,10 @@ public class OrderServiceImp implements OrderService {
     public void logicallyDeleteById(Long id) throws ResourceNotFoundException {
         CustomerOrder customerOrder = this.orderRepository.getOrderById(id);
         customerOrder.setDeleted(true);
+        orderRepository.save(customerOrder);
     }
 
+    @Override
     @Transactional
     public OrderDto<OrderDto.OrderItemSelectDto> createOrder(
             @Validated(NullCheckGroup.OnInsert.class) OrderDto<OrderDto.OrderItemInsertDto> dto
@@ -81,6 +91,7 @@ public class OrderServiceImp implements OrderService {
         return orderDtoBuilder.build();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Page<OrderDto<OrderDto.OrderItemSelectDto>> getAllOrders(@NonNull Pageable pageable) {
         return orderRepository.findAll(
@@ -88,13 +99,61 @@ public class OrderServiceImp implements OrderService {
         ).map(this::orderSummary);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) throws ResourceNotFoundException {
         CustomerOrder persistedCustomerOrder = this.orderRepository.getOrderById(id);
         return orderSummary(persistedCustomerOrder);
     }
 
     @Override
-    public BigDecimal getAverageProductPrice(Long idUser) throws ResourceNotFoundException {
-        return null;
+    @Transactional(readOnly = true)
+    public BigDecimal getAverageProductPrice(@NonNull Long idUser) throws ResourceNotFoundException {
+        Iterable<PlatformUser> allUsers = userRepository.findAll();
+        PlatformUser targetUser = null;
+        for (PlatformUser user : allUsers) {
+            if (user.getId().equals(idUser)) {
+                targetUser = user;
+                break;
+            }
+        }
+
+        if (targetUser == null) {
+            throw new ResourceNotFoundException("User with id " + idUser + " was not found");
+        }
+
+        List<CustomerOrder> allOrders = new ArrayList<>();
+        Iterable<CustomerOrder> ordersIterable = orderRepository.findAll();
+        for (CustomerOrder order : ordersIterable) {
+            allOrders.add(order);
+        }
+
+        List<CustomerOrder> userOrders = new ArrayList<>();
+        for (CustomerOrder order : allOrders) {
+            if (order.getPlatformUser().getId().equals(idUser)) {
+                userOrders.add(order);
+            }
+        }
+
+        List<CustomerOrderItem> allItems = new ArrayList<>();
+        for (CustomerOrder order : userOrders) {
+            Set<CustomerOrderItem> items = order.getCustomerOrderItems();
+            allItems.addAll(items);
+        }
+
+        BigDecimal sum = BigDecimal.ZERO;
+        int count = 0;
+
+        for (CustomerOrderItem item : allItems) {
+            BigDecimal price = item.getProductPriceSnapshot().getPrice();
+            sum = sum.add(price);
+            count++;
+        }
+
+        if (count == 0) {
+            return BigDecimal.ZERO;
+        }
+
+        return sum.divide(BigDecimal.valueOf(count), 20, RoundingMode.HALF_UP);
     }
 }

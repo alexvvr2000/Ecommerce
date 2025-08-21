@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -37,6 +39,13 @@ public class OrderController {
         OrderDto<OrderDto.OrderItemSelectDto> persistedOrder = orderService.createOrder(orderInsertDto);
         log.info("Created order with id {}", persistedOrder.getId());
         return ResponseEntity.ok(persistedOrder);
+    }
+
+    @PostMapping("/orders/getAverageProductPrice")
+    public ResponseEntity<BigDecimal> getAverageProductPrice(@NonNull Long userId){
+        BigDecimal averagePrice = orderService.getAverageProductPrice(userId);
+        log.info("Calculated average order item price for user {}", userId);
+        return ResponseEntity.ok(averagePrice);
     }
 
     @DeleteMapping("/orders/{orderId}")
