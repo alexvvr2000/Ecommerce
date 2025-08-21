@@ -1,0 +1,19 @@
+meta {
+  name: Calcular precio promedio guardado
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/api/v1/orders/getAverageProductPrice?userId=3792
+  body: none
+  auth: inherit
+}
+
+params:query {
+  userId: 3792
+}
+
+settings {
+  encodeUrl: true
+}
