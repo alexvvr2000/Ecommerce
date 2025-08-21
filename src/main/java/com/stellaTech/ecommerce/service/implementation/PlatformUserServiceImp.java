@@ -47,6 +47,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         userRepository.save(user);
     }
 
+    @Override
     @Transactional
     public void changePassword(
             @Valid @NotNull PasswordChangeDto dto, @NotNull Long platformUserId
@@ -65,6 +66,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         userPasswordRepository.save(password);
     }
 
+    @Override
     @Transactional
     public PlatformUserDto updatePlatformUser(
             Long idUser, @Validated(NullCheckGroup.OnUpdate.class) PlatformUserDto dto
@@ -75,6 +77,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
+    @Override
     @Transactional
     public PlatformUserDto patchPlatformUser(
             Long idUser, @Valid PlatformUserDto dto
@@ -85,6 +88,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
+    @Override
     @Transactional
     public PlatformUserDto createUser(@Validated(NullCheckGroup.OnInsert.class) PlatformUserDto dto) {
         PlatformUser persistedUser = persistPropertyManager.map(dto, PlatformUser.class);
@@ -92,6 +96,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         return persistPropertyManager.map(persistedUser, PlatformUserDto.class);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Page<PlatformUserDto> getAllPlatformUsers(@NonNull Pageable pageable) {
         Page<PlatformUser> users = userRepository.findAll(PlatformUserSpecs.hasNotBeenDeleted(), pageable);
@@ -100,6 +105,7 @@ public class PlatformUserServiceImp implements PlatformUserService {
         );
     }
 
+    @Override
     @Transactional(readOnly = true)
     public PlatformUserDto getUserDtoById(Long id) throws ResourceNotFoundException {
         return persistPropertyManager.map(this.userRepository.getUserById(id), PlatformUserDto.class);

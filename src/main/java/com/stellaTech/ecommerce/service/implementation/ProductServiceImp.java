@@ -37,6 +37,7 @@ public class ProductServiceImp implements ProductService {
         product.setDeleted(true);
     }
 
+    @Override
     @Transactional
     public ProductDto updateProduct(Long productId, @Validated(NullCheckGroup.OnUpdate.class) ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = this.productRepository.getProductById(productId);
@@ -45,6 +46,7 @@ public class ProductServiceImp implements ProductService {
         return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
+    @Override
     @Transactional
     public ProductDto patchProduct(Long id, @Valid ProductDto dto) throws ResourceNotFoundException {
         Product persistedProduct = this.productRepository.getProductById(id);
@@ -53,6 +55,7 @@ public class ProductServiceImp implements ProductService {
         return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
+    @Override
     @Transactional
     public ProductDto createProduct(@Validated(NullCheckGroup.OnInsert.class) ProductDto dto) {
         Product persistedProduct = persistPropertyManager.map(dto, Product.class);
@@ -60,12 +63,14 @@ public class ProductServiceImp implements ProductService {
         return persistPropertyManager.map(persistedProduct, ProductDto.class);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Page<ProductDto> getAllProductsPaginated(@NonNull Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(ProductSpecs.hasNotBeenDeleted(), pageable);
         return productPage.map(product -> persistPropertyManager.map(product, ProductDto.class));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ProductDto getProductDtoById(Long id) throws ResourceNotFoundException {
         return persistPropertyManager.map(this.productRepository.getProductById(id), ProductDto.class);
