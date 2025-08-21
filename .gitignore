@@ -64,6 +64,10 @@ target/
 .idea/sonarlint/
 *.iml
 
+# folders de java
+jmeter/env/
+.python-version
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
