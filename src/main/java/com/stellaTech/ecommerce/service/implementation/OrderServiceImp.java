@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
+
 @Service
 public class OrderServiceImp implements OrderService {
     @Autowired
@@ -89,5 +91,10 @@ public class OrderServiceImp implements OrderService {
     public OrderDto<OrderDto.OrderItemSelectDto> getOrderDtoById(Long id) throws ResourceNotFoundException {
         CustomerOrder persistedCustomerOrder = this.orderRepository.getOrderById(id);
         return orderSummary(persistedCustomerOrder);
+    }
+
+    @Override
+    public BigDecimal getAverageProductPrice(Long idUser) throws ResourceNotFoundException {
+        return null;
     }
 }
