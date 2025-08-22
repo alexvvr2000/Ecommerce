@@ -133,9 +133,9 @@ async def post_user() -> int:
                 print(f"Status post_user: {response.status}")
                 try:
                     response_json = await response.json()
-                    id = response_json.get("id")
-                    print(f"New user with id {id}")
-                    return id
+                    user_id = response_json.get("id")
+                    print(f"New user with id {user_id}")
+                    return user_id
                 except Exception as e:
                     print(e)
 
@@ -170,9 +170,9 @@ async def create_order(user_id: int, product_amount: int) -> PersistedUserOrder:
                 print(f"Status order: {response.status}")
                 try:
                     response_json = await response.json()
-                    id = response_json.get("id")
-                    print(f"New order with id {id}")
-                    return PersistedUserOrder(user_id, id)
+                    order_id = response_json.get("id")
+                    print(f"New order with id {order_id}")
+                    return PersistedUserOrder(user_id, order_id)
                 except Exception as e:
                     print(e)
 
