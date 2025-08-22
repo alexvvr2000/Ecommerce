@@ -68,6 +68,9 @@ target/
 .venv
 .python-version
 
+# self generated data
+jmeter/input_data
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

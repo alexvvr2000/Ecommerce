@@ -2,3 +2,4 @@ Faker
 aiohttp
 mypy
 aiofiles
+types-aiofiles

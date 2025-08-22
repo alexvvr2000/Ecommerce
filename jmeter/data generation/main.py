@@ -1,10 +1,11 @@
 from dataclasses import dataclass, asdict
-from decimal import Decimal
 from typing import List, Optional
 from faker import Faker
 from aiohttp import ClientSession, ClientConnectorError, ClientError
 from asyncio import gather, run
 from argparse import ArgumentParser
+from aiofiles import open
+from pathlib import Path
 
 parser = ArgumentParser()
 parser.add_argument("-i", "--maxItemsOrder", type=int)
@@ -14,6 +15,7 @@ parser.add_argument("-o", "--maxUserOrders", type=int)
 parser.add_argument("-uu", "--urlUser", default="http://localhost:8080/api/v1/users", type=str)
 parser.add_argument("-up", "--urlProduct", default="http://localhost:8080/api/v1/products", type=str)
 parser.add_argument("-uo", "--urlOrder", default="http://localhost:8080/api/v1/orders", type=str)
+parser.add_argument("-f", "--outputFolder", default=".", type=Path)
 
 args = parser.parse_args()
 
@@ -24,8 +26,12 @@ MAX_USER_ORDERS = args.maxUserOrders
 BASE_URL_USER = args.urlUser
 BASE_URL_PRODUCT = args.urlProduct
 BASE_URL_ORDER = args.urlOrder
+OUTPUT_FOLDER = args.outputFolder
 
 fake = Faker("es_MX")
+
+if not Path.is_dir(OUTPUT_FOLDER):
+    raise NotADirectoryError("You must")
 
 
 @dataclass
@@ -196,50 +202,23 @@ async def get_users_with_orders() -> List[int]:
     order_routines = [create_user_orders() for _ in range(0, MAX_USER_COUNT)]
     return await gather(*order_routines)
 
-async def get_order_product_average_price(user_id: int) -> tuple[int, Decimal]:
-    print(f"Process started for user {user_id}")
-    url_query = f"{BASE_URL_ORDER}/getAverageProductPrice?userId={user_id}"
-    try:
-        async with ClientSession() as session:
-            async with session.post(
-                url_query,
-                headers={"Content-Type": "application/json"},
-            ) as response:
-                print(f"Status order: {response.status}")
-                if response.status == 200:
-                    response_text = await response.text()
-                    
-                    try:
-                        average_price = Decimal(response_text.strip())
-                        print(f"Average price for user {user_id}: {average_price}")
-                        return user_id, average_price
-                    
-                    except Exception as e:
-                        print(f"Error converting response to Decimal: {e}")
-                        return user_id, Decimal("-1")
-                
-                else:
-                    print(f"Error response status: {response.status}")
-                    return user_id, Decimal("-1")
+async def write_user_id(output_folder: Path) -> Path:
+    new_file = Path(output_folder, "data.csv")
+    if Path.exists(new_file):
+        Path.unlink(new_file)
 
-    except ClientConnectorError:
-        print(
-            f"Error: Couldn't reach endpoint {url_query}"
-        )
-    except ClientError as e:
-        print(f"Client error: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-    return -1, Decimal("-1")
+    async with open(new_file, "w") as output_file:
+        await output_file.write("user_id\n")
+        user_list_int = await get_users_with_orders()
+        user_list_str = [str(user_id) for user_id in user_list_int]
+        user_data = "\n".join(user_list_str) + "\n"
+        await output_file.write(user_data)
+
+    return new_file
 
 async def main() -> None:
-    order_list = await get_users_with_orders()
-    print(f"Created {len(order_list)} users with orders")
-
-    tasks = [get_order_product_average_price(user_id) for user_id in order_list]
-    results = await gather(*tasks, return_exceptions=True)
-    
-    print("All results:", results)
+    csv_data_path = await write_user_id(OUTPUT_FOLDER)
+    print(f"New data in file: {csv_data_path}")
 
 if __name__ == "__main__":
     run(main())
