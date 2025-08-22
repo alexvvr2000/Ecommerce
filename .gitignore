@@ -64,8 +64,8 @@ target/
 .idea/sonarlint/
 *.iml
 
-# folders de java
-jmeter/env/
+# python folders
+.venv
 .python-version
 
 ### NetBeans ###

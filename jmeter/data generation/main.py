@@ -92,20 +92,20 @@ async def post_product() -> int:
                 print(f"Status post_user: {response.status}")
                 try:
                     response_json = await response.json()
-                    id = response_json.get("id")
-                    print(f"New product with id {id}")
-                    return id
+                    product_id = response_json.get("id")
+                    print(f"New product with id {product_id}")
+                    return product_id
                 except Exception as e:
                     print(e)
 
     except ClientConnectorError:
         print(
-            "Error: No se pudo conectar al servidor. ¿Está corriendo en localhost:8080?"
+            f"Couldn't connect to endpoint {BASE_URL_PRODUCT}"
         )
     except ClientError as e:
-        print(f"Error de cliente: {e}")
+        print(f"Client error: {e}")
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"Unexpected error: {e}")
     return -1
 
 
@@ -129,12 +129,12 @@ async def post_user() -> int:
 
     except ClientConnectorError:
         print(
-            "Error: No se pudo conectar al servidor. ¿Está corriendo en localhost:8080?"
+            f"Couldn't connect to endpoint {BASE_URL_USER}"
         )
     except ClientError as e:
         print(f"Error de cliente: {e}")
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"Unexpected error: {e}")
     return -1
 
 
@@ -166,12 +166,12 @@ async def create_order(user_id: int, product_amount: int) -> PersistedUserOrder:
 
     except ClientConnectorError:
         print(
-            "Error: No se pudo conectar al servidor. ¿Está corriendo en localhost:8080?"
+            f"Couldn't connect to endpoint {BASE_URL_ORDER}"
         )
     except ClientError as e:
-        print(f"Error de cliente: {e}")
+        print(f"Client error: {e}")
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"Unexpected error: {e}")
     return PersistedUserOrder(user_id, -1)
 
 async def get_users_with_orders() -> List[int]:
@@ -200,31 +200,30 @@ async def get_order_product_average_price(user_id: int) -> tuple[int, Decimal]:
                     try:
                         average_price = Decimal(response_text.strip())
                         print(f"Average price for user {user_id}: {average_price}")
-                        return (user_id, average_price)
+                        return user_id, average_price
                     
                     except Exception as e:
                         print(f"Error converting response to Decimal: {e}")
-                        return (user_id, Decimal("-1"))
+                        return user_id, Decimal("-1")
                 
                 else:
                     print(f"Error response status: {response.status}")
-                    return (user_id, Decimal("-1"))
+                    return user_id, Decimal("-1")
 
     except ClientConnectorError:
         print(
-            "Error: No se pudo conectar al servidor. ¿Está corriendo en localhost:8080?"
+            f"Error: Couldn't reach endpoint {url_query}"
         )
     except ClientError as e:
-        print(f"Error de cliente: {e}")
+        print(f"Client error: {e}")
     except Exception as e:
-        print(f"Error inesperado: {e}")
-    return (-1, Decimal("-1"))
+        print(f"Unexpected error: {e}")
+    return -1, Decimal("-1")
 
 async def main() -> None:
     order_list = await get_users_with_orders()
     print(f"Created {len(order_list)} users with orders")
-    
-    # Usar asyncio.gather en lugar de threads
+
     tasks = [get_order_product_average_price(user_id) for user_id in order_list]
     results = await gather(*tasks, return_exceptions=True)
     
