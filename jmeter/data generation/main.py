@@ -4,14 +4,26 @@ from typing import List, Optional
 from faker import Faker
 from aiohttp import ClientSession, ClientConnectorError, ClientError
 from asyncio import gather, run
+from argparse import ArgumentParser
 
-MAX_ITEMS_ORDER = 15
-MAX_PRODUCT_ORDER_QUANTITY = 20
-MAX_USER_COUNT = 10
-MAX_USER_ORDERS = 30
-BASE_URL_USER = "http://localhost:8080/api/v1/users"
-BASE_URL_PRODUCT = "http://localhost:8080/api/v1/products"
-BASE_URL_ORDER = "http://localhost:8080/api/v1/orders"
+parser = ArgumentParser()
+parser.add_argument("-i", "--maxItemsOrder", type=int)
+parser.add_argument("-u", "--maxProductOrderQuantity", type=int)
+parser.add_argument("-c", "--maxUserCount", type=int)
+parser.add_argument("-o", "--maxUserOrders", type=int)
+parser.add_argument("-uu", "--urlUser", default="http://localhost:8080/api/v1/users", type=str)
+parser.add_argument("-up", "--urlProduct", default="http://localhost:8080/api/v1/products", type=str)
+parser.add_argument("-uo", "--urlOrder", default="http://localhost:8080/api/v1/orders", type=str)
+
+args = parser.parse_args()
+
+MAX_ITEMS_ORDER = args.maxItemsOrder
+MAX_PRODUCT_ORDER_QUANTITY = args.maxProductOrderQuantity
+MAX_USER_COUNT = args.maxUserCount
+MAX_USER_ORDERS = args.maxUserOrders
+BASE_URL_USER = args.urlUser
+BASE_URL_PRODUCT = args.urlProduct
+BASE_URL_ORDER = args.urlOrder
 
 fake = Faker("es_MX")
 

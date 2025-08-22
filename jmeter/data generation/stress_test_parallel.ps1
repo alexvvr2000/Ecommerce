@@ -5,13 +5,13 @@ param(
 
 Write-Host "🌪️  EXTREME STRESS TEST - $NumRuns PROCESSES" -ForegroundColor Red
 
-# Execute the script with no controll
+# Execute the script with no control
 $jobs = @()
 for ($i = 1; $i -le $NumRuns; $i++) {
     Write-Host "💥 Starting process number $i" -ForegroundColor Red
 
     $job = Start-Job -ScriptBlock {
-        & python .\main.py
+        & python .\main.py --maxItemsOrder 5 --maxProductOrderQuantity 3 --maxUserCount 1 --maxUserOrders
         return $LASTEXITCODE
     }
     $jobs += $job
