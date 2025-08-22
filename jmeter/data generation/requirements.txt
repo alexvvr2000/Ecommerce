@@ -1,3 +1,4 @@
 Faker
 aiohttp
 mypy
+aiofiles
