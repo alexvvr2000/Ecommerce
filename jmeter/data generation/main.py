@@ -9,16 +9,16 @@ from aiohttp import ClientSession, ClientConnectorError, ClientError
 from faker import Faker
 
 parser = ArgumentParser()
+parser.add_argument("-uu", "--urlUser", default="http://localhost:8080/api/v1/users", type=str)
+parser.add_argument("-up", "--urlProduct", default="http://localhost:8080/api/v1/products", type=str)
+parser.add_argument("-uo", "--urlOrder", default="http://localhost:8080/api/v1/orders", type=str)
 parser.add_argument("-u", "--maxProductOrderQuantity", type=int)
 parser.add_argument("-i", "--maxItemsOrder", type=int)
 parser.add_argument("-o", "--maxUserOrders", type=int)
 parser.add_argument("-c", "--maxUserCount", type=int)
-parser.add_argument("-uu", "--urlUser", default="http://localhost:8080/api/v1/users", type=str)
-parser.add_argument("-up", "--urlProduct", default="http://localhost:8080/api/v1/products", type=str)
-parser.add_argument("-uo", "--urlOrder", default="http://localhost:8080/api/v1/orders", type=str)
 parser.add_argument("-f", "--outputFolder", default=".", type=Path)
-parser.add_argument("-eu", "--extraUsers", default=-1, type=int)
-parser.add_argument("-ep", "--extraProducts", default=-1, type=int)
+parser.add_argument("-eu", "--extraUsers", default=0, type=int)
+parser.add_argument("-ep", "--extraProducts", default=0, type=int)
 
 args = parser.parse_args()
 
@@ -30,6 +30,8 @@ BASE_URL_USER = args.urlUser
 BASE_URL_PRODUCT = args.urlProduct
 BASE_URL_ORDER = args.urlOrder
 OUTPUT_FOLDER = args.outputFolder
+EXTRA_USERS = args.extraUsers
+EXTRA_PRODUCTS = args.extraProducts
 
 fake = Faker("es_MX")
 
@@ -108,7 +110,6 @@ async def make_call_endpoint(session: ClientSession, endpoint: str, json: dict[s
                 json=json,
                 headers={"Content-Type": "application/json"},
         ) as response:
-            print(f"Request status to endpoint {endpoint}: {response.status}")
             try:
                 response_json = await response.json()
                 return response_json
@@ -201,6 +202,12 @@ async def write_users_with_orders(client_session: ClientSession, output_folder: 
 
 async def main() -> None:
     async with ClientSession() as session:
+        if EXTRA_USERS != 0:
+            for _ in range(0, EXTRA_USERS):
+                await post_user(session)
+        if EXTRA_PRODUCTS != 0:
+            for _ in range(0, EXTRA_PRODUCTS):
+                await post_product(session)
         csv_data_path = await write_users_with_orders(session, OUTPUT_FOLDER)
         print(f"New data in file: {csv_data_path}")
 
