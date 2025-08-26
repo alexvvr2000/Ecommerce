@@ -202,12 +202,9 @@ async def write_users_with_orders(client_session: ClientSession, output_folder: 
 
 async def main() -> None:
     async with ClientSession() as session:
-        if EXTRA_USERS != 0:
-            for _ in range(0, EXTRA_USERS):
-                await post_user(session)
-        if EXTRA_PRODUCTS != 0:
-            for _ in range(0, EXTRA_PRODUCTS):
-                await post_product(session)
+        users_coroutines = [post_user(session) for _ in range(EXTRA_USERS)] if EXTRA_USERS != 0 else []
+        products_coroutines = [post_product(session) for _ in range(EXTRA_PRODUCTS)] if EXTRA_PRODUCTS != 0 else []
+        await gather(*users_coroutines, *products_coroutines)
         csv_data_path = await write_users_with_orders(session, OUTPUT_FOLDER)
         print(f"New data in file: {csv_data_path}")
 
