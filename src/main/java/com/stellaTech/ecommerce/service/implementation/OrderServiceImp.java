@@ -18,6 +18,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -110,7 +111,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal getAverageProductPrice(@NonNull Long idUser) throws ResourceNotFoundException {
-        Iterable<PlatformUser> allUsers = userRepository.findAll();
+        Iterable<PlatformUser> allUsers = userRepository.findAll(Sort.by("id").ascending());
         PlatformUser targetUser = null;
 
         for (PlatformUser user : allUsers) {
@@ -125,7 +126,7 @@ public class OrderServiceImp implements OrderService {
         }
 
         List<CustomerOrder> allOrders = new ArrayList<>();
-        Iterable<CustomerOrder> ordersIterable = orderRepository.findAll();
+        Iterable<CustomerOrder> ordersIterable = orderRepository.findAll(Sort.by("id").ascending());
         for (CustomerOrder order : ordersIterable) {
             allOrders.add(order);
         }
