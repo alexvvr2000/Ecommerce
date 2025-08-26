@@ -1,21 +1,24 @@
-from dataclasses import dataclass, asdict
-from typing import List, Optional
-from faker import Faker
-from aiohttp import ClientSession, ClientConnectorError, ClientError
-from asyncio import gather, run
 from argparse import ArgumentParser
-from aiofiles import open
+from asyncio import gather, run
+from dataclasses import dataclass, asdict
 from pathlib import Path
+from typing import List, Optional, Any
+
+from aiofiles import open
+from aiohttp import ClientSession, ClientConnectorError, ClientError
+from faker import Faker
 
 parser = ArgumentParser()
-parser.add_argument("-i", "--maxItemsOrder", type=int)
 parser.add_argument("-u", "--maxProductOrderQuantity", type=int)
-parser.add_argument("-c", "--maxUserCount", type=int)
+parser.add_argument("-i", "--maxItemsOrder", type=int)
 parser.add_argument("-o", "--maxUserOrders", type=int)
+parser.add_argument("-c", "--maxUserCount", type=int)
 parser.add_argument("-uu", "--urlUser", default="http://localhost:8080/api/v1/users", type=str)
 parser.add_argument("-up", "--urlProduct", default="http://localhost:8080/api/v1/products", type=str)
 parser.add_argument("-uo", "--urlOrder", default="http://localhost:8080/api/v1/orders", type=str)
 parser.add_argument("-f", "--outputFolder", default=".", type=Path)
+parser.add_argument("-eu", "--extraUsers", default=-1, type=int)
+parser.add_argument("-ep", "--extraProducts", default=-1, type=int)
 
 args = parser.parse_args()
 
@@ -98,120 +101,97 @@ def create_user() -> User:
     )
 
 
-async def post_product() -> int:
-    product_dict = asdict(create_product())
+async def make_call_endpoint(session: ClientSession, endpoint: str, json: dict[str, Any]) -> dict[str, Any]:
     try:
-        async with ClientSession() as session:
-            async with session.post(
-                    BASE_URL_PRODUCT,
-                    json=product_dict,
-                    headers={"Content-Type": "application/json"},
-            ) as response:
-                print(f"Status post_user: {response.status}")
-                try:
-                    response_json = await response.json()
-                    product_id = response_json.get("id")
-                    print(f"New product with id {product_id}")
-                    return product_id
-                except Exception as e:
-                    print(e)
-
+        async with session.post(
+                endpoint,
+                json=json,
+                headers={"Content-Type": "application/json"},
+        ) as response:
+            print(f"Request status to endpoint {endpoint}: {response.status}")
+            try:
+                response_json = await response.json()
+                return response_json
+            except Exception as e:
+                print(e)
     except ClientConnectorError:
         print(
-            f"Couldn't connect to endpoint {BASE_URL_PRODUCT}"
+            f"Couldn't connect to endpoint {endpoint}"
         )
     except ClientError as e:
         print(f"Client error: {e}")
     except Exception as e:
         print(f"Unexpected error: {e}")
+    return dict()
+
+
+async def post_product(client_session: ClientSession) -> int:
+    product_dict = asdict(create_product())
+    try:
+        returned_data = await make_call_endpoint(client_session, BASE_URL_PRODUCT, product_dict)
+        product_id: int = returned_data.get("id")
+        print(f"New product: {product_id}")
+        return product_id
+    except Exception as e:
+        print(e)
     return -1
 
 
-async def post_user() -> int:
+async def post_user(client_session: ClientSession) -> int:
     user_dict = asdict(create_user())
     try:
-        async with ClientSession() as session:
-            async with session.post(
-                    BASE_URL_USER,
-                    json=user_dict,
-                    headers={"Content-Type": "application/json"},
-            ) as response:
-                print(f"Status post_user: {response.status}")
-                try:
-                    response_json = await response.json()
-                    user_id = response_json.get("id")
-                    print(f"New user with id {user_id}")
-                    return user_id
-                except Exception as e:
-                    print(e)
-
-    except ClientConnectorError:
-        print(
-            f"Couldn't connect to endpoint {BASE_URL_USER}"
-        )
-    except ClientError as e:
-        print(f"Error de cliente: {e}")
+        returned_data = await make_call_endpoint(client_session, BASE_URL_USER, user_dict)
+        user_id: int = returned_data.get("id")
+        print(f"New user: {user_id}")
+        return user_id
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(e)
     return -1
 
 
-async def create_order(user_id: int, product_amount: int) -> PersistedUserOrder:
+async def select_order_items(client_session: ClientSession, product_amount: int) -> List[OrderItem]:
     product_list: List[OrderItem] = []
     for _ in range(0, product_amount):
-        product_id = await post_product()
+        product_id = await post_product(client_session)
         product_list.append(
             OrderItem(product_id, fake.random_int(1, MAX_PRODUCT_ORDER_QUANTITY))
         )
+    return product_list
 
+
+async def create_order(client_session: ClientSession, user_id: int, product_amount: int) -> PersistedUserOrder:
+    product_list: List[OrderItem] = await select_order_items(client_session, product_amount)
     new_order = Order(user_id, product_list)
     order_dict = asdict(new_order)
     try:
-        async with ClientSession() as session:
-            async with session.post(
-                    BASE_URL_ORDER,
-                    json=order_dict,
-                    headers={"Content-Type": "application/json"},
-            ) as response:
-                print(f"Status order: {response.status}")
-                try:
-                    response_json = await response.json()
-                    order_id = response_json.get("id")
-                    print(f"New order with id {order_id}")
-                    return PersistedUserOrder(user_id, order_id)
-                except Exception as e:
-                    print(e)
-
-    except ClientConnectorError:
-        print(
-            f"Couldn't connect to endpoint {BASE_URL_ORDER}"
-        )
-    except ClientError as e:
-        print(f"Client error: {e}")
+        returned_data = await make_call_endpoint(client_session, BASE_URL_ORDER, order_dict)
+        order_id: int = returned_data.get("id")
+        print(f"New order: {order_id}")
+        return PersistedUserOrder(user_id, order_id)
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(e)
     return PersistedUserOrder(user_id, -1)
 
 
-async def get_users_with_orders() -> List[int]:
+async def get_users_with_orders(client_session: ClientSession, max_user_orders: int, max_items_order: int) -> List[int]:
     async def create_user_orders() -> int:
-        user_id = await post_user()
-        for _ in range(0, MAX_USER_ORDERS):
-            await create_order(user_id, fake.random_int(1, MAX_ITEMS_ORDER))
+        user_id = await post_user(client_session)
+        for _ in range(0, max_user_orders):
+            await create_order(client_session, user_id, fake.random_int(1, max_items_order))
         return user_id
 
     order_routines = [create_user_orders() for _ in range(0, MAX_USER_COUNT)]
     return await gather(*order_routines)
 
 
-async def write_user_id(output_folder: Path) -> Path:
+async def write_users_with_orders(client_session: ClientSession, output_folder: Path) -> Path:
     new_file = Path(output_folder, "data.csv")
     if Path.exists(new_file):
         Path.unlink(new_file)
 
     async with open(new_file, "w") as output_file:
         await output_file.write("user_id\n")
-        user_list_int = await get_users_with_orders()
+        user_list_int = await get_users_with_orders(client_session, MAX_USER_ORDERS, MAX_ITEMS_ORDER)
         user_list_str = [str(user_id) for user_id in user_list_int]
         user_data = "\n".join(user_list_str) + "\n"
         await output_file.write(user_data)
@@ -220,8 +200,9 @@ async def write_user_id(output_folder: Path) -> Path:
 
 
 async def main() -> None:
-    csv_data_path = await write_user_id(OUTPUT_FOLDER)
-    print(f"New data in file: {csv_data_path}")
+    async with ClientSession() as session:
+        csv_data_path = await write_users_with_orders(session, OUTPUT_FOLDER)
+        print(f"New data in file: {csv_data_path}")
 
 
 if __name__ == "__main__":
