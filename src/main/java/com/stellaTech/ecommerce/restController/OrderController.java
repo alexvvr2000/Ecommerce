@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders/getAverageProductPrice")
-    public ResponseEntity<BigDecimal> getAverageProductPrice(@NonNull Long userId){
+    public ResponseEntity<BigDecimal> getAverageProductPrice(@NonNull Long userId) {
         BigDecimal averagePrice = orderService.getAverageProductPrice(userId);
         log.info("Calculated average order item price for user {}", userId);
         return ResponseEntity.ok(averagePrice);
