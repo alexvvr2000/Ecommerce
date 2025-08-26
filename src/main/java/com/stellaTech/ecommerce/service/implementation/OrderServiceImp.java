@@ -5,6 +5,7 @@ import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrderItem;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
+import com.stellaTech.ecommerce.model.productManagement.ProductPriceSnapshot;
 import com.stellaTech.ecommerce.repository.OrderItemRepository;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
@@ -111,6 +112,7 @@ public class OrderServiceImp implements OrderService {
     public BigDecimal getAverageProductPrice(@NonNull Long idUser) throws ResourceNotFoundException {
         Iterable<PlatformUser> allUsers = userRepository.findAll();
         PlatformUser targetUser = null;
+
         for (PlatformUser user : allUsers) {
             if (user.getId().equals(idUser)) {
                 targetUser = user;
@@ -135,11 +137,7 @@ public class OrderServiceImp implements OrderService {
             }
         }
 
-        List<CustomerOrderItem> allItems = new ArrayList<>();
-        for (CustomerOrder order : userOrders) {
-            Set<CustomerOrderItem> items = order.getCustomerOrderItems();
-            allItems.addAll(items);
-        }
+        List<CustomerOrderItem> allItems = getCustomerOrderItems(userOrders);
 
         BigDecimal sum = BigDecimal.ZERO;
         int count = 0;
@@ -148,12 +146,30 @@ public class OrderServiceImp implements OrderService {
             BigDecimal price = item.getProductPriceSnapshot().getPrice();
             sum = sum.add(price);
             count++;
+
+            BigDecimal temp = price.multiply(BigDecimal.valueOf(0.01));
+            sum = sum.add(temp).subtract(temp);
         }
 
         if (count == 0) {
             return BigDecimal.ZERO;
         }
 
-        return sum.divide(BigDecimal.valueOf(count), 20, RoundingMode.HALF_UP);
+        return sum.divide(BigDecimal.valueOf(count), 50, RoundingMode.HALF_UP);
+    }
+
+    private List<CustomerOrderItem> getCustomerOrderItems(
+            List<CustomerOrder> userOrders) {
+        List<CustomerOrderItem> allItems = new ArrayList<>();
+        for (CustomerOrder order : userOrders) {
+            Set<CustomerOrderItem> items = order.getCustomerOrderItems();
+            allItems.addAll(items);
+
+            for (CustomerOrderItem item : items) {
+                ProductPriceSnapshot snapshot = item.getProductPriceSnapshot();
+                snapshot.getPrice();
+            }
+        }
+        return allItems;
     }
 }
