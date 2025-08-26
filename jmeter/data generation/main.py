@@ -103,9 +103,9 @@ async def post_product() -> int:
     try:
         async with ClientSession() as session:
             async with session.post(
-                BASE_URL_PRODUCT,
-                json=product_dict,
-                headers={"Content-Type": "application/json"},
+                    BASE_URL_PRODUCT,
+                    json=product_dict,
+                    headers={"Content-Type": "application/json"},
             ) as response:
                 print(f"Status post_user: {response.status}")
                 try:
@@ -132,9 +132,9 @@ async def post_user() -> int:
     try:
         async with ClientSession() as session:
             async with session.post(
-                BASE_URL_USER,
-                json=user_dict,
-                headers={"Content-Type": "application/json"},
+                    BASE_URL_USER,
+                    json=user_dict,
+                    headers={"Content-Type": "application/json"},
             ) as response:
                 print(f"Status post_user: {response.status}")
                 try:
@@ -169,9 +169,9 @@ async def create_order(user_id: int, product_amount: int) -> PersistedUserOrder:
     try:
         async with ClientSession() as session:
             async with session.post(
-                BASE_URL_ORDER,
-                json=order_dict,
-                headers={"Content-Type": "application/json"},
+                    BASE_URL_ORDER,
+                    json=order_dict,
+                    headers={"Content-Type": "application/json"},
             ) as response:
                 print(f"Status order: {response.status}")
                 try:
@@ -192,6 +192,7 @@ async def create_order(user_id: int, product_amount: int) -> PersistedUserOrder:
         print(f"Unexpected error: {e}")
     return PersistedUserOrder(user_id, -1)
 
+
 async def get_users_with_orders() -> List[int]:
     async def create_user_orders() -> int:
         user_id = await post_user()
@@ -201,6 +202,7 @@ async def get_users_with_orders() -> List[int]:
 
     order_routines = [create_user_orders() for _ in range(0, MAX_USER_COUNT)]
     return await gather(*order_routines)
+
 
 async def write_user_id(output_folder: Path) -> Path:
     new_file = Path(output_folder, "data.csv")
@@ -216,9 +218,11 @@ async def write_user_id(output_folder: Path) -> Path:
 
     return new_file
 
+
 async def main() -> None:
     csv_data_path = await write_user_id(OUTPUT_FOLDER)
     print(f"New data in file: {csv_data_path}")
+
 
 if __name__ == "__main__":
     run(main())
