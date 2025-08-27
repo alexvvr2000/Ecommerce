@@ -21,20 +21,23 @@ MAX_CONCURRENT_OPERATIONS = args.maxConcurrentOperations
 
 async def main() -> None:
     async with ClientSession() as session:
-        users_coroutines = []
-        products_coroutines = []
+        user_counter = EXTRA_USERS
+        product_counter = EXTRA_PRODUCTS
+        iterations = max(user_counter, product_counter)
 
-        if EXTRA_USERS != 0:
-            for i in range(EXTRA_USERS):
-                users_coroutines.append(post_user(session))
-                print(f"created new coroutine post_user #{i + 1}")
+        list_coroutines = []
 
-        if EXTRA_PRODUCTS != 0:
-            for i in range(EXTRA_PRODUCTS):
-                products_coroutines.append(post_product(session))
-                print(f"created new coroutine post_product #{i + 1}")
+        for index in range(0, iterations):
+            if user_counter != 0:
+                list_coroutines.append(post_user(session))
+                print(f"created new coroutine post_user #{index + 1}")
+                user_counter -= 1
 
-        list_coroutines = users_coroutines + products_coroutines
+            if product_counter != 0:
+                list_coroutines.append(post_product(session))
+                print(f"created new coroutine post_product #{index + 1}")
+                product_counter -= 1
+
         list_iterator = batched(list_coroutines, MAX_CONCURRENT_OPERATIONS)
         for index, batched_list in enumerate(list_iterator):
             print(f"Batch number {index} started")
