@@ -1,6 +1,7 @@
 from dataclasses import dataclass, asdict
 from os import environ
 from typing import Optional
+from uuid import uuid4
 
 from aiohttp import ClientSession
 from faker import Faker
@@ -23,14 +24,14 @@ class User:
 
 def create_user() -> User:
     return User(
-        curp=fake.curp(),
+        curp=str(uuid4())[:18],
         fullName=fake.name(),
-        email=fake.email(),
+        email=f"em_{str(uuid4()).replace("-", "")}@gmail.com",
         phoneNumber=fake.phone_number(),
         password=fake.password(
             length=12, special_chars=True, digits=True, upper_case=True, lower_case=True
         ),
-        rfc=fake.rfc(),
+        rfc=str(uuid4()),
     )
 
 
