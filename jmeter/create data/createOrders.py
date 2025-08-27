@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from asyncio import gather, run
+from itertools import batched
 from pathlib import Path
 
 from aiofiles import open
@@ -17,6 +18,7 @@ parser.add_argument("-o", "--maxUserOrders", type=int)
 parser.add_argument("-i", "--maxItemsOrder", type=int)
 parser.add_argument("-u", "--maxProductOrderQuantity", type=int)
 parser.add_argument("-pc", "--maxProductCount", type=int)
+parser.add_argument("-mc", "--maxConcurrentOperations", type=int, default=500)
 
 args = parser.parse_args()
 
@@ -26,6 +28,7 @@ MAX_USER_ORDERS = args.maxUserOrders
 MAX_ITEMS_ORDER = args.maxItemsOrder
 MAX_PRODUCT_ORDER_QUANTITY = args.maxProductOrderQuantity
 MAX_PRODUCT_COUNT = args.maxProductCount
+MAX_CONCURRENT_OPERATIONS = args.maxConcurrentOperations
 
 fake = Faker("es_MX")
 
@@ -48,7 +51,13 @@ async def get_users_with_orders(
         return user_id
 
     order_routines = [create_user_orders() for _ in range(0, MAX_USER_COUNT)]
-    return await gather(*order_routines)
+    id_list: list[int] = []
+    list_iterator = batched(order_routines, MAX_CONCURRENT_OPERATIONS)
+    for index,order_list in enumerate(list_iterator, 1):
+        print(f"Batch number {index} started")
+        new_id_list = await gather(*order_list)
+        id_list.extend(new_id_list)
+    return id_list
 
 
 async def write_users_with_orders(client_session: ClientSession, output_folder: Path) -> Path:

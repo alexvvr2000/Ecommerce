@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from asyncio import gather, run
+from itertools import batched
 
 from aiohttp import ClientSession
 
@@ -9,11 +10,13 @@ from data_generation.user import post_user
 parser = ArgumentParser()
 parser.add_argument("-eu", "--extraUsers", type=int)
 parser.add_argument("-ep", "--extraProducts", type=int)
+parser.add_argument("-mc", "--maxConcurrentOperations", type=int, default=500)
 
 args = parser.parse_args()
 
 EXTRA_USERS = args.extraUsers
 EXTRA_PRODUCTS = args.extraProducts
+MAX_CONCURRENT_OPERATIONS = args.maxConcurrentOperations
 
 
 async def main() -> None:
@@ -30,7 +33,12 @@ async def main() -> None:
             for i in range(EXTRA_PRODUCTS):
                 products_coroutines.append(post_product(session))
                 print(f"created new coroutine post_product #{i + 1}")
-        await gather(*users_coroutines, *products_coroutines)
+
+        list_coroutines = users_coroutines + products_coroutines
+        list_iterator = batched(list_coroutines, MAX_CONCURRENT_OPERATIONS)
+        for index, batched_list in enumerate(list_iterator):
+            print(f"Batch number {index} started")
+            await gather(*batched_list)
 
 
 if __name__ == "__main__":
