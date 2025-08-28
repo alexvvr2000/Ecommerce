@@ -1,47 +1,35 @@
 from argparse import ArgumentParser
-from asyncio import gather, run
-from itertools import batched
-
-from aiohttp import ClientSession
-
-from data_generation.product import post_product
-from data_generation.user import post_user
+from asyncio import run
+from typing import Generator
+from data_generation.product import create_product, Product
+from data_generation.user import create_user, User
+from pathlib import Path
 
 parser = ArgumentParser()
 parser.add_argument("-eu", "--extraUsers", type=int)
 parser.add_argument("-ep", "--extraProducts", type=int)
-parser.add_argument("-mc", "--maxConcurrentOperations", type=int, default=500)
+parser.add_argument("-of", "--outputFolder", type=Path, default=500)
 
 args = parser.parse_args()
 
-EXTRA_USERS = args.extraUsers
-EXTRA_PRODUCTS = args.extraProducts
-MAX_CONCURRENT_OPERATIONS = args.maxConcurrentOperations
+EXTRA_USERS: int = args.extraUsers
+EXTRA_PRODUCTS: int = args.extraProducts
+MAX_CONCURRENT_OPERATIONS: int = args.maxConcurrentOperations
+OUTPUT_FOLDER: Path = args.outputFolder
 
+if not OUTPUT_FOLDER.is_dir():
+    raise NotADirectoryError()
+
+def product_creator(quantity: int) -> Generator[Product, None, None]:
+    for _ in range(0, quantity):
+        yield create_product()
+
+def user_creator(quantity: int) -> Generator[User, None, None]:
+    for _ in range(0, quantity):
+        yield create_user()
 
 async def main() -> None:
-    async with ClientSession() as session:
-        user_counter = EXTRA_USERS
-        product_counter = EXTRA_PRODUCTS
-        iterations = max(user_counter, product_counter)
-
-        list_coroutines = []
-
-        for index in range(0, iterations):
-            if user_counter != 0:
-                list_coroutines.append(post_user(session))
-                print(f"created new coroutine post_user #{index + 1}")
-                user_counter -= 1
-
-            if product_counter != 0:
-                list_coroutines.append(post_product(session))
-                print(f"created new coroutine post_product #{index + 1}")
-                product_counter -= 1
-
-        list_iterator = batched(list_coroutines, MAX_CONCURRENT_OPERATIONS)
-        for index, batched_list in enumerate(list_iterator):
-            print(f"Batch number {index} started")
-            await gather(*batched_list)
+    return
 
 
 if __name__ == "__main__":
