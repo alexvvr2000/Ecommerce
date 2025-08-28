@@ -19,9 +19,10 @@ class Product:
     main_image_url: str
     deleted: bool = False
     average_rating: Optional[float] = None
+    id: Optional[int] = None
 
 
-def create_product() -> Product:
+def create_product(product_id: Optional[int] = None) -> Product:
     return Product(
         name=fake.word().title() + " " + fake.word().title(),
         price=fake.pyfloat(
@@ -33,6 +34,7 @@ def create_product() -> Product:
         ),
         md_format_description=f"**{fake.text(max_nb_chars=100)}**",
         main_image_url=fake.image_url(),
+        id=product_id
     )
 
 
