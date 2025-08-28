@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from os import environ
+from typing import Optional
 
 from aiohttp import ClientSession
 from faker import Faker
@@ -14,8 +15,10 @@ BASE_URL_PRODUCT = environ.get("urlProduct", "http://localhost:8080/api/v1/produ
 class Product:
     name: str
     price: float
-    mdFormatDescription: str
-    mainImageUrl: str
+    md_format_description: str
+    main_image_url: str
+    deleted: bool = False
+    average_rating: Optional[float] = None
 
 
 def create_product() -> Product:
@@ -28,8 +31,8 @@ def create_product() -> Product:
             min_value=50.0,
             max_value=500.0,
         ),
-        mdFormatDescription=f"**{fake.text(max_nb_chars=100)}**",
-        mainImageUrl=fake.image_url(),
+        md_format_description=f"**{fake.text(max_nb_chars=100)}**",
+        main_image_url=fake.image_url(),
     )
 
 
