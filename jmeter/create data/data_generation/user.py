@@ -20,18 +20,21 @@ class User:
     phoneNumber: str
     password: str
     rfc: Optional[str]
+    id: Optional[int] = None
+    deleted: bool = False
 
 
-def create_user() -> User:
+def create_user(user_id: Optional[int] = None) -> User:
     return User(
         curp=str(uuid4())[:18],
-        fullName=fake.name(),
+        full_name=fake.name(),
         email=f"em_{str(uuid4()).replace("-", "")}@gmail.com",
-        phoneNumber=fake.phone_number(),
+        phone_number=fake.phone_number(),
         password=fake.password(
             length=12, special_chars=True, digits=True, upper_case=True, lower_case=True
         ),
         rfc=str(uuid4()),
+        id=user_id
     )
 
 
