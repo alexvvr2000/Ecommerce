@@ -10,6 +10,9 @@ parser = ArgumentParser()
 parser.add_argument("-eu", "--extraUsers", type=int)
 parser.add_argument("-ep", "--extraProducts", type=int)
 parser.add_argument("-of", "--outputFolder", type=Path, default=500)
+parser.add_argument("-puf", "--platformUserFile", type=str, default="platform_user.csv")
+parser.add_argument("-pf", "--passwordsFile", type=str, default="platform_user_password.csv")
+parser.add_argument("-prf", "--productFile", type=str, default="product.csv")
 
 args = parser.parse_args()
 
@@ -20,6 +23,10 @@ OUTPUT_FOLDER: Path = args.outputFolder
 
 if not OUTPUT_FOLDER.is_dir():
     raise NotADirectoryError()
+
+PLATFORM_USER_CSV_FILE: Path = Path(OUTPUT_FOLDER, args.platformUserFile)
+PASSWORD_USER_CSV_FILE: Path = Path(OUTPUT_FOLDER, args.passwordsFile)
+PRODUCT_CSV_FILE: Path = Path(OUTPUT_FOLDER, args.productFile)
 
 
 def product_creator(quantity: int) -> Generator[tuple[Product, int], None, None]:
