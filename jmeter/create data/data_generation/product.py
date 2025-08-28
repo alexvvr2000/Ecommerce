@@ -15,8 +15,8 @@ BASE_URL_PRODUCT = environ.get("urlProduct", "http://localhost:8080/api/v1/produ
 class Product:
     name: str
     price: float
-    md_format_description: str
-    main_image_url: str
+    mdFormatDescription: str
+    mainImageUrl: str
     deleted: bool = False
     average_rating: Optional[float] = None
     id: Optional[int] = None
@@ -32,8 +32,8 @@ def create_product(product_id: Optional[int] = None) -> Product:
             min_value=50.0,
             max_value=500.0,
         ),
-        md_format_description=f"**{fake.text(max_nb_chars=100)}**",
-        main_image_url=fake.image_url(),
+        mdFormatDescription=f"**{fake.text(max_nb_chars=100)}**",
+        mainImageUrl=fake.image_url(),
         id=product_id
     )
 

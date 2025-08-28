@@ -68,6 +68,16 @@ async def main() -> None:
     user_df = DataFrame(user_creator(EXTRA_USERS))
     password_df = DataFrame(password_creator(EXTRA_USERS))
 
+    product_df = product_df.rename(columns={
+        'mdFormatDescription': 'md_format_description',
+        'mainImageUrl': 'main_image_url'
+    })
+
+    user_df = user_df.rename(columns={
+        'fullName': 'full_name',
+        'phoneNumber': 'phone_number'
+    })
+
     product_df.to_csv(product_csv_file, index=False, encoding="utf-8")
     user_df.to_csv(platform_user_csv_file, index=False, encoding="utf-8")
     password_df.to_csv(password_user_csv_file, index=False, encoding="utf-8")

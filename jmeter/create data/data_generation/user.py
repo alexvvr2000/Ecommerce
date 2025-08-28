@@ -15,9 +15,9 @@ BASE_URL_USER = environ.get("urlUser", "http://localhost:8080/api/v1/users")
 @dataclass
 class User:
     curp: str
-    full_name: str
+    fullName: str
     email: str
-    phone_number: str
+    phoneNumber: str
     password: str
     rfc: Optional[str]
     id: Optional[int] = None
@@ -27,9 +27,9 @@ class User:
 def create_user(user_id: Optional[int] = None) -> User:
     return User(
         curp=str(uuid4())[:18],
-        full_name=fake.name(),
+        fullName=fake.name(),
         email=f"em_{str(uuid4()).replace("-", "")}@gmail.com",
-        phone_number=fake.phone_number(),
+        phoneNumber=fake.phone_number(),
         password=fake.password(
             length=12, special_chars=True, digits=True, upper_case=True, lower_case=True
         ),
