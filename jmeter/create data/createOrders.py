@@ -46,14 +46,15 @@ async def get_users_with_orders(
                 client_session,
                 user_id,
                 fake.random_int(1, max_items_order),
-                fake.random_int(1, max_item_count)
+                fake.random_int(1, max_item_count),
+                MAX_CONCURRENT_OPERATIONS
             )
         return user_id
 
     order_routines = [create_user_orders() for _ in range(0, MAX_USER_COUNT)]
     id_list: list[int] = []
     list_iterator = batched(order_routines, MAX_CONCURRENT_OPERATIONS)
-    for index,order_list in enumerate(list_iterator, 1):
+    for index, order_list in enumerate(list_iterator, 1):
         print(f"Batch number {index} started")
         new_id_list = await gather(*order_list)
         id_list.extend(new_id_list)

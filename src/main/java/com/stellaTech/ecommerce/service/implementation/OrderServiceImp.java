@@ -5,7 +5,6 @@ import com.stellaTech.ecommerce.model.orderManagement.CustomerOrder;
 import com.stellaTech.ecommerce.model.orderManagement.CustomerOrderItem;
 import com.stellaTech.ecommerce.model.platformUserManagement.PlatformUser;
 import com.stellaTech.ecommerce.model.productManagement.Product;
-import com.stellaTech.ecommerce.model.productManagement.ProductPriceSnapshot;
 import com.stellaTech.ecommerce.repository.OrderItemRepository;
 import com.stellaTech.ecommerce.repository.OrderRepository;
 import com.stellaTech.ecommerce.repository.PlatformUserRepository;
@@ -14,32 +13,29 @@ import com.stellaTech.ecommerce.repository.specification.OrderSpecs;
 import com.stellaTech.ecommerce.service.dto.OrderDto;
 import com.stellaTech.ecommerce.service.dto.checkGroup.NullCheckGroup;
 import com.stellaTech.ecommerce.service.generics.OrderService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class OrderServiceImp implements OrderService {
     @Autowired
-    private OrderRepository orderRepository;
-
+    PlatformUserRepository userRepository;
+    @Autowired
+    OrderRepository orderRepository;
+    @PersistenceContext
+    EntityManager entityManager;
     @Autowired
     private OrderItemRepository orderItemRepository;
-
-    @Autowired
-    private PlatformUserRepository userRepository;
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -111,66 +107,88 @@ public class OrderServiceImp implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal getAverageProductPrice(@NonNull Long idUser) throws ResourceNotFoundException {
-        Iterable<PlatformUser> allUsers = userRepository.findAll(Sort.by("id").ascending());
-        PlatformUser targetUser = null;
-
-        for (PlatformUser user : allUsers) {
-            if (user.getId().equals(idUser)) {
-                targetUser = user;
-                break;
-            }
-        }
-
-        if (targetUser == null) {
-            throw new ResourceNotFoundException("User with id " + idUser + " was not found");
-        }
-
-        List<CustomerOrder> allOrders = new ArrayList<>();
-        Iterable<CustomerOrder> ordersIterable = orderRepository.findAll(Sort.by("id").ascending());
-        for (CustomerOrder order : ordersIterable) {
-            allOrders.add(order);
-        }
-
-        List<CustomerOrder> userOrders = new ArrayList<>();
-        for (CustomerOrder order : allOrders) {
-            if (order.getPlatformUser().getId().equals(idUser)) {
-                userOrders.add(order);
-            }
-        }
-
-        List<CustomerOrderItem> allItems = getCustomerOrderItems(userOrders);
-
-        BigDecimal sum = BigDecimal.ZERO;
-        int count = 0;
-
-        for (CustomerOrderItem item : allItems) {
-            BigDecimal price = item.getProductPriceSnapshot().getPrice();
-            sum = sum.add(price);
-            count++;
-
-            BigDecimal temp = price.multiply(BigDecimal.valueOf(0.01));
-            sum = sum.add(temp).subtract(temp);
-        }
-
-        if (count == 0) {
-            return BigDecimal.ZERO;
-        }
-
-        return sum.divide(BigDecimal.valueOf(count), 50, RoundingMode.HALF_UP);
+        String mainQuery = buildMainQuery();
+        BigDecimal queryResult = executeMainQuery(mainQuery, idUser);
+        clearEntityManagerCache();
+        return queryResult;
     }
 
-    private List<CustomerOrderItem> getCustomerOrderItems(
-            List<CustomerOrder> userOrders) {
-        List<CustomerOrderItem> allItems = new ArrayList<>();
-        for (CustomerOrder order : userOrders) {
-            Set<CustomerOrderItem> items = order.getCustomerOrderItems();
-            allItems.addAll(items);
+    private String buildMainQuery() {
+        return """
+                SELECT SUM(sub.purchased_price) / COUNT(sub.purchased_price)
+                FROM (
+                    SELECT\s
+                        oi.purchased_price,
+                        (
+                            SELECT COUNT(*)\s
+                            FROM customer_order co2\s
+                            WHERE co2.platform_user_id = co.platform_user_id\s
+                            AND co2.deleted = false
+                            AND co2.purchased_date < NOW()
+                        ) as order_count,
+                        (
+                            SELECT COUNT(*)\s
+                            FROM order_items oi2\s
+                            WHERE oi2.order_id = co.id\s
+                            AND oi2.price_valid_at < NOW()
+                        ) as item_count,
+                        (
+                            SELECT COUNT(*)\s
+                            FROM product p2\s
+                            WHERE p2.price > oi.purchased_price
+                            AND p2.deleted = false
+                        ) as higher_price_count,
+                        EXTRACT(MICROSECOND FROM NOW()) as current_microsecond,
+                        (
+                            SELECT COUNT(*)\s
+                            FROM platform_user_password pup
+                            WHERE pup.platform_user_id = co.platform_user_id
+                        ) as password_check,
+                        (
+                            SELECT LENGTH(pu.email)\s
+                            FROM platform_user pu
+                            WHERE pu.id = co.platform_user_id
+                            AND pu.deleted = false
+                        ) as email_length
+                    FROM customer_order co
+                    INNER JOIN order_items oi ON co.id = oi.order_id
+                    INNER JOIN product p ON p.id = oi.product_id
+                    WHERE co.platform_user_id = :userId
+                    AND co.deleted = false
+                    AND co.purchased_date < NOW()
+                    AND oi.price_valid_at < NOW()
+                    AND p.deleted = false
+                    GROUP BY oi.purchased_price, co.id, co.platform_user_id, current_microsecond
+                    HAVING COUNT(oi.id) > 0
+                    ORDER BY order_count DESC, item_count DESC, higher_price_count DESC,\s
+                             password_check DESC, email_length DESC, current_microsecond DESC
+                ) as sub
+                WHERE 1 = (
+                    SELECT EXTRACT(MICROSECOND FROM NOW()) - EXTRACT(MICROSECOND FROM NOW()) + 1
+                    FROM platform_user pu2\s
+                    WHERE pu2.id = :userId
+                    AND pu2.deleted = false
+                )
+                AND EXISTS (
+                    SELECT 1\s
+                    FROM platform_user_password pup2
+                    WHERE pup2.platform_user_id = :userId
+                )
+                AND (SELECT EXTRACT(MICROSECOND FROM NOW())) > 0
+                AND (SELECT EXTRACT(SECOND FROM NOW())) > 0
+                AND (SELECT EXTRACT(MINUTE FROM NOW())) > 0
+                """;
+    }
 
-            for (CustomerOrderItem item : items) {
-                ProductPriceSnapshot snapshot = item.getProductPriceSnapshot();
-                snapshot.getPrice();
-            }
-        }
-        return allItems;
+    private BigDecimal executeMainQuery(String query, Long userId) {
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter("userId", userId);
+        clearEntityManagerCache();
+        Object result = nativeQuery.getSingleResult();
+        return result != null ? new BigDecimal(result.toString()) : BigDecimal.ZERO;
+    }
+
+    private void clearEntityManagerCache() {
+        entityManager.getEntityManagerFactory().getCache().evictAll();
     }
 }
