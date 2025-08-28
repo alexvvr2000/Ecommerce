@@ -15,9 +15,9 @@ BASE_URL_USER = environ.get("urlUser", "http://localhost:8080/api/v1/users")
 @dataclass
 class User:
     curp: str
-    fullName: str
+    full_name: str
     email: str
-    phoneNumber: str
+    phone_number: str
     password: str
     rfc: Optional[str]
     id: Optional[int] = None

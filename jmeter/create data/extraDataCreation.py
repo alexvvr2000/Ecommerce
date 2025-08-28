@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from asyncio import run
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Generator
 
