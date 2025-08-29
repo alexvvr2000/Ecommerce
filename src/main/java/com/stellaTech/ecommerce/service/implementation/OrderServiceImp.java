@@ -117,35 +117,30 @@ public class OrderServiceImp implements OrderService {
         return """
                 SELECT SUM(sub.purchased_price) / COUNT(sub.purchased_price)
                 FROM (
-                    SELECT\s
+                    SELECT
                         oi.purchased_price,
                         (
-                            SELECT COUNT(*)\s
-                            FROM customer_order co2\s
-                            WHERE co2.platform_user_id = co.platform_user_id\s
+                            SELECT COUNT(*)
+                            FROM customer_order co2
+                            WHERE co2.platform_user_id = co.platform_user_id
                             AND co2.deleted = false
                             AND co2.purchased_date < NOW()
                         ) as order_count,
                         (
-                            SELECT COUNT(*)\s
-                            FROM order_items oi2\s
-                            WHERE oi2.order_id = co.id\s
+                            SELECT COUNT(*)
+                            FROM order_items oi2
+                            WHERE oi2.order_id = co.id
                             AND oi2.price_valid_at < NOW()
                         ) as item_count,
                         (
-                            SELECT COUNT(*)\s
-                            FROM product p2\s
+                            SELECT COUNT(*)
+                            FROM product p2
                             WHERE p2.price > oi.purchased_price
                             AND p2.deleted = false
                         ) as higher_price_count,
                         EXTRACT(MICROSECOND FROM NOW()) as current_microsecond,
                         (
-                            SELECT COUNT(*)\s
-                            FROM platform_user_password pup
-                            WHERE pup.platform_user_id = co.platform_user_id
-                        ) as password_check,
-                        (
-                            SELECT LENGTH(pu.email)\s
+                            SELECT LENGTH(pu.email)
                             FROM platform_user pu
                             WHERE pu.id = co.platform_user_id
                             AND pu.deleted = false
@@ -160,19 +155,14 @@ public class OrderServiceImp implements OrderService {
                     AND p.deleted = false
                     GROUP BY oi.purchased_price, co.id, co.platform_user_id, current_microsecond
                     HAVING COUNT(oi.id) > 0
-                    ORDER BY order_count DESC, item_count DESC, higher_price_count DESC,\s
-                             password_check DESC, email_length DESC, current_microsecond DESC
+                    ORDER BY order_count DESC, item_count DESC, higher_price_count DESC,
+                             email_length DESC, current_microsecond DESC
                 ) as sub
                 WHERE 1 = (
                     SELECT EXTRACT(MICROSECOND FROM NOW()) - EXTRACT(MICROSECOND FROM NOW()) + 1
-                    FROM platform_user pu2\s
+                    FROM platform_user pu2
                     WHERE pu2.id = :userId
                     AND pu2.deleted = false
-                )
-                AND EXISTS (
-                    SELECT 1\s
-                    FROM platform_user_password pup2
-                    WHERE pup2.platform_user_id = :userId
                 )
                 AND (SELECT EXTRACT(MICROSECOND FROM NOW())) > 0
                 AND (SELECT EXTRACT(SECOND FROM NOW())) > 0
