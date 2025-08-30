@@ -124,7 +124,7 @@ public class OrderServiceImp implements OrderService {
                             FROM customer_order co2
                             WHERE co2.platform_user_id = co.platform_user_id
                             AND co2.deleted = false
-                            AND co2.purchased_date < NOW()
+                            AND co2.purchased_date <    NOW()
                         ) as order_count,
                         (
                             SELECT COUNT(*)
