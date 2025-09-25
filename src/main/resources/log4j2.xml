@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-5level} %style{${hostName}}{magenta} [%t] %style{%C{1.}}{cyan}: %msg%n%throwable</Property>
+        <Property name="profile">${bundle:application:spring.profiles.active}</Property>
+        <Property name="filename">$${bundle:application:logging.file.name:-app}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="sqlLog"
+                     fileName="log/sqlLog.log"
+                     filePattern="log/sqlLog-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="net.ttddyy.dsproxy.listener" level="DEBUG" additivity="false">
+            <AppenderRef ref="sqlLog"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
