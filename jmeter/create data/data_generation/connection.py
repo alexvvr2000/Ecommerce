@@ -1,6 +1,5 @@
-from typing import Any
-
 from aiohttp import ClientSession, ClientConnectorError, ClientError
+from typing import Any
 
 
 async def make_call_endpoint(session: ClientSession, endpoint: str, json: dict[str, Any]) -> dict[str, Any]:

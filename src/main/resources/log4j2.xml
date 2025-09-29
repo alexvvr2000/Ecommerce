@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-5level} %style{${hostName}}{magenta} [%t] %style{%C{1.}}{cyan}: %msg%n%throwable</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-5level} %style{${hostName}}{magenta} [%t]
+            %style{%C{1.}}{cyan}: %msg%n%throwable
+        </Property>
         <Property name="profile">${bundle:application:spring.profiles.active}</Property>
         <Property name="filename">$${bundle:application:logging.file.name:-app}</Property>
     </Properties>
@@ -23,10 +25,6 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="net.ttddyy.dsproxy.listener" level="DEBUG" additivity="false">
-            <AppenderRef ref="sqlLog"/>
-            <AppenderRef ref="Console"/>
-        </Logger>
         <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>

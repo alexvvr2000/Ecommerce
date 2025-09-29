@@ -1,11 +1,10 @@
 from argparse import ArgumentParser
 from asyncio import run
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Generator
-
 from faker import Faker
 from pandas import DataFrame
+from pathlib import Path
+from typing import Generator
 
 from data_generation.product import create_product, Product
 from data_generation.user import create_user, User
