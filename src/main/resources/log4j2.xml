@@ -11,7 +11,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
-        <RollingFile name="sqlLog"
+        <RollingFile name="SqlFileAppender"
                      fileName="log/sqlLog.log"
                      filePattern="log/sqlLog-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout>
@@ -25,6 +25,10 @@
         </RollingFile>
     </Appenders>
     <Loggers>
+        <Logger name="net.ttddyy.dsproxy.listener" level="DEBUG" additivity="false">
+            <AppenderRef ref="SqlFileAppender"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>
