@@ -24,7 +24,7 @@ public class PlatformUser extends LogicallyDeletableEntity {
     @Getter
     @EqualsAndHashCode.Include
     @Setter
-    @Column( nullable = false, length = 18, unique = true)
+    @Column(nullable = false, length = 18, unique = true)
     private String curp;
 
     @NotNull

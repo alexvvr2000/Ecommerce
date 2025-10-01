@@ -23,14 +23,22 @@
                 <TimeBasedTriggeringPolicy/>
             </Policies>
         </RollingFile>
+        <Rewrite name="RewriteSqlFiles">
+            <SqlRewritePolicy/>
+            <AppenderRef ref="SqlFileAppender"/>
+        </Rewrite>
+        <Rewrite name="RewriteConsole">
+            <SqlRewritePolicy/>
+            <AppenderRef ref="Console"/>
+        </Rewrite>
     </Appenders>
     <Loggers>
         <Logger name="net.ttddyy.dsproxy.listener" level="DEBUG" additivity="false">
-            <AppenderRef ref="SqlFileAppender"/>
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RewriteSqlFiles"/>
+            <AppenderRef ref="RewriteConsole"/>
         </Logger>
         <Root level="INFO">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RewriteConsole"/>
         </Root>
     </Loggers>
 </Configuration>
