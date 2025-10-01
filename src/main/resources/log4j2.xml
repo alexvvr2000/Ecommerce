@@ -38,7 +38,7 @@
             <AppenderRef ref="RewriteConsole"/>
         </Logger>
         <Root level="INFO">
-            <AppenderRef ref="RewriteConsole"/>
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
