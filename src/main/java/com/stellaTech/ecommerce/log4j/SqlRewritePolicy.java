@@ -21,6 +21,11 @@ import java.util.regex.Pattern;
 public class SqlRewritePolicy implements RewritePolicy {
     private final String MASKED_TEXT = "<MASKED>";
 
+    @PluginFactory
+    public static SqlRewritePolicy createPolicy() {
+        return new SqlRewritePolicy();
+    }
+
     private List<String> getMaskedFields() {
         return List.of("password");
     }
@@ -33,16 +38,11 @@ public class SqlRewritePolicy implements RewritePolicy {
         return logEntryMessage.contains("Query:[");
     }
 
-    @PluginFactory
-    public static SqlRewritePolicy createPolicy() {
-        return new SqlRewritePolicy();
-    }
-
     @Override
     public LogEvent rewrite(LogEvent source) {
         String logEntryMessage = source.getMessage().getFormattedMessage();
         SimpleMessage maskedMessage = maskSql(logEntryMessage);
-        return !isQuery(logEntryMessage)? source : Log4jLogEvent.newBuilder()
+        return !isQuery(logEntryMessage) ? source : Log4jLogEvent.newBuilder()
                 .setLoggerName(source.getLoggerName())
                 .setMarker(source.getMarker())
                 .setLoggerFqcn(source.getLoggerFqcn())
@@ -59,8 +59,8 @@ public class SqlRewritePolicy implements RewritePolicy {
 
     private SimpleMessage maskSql(String rawLogEntry) {
         String rawQuery = getRawQueryFromEntry(rawLogEntry);
-        if(rawQuery.isEmpty()) return new SimpleMessage(rawLogEntry);
-        Map<String, Integer> listParameters = isInsert(rawQuery) ?
+        if (rawQuery.isEmpty()) return new SimpleMessage(rawLogEntry);
+        Map<Integer, String> listParameters = isInsert(rawQuery) ?
                 extractQueryParametersFromInsert(rawQuery) : extractQueryParametersFromWhere(rawQuery);
         String newEntryLog = replaceParametersFromEntry(rawLogEntry, listParameters);
         return new SimpleMessage(newEntryLog);
@@ -71,10 +71,10 @@ public class SqlRewritePolicy implements RewritePolicy {
         String queryData = logData[3].trim();
         String rawQueryPattern = "Query:\\[\"(?<rawQuery>.*)\"\\]";
         Matcher rawQueryMatcher = Pattern.compile(rawQueryPattern, Pattern.CASE_INSENSITIVE).matcher(queryData);
-        return !rawQueryMatcher.find()? "" : rawQueryMatcher.group("rawQuery");
+        return !rawQueryMatcher.find() ? "" : rawQueryMatcher.group("rawQuery");
     }
 
-    private Map<String, Integer> extractQueryParametersFromWhere(String logQuery) {
+    private Map<Integer, String> extractQueryParametersFromWhere(String logQuery) {
         String LOG_QUERY_WITH_WHERE = "(?<queryType>select|insert|update)(?<body>.*)(where )(?<parameters>.*)";
         Matcher matcher = Pattern.compile(LOG_QUERY_WITH_WHERE, Pattern.CASE_INSENSITIVE).matcher(logQuery);
         if (!matcher.find()) return new HashMap<>();
@@ -82,24 +82,40 @@ public class SqlRewritePolicy implements RewritePolicy {
         return mapPositionsToParametersFromWhere(originalParameters);
     }
 
-    private Map<String, Integer> mapPositionsToParametersFromWhere(String rawParameters) {
-        log.info("Query parameters from where: {}", rawParameters);
-        Map<String, Integer> indexMap = new HashMap<>();
+    private Map<Integer, String> mapPositionsToParametersFromWhere(String rawParameters) {
+        String VARIABLE_REGEX = "(?<variable>.+)\\s?[+\\-*/%&|^=<>]+\\s?(?<value>.+)";
+        Matcher matcher = Pattern.compile(VARIABLE_REGEX, Pattern.CASE_INSENSITIVE).matcher(rawParameters);
+        Map<Integer, String> indexMap = new HashMap<>();
+        for (int parameterIndex = 0; matcher.find(); parameterIndex++) {
+            indexMap.put(parameterIndex, matcher.group("variable"));
+        }
         return indexMap;
     }
 
-    private Map<String, Integer> extractQueryParametersFromInsert(String logQuery) {
+    private Map<Integer, String> extractQueryParametersFromInsert(String logQuery) {
         return mapPositionsToParametersFromInsert("");
     }
 
 
-    private Map<String, Integer> mapPositionsToParametersFromInsert(String rawParameters) {
-        log.info("Query parameters from insert: {}", rawParameters);
-        Map<String, Integer> indexMap = new HashMap<>();
+    private Map<Integer, String> mapPositionsToParametersFromInsert(String rawParameters) {
+        Map<Integer, String> indexMap = new HashMap<>();
         return indexMap;
     }
 
-    private String replaceParametersFromEntry(String rawLogEntry, Map<String, Integer> parameterMapping) {
-        return "";
+    private String replaceParametersFromEntry(String rawLogEntry, Map<Integer, String> parameterMapping) {
+        String[] logData = rawLogEntry.split("\n");
+        String queryParameters = logData[4].trim();
+        String QUERY_ENTRY_PARAMETERS = "Params:\\[\\((?<parameterList>.*)\\)\\]";
+        Matcher matcher = Pattern.compile(QUERY_ENTRY_PARAMETERS, Pattern.CASE_INSENSITIVE).matcher(queryParameters);
+        if (!matcher.find()) return String.join("\n", logData);
+        String[] listParameters = matcher.group("parameterList").split(",");
+        if (listParameters.length == 0 || parameterMapping.isEmpty()) return String.join("\n", logData);
+        for (int parameterIndex = 0; parameterIndex < listParameters.length; parameterIndex++) {
+            String currentParameter = parameterMapping.get(parameterIndex);
+            if (currentParameter == null || !getMaskedFields().contains(currentParameter)) continue;
+            listParameters[parameterIndex] = MASKED_TEXT;
+        }
+        logData[4] = String.format("Params:[(%s)]", String.join(",", listParameters));
+        return String.join("\n", logData);
     }
 }
