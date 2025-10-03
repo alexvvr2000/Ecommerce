@@ -3,7 +3,7 @@ package com.stellaTech.ecommerce.configuration;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
-public class PropertyMapper {
+public class PropertyMapperConfig {
     public static ModelMapper persistPropertyMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(false);

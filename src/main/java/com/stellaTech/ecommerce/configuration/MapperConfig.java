@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 public class MapperConfig {
     @Bean
     public ModelMapper persistPropertyMapper() {
-        return PropertyMapper.persistPropertyMapper();
+        return PropertyMapperConfig.persistPropertyMapper();
     }
 
     @Bean
     public ModelMapper patchPropertyMapper() {
-        return PropertyMapper.patchPropertyMapper();
+        return PropertyMapperConfig.patchPropertyMapper();
     }
 }

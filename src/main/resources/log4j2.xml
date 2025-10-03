@@ -6,6 +6,8 @@
         </Property>
         <Property name="profile">${bundle:application:spring.profiles.active}</Property>
         <Property name="filename">$${bundle:application:logging.file.name:-app}</Property>
+        <Property name="default.masked.text">--MASKED--</Property>
+        <Property name="default.masked.fields">password,platform_user_id</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
@@ -24,11 +26,13 @@
             </Policies>
         </RollingFile>
         <Rewrite name="RewriteSqlFiles">
-            <SqlRewritePolicy/>
+            <SqlRewritePolicy maskedText="${default.masked.text}"
+                              maskedFields="${default.masked.fields}"/>
             <AppenderRef ref="SqlFileAppender"/>
         </Rewrite>
         <Rewrite name="RewriteConsole">
-            <SqlRewritePolicy/>
+            <SqlRewritePolicy maskedText="${default.masked.text}"
+                              maskedFields="${default.masked.fields}"/>
             <AppenderRef ref="Console"/>
         </Rewrite>
     </Appenders>

@@ -4,14 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.rewrite.RewritePolicy;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.apache.logging.log4j.util.StringMap;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,15 +18,30 @@ import java.util.regex.Pattern;
 @Plugin(name = "SqlRewritePolicy", category = "Core",
         elementType = "rewritePolicy", printObject = true)
 public class SqlRewritePolicy implements RewritePolicy {
-    private final String MASKED_TEXT = "<MASKED>";
+    private final String MASKED_TEXT;
 
-    @PluginFactory
-    public static SqlRewritePolicy createPolicy() {
-        return new SqlRewritePolicy();
+    private final List<String> maskedFieldsList;
+
+    private SqlRewritePolicy(String MASKED_TEXT, String maskedFieldsList) {
+        this.MASKED_TEXT = MASKED_TEXT != null ? MASKED_TEXT : "**MASKED**";
+        this.maskedFieldsList = parseMaskedFields(maskedFieldsList);
     }
 
-    private List<String> getMaskedFields() {
-        return List.of("password");
+    @PluginFactory
+    public static SqlRewritePolicy createPolicy(
+            @PluginAttribute("maskedText") String maskedText,
+            @PluginAttribute("maskedFields") String maskedFields) {
+        return new SqlRewritePolicy(maskedText, maskedFields);
+    }
+
+    private List<String> parseMaskedFields(String maskedFields) {
+        if (maskedFields == null || maskedFields.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(maskedFields.split(","))
+                .map(String::trim)
+                .filter(field -> !field.isEmpty())
+                .toList();
     }
 
     private boolean isInsert(String rawQuery) {
@@ -83,7 +97,7 @@ public class SqlRewritePolicy implements RewritePolicy {
     }
 
     private Map<Integer, String> mapPositionsToParametersFromWhere(String rawParameters) {
-        String VARIABLE_REGEX = "(?<variable>.+)\\s?[+\\-*/%&|^=<>]+\\s?(?<value>.+)";
+        String VARIABLE_REGEX = "((.+\\.)?(?<variable>.+))\\s?[+\\-*/%&|^=<>]+\\s?(?<value>\\?)";
         Matcher matcher = Pattern.compile(VARIABLE_REGEX, Pattern.CASE_INSENSITIVE).matcher(rawParameters);
         Map<Integer, String> indexMap = new HashMap<>();
         for (int parameterIndex = 0; matcher.find(); parameterIndex++) {
@@ -93,12 +107,21 @@ public class SqlRewritePolicy implements RewritePolicy {
     }
 
     private Map<Integer, String> extractQueryParametersFromInsert(String logQuery) {
-        return mapPositionsToParametersFromInsert("");
+        String RAW_PARAMETERS_INDEX = "insert\\sinto\\s(?<table>.+)\\s\\((?<parameters>.+)\\).+";
+        Matcher matcher = Pattern.compile(RAW_PARAMETERS_INDEX, Pattern.CASE_INSENSITIVE).matcher(logQuery);
+        if (!matcher.find()) return new HashMap<>();
+        String rawParameters = matcher.group("parameters");
+        log.info("raw parameters: {}", rawParameters);
+        return mapPositionsToParametersFromInsert(rawParameters);
     }
 
 
     private Map<Integer, String> mapPositionsToParametersFromInsert(String rawParameters) {
+        String[] parameterList = rawParameters.split(",");
         Map<Integer, String> indexMap = new HashMap<>();
+        for (int parameterIndex = 0; parameterIndex < parameterList.length; parameterIndex++) {
+            indexMap.put(parameterIndex, parameterList[parameterIndex]);
+        }
         return indexMap;
     }
 
@@ -112,7 +135,7 @@ public class SqlRewritePolicy implements RewritePolicy {
         if (listParameters.length == 0 || parameterMapping.isEmpty()) return String.join("\n", logData);
         for (int parameterIndex = 0; parameterIndex < listParameters.length; parameterIndex++) {
             String currentParameter = parameterMapping.get(parameterIndex);
-            if (currentParameter == null || !getMaskedFields().contains(currentParameter)) continue;
+            if (currentParameter == null || !maskedFieldsList.contains(currentParameter)) continue;
             listParameters[parameterIndex] = MASKED_TEXT;
         }
         logData[4] = String.format("Params:[(%s)]", String.join(",", listParameters));
