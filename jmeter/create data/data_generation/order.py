@@ -1,10 +1,11 @@
-from aiohttp import ClientSession
 from asyncio import gather
 from dataclasses import dataclass, asdict
-from faker import Faker
 from itertools import batched
 from os import environ
 from typing import List
+
+from aiohttp import ClientSession
+from faker import Faker
 
 from .connection import make_call_endpoint
 from .product import post_product

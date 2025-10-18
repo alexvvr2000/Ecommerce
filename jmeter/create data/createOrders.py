@@ -1,10 +1,11 @@
-from aiofiles import open
-from aiohttp import ClientSession
 from argparse import ArgumentParser
 from asyncio import gather, run
-from faker import Faker
 from itertools import batched
 from pathlib import Path
+
+from aiofiles import open
+from aiohttp import ClientSession
+from faker import Faker
 
 from data_generation.order import create_order
 from data_generation.user import post_user
