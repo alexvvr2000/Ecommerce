@@ -48,6 +48,10 @@ public class SqlRewritePolicy implements RewritePolicy {
         return rawQuery.startsWith("insert");
     }
 
+    private boolean isUpdate(String rawQuery){
+        return rawQuery.startsWith("update");
+    }
+
     private boolean isQuery(String logEntryMessage) {
         return logEntryMessage.contains("Query:[");
     }
