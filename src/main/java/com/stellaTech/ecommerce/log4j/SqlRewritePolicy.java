@@ -74,6 +74,7 @@ public class SqlRewritePolicy implements RewritePolicy {
     private SimpleMessage maskSql(String rawLogEntry) {
         String rawQuery = getRawQueryFromEntry(rawLogEntry);
         if (rawQuery.isEmpty()) return new SimpleMessage(rawLogEntry);
+        log.info("Current raw query entry: {}", rawQuery);
         Map<Integer, String> listParameters = isInsert(rawQuery) ?
                 extractQueryParametersFromInsert(rawQuery) : extractQueryParametersFromWhere(rawQuery);
         String newEntryLog = replaceParametersFromEntry(rawLogEntry, listParameters);
@@ -88,9 +89,9 @@ public class SqlRewritePolicy implements RewritePolicy {
         return !rawQueryMatcher.find() ? "" : rawQueryMatcher.group("rawQuery");
     }
 
-    private Map<Integer, String> extractQueryParametersFromWhere(String logQuery) {
+    private Map<Integer, String> extractQueryParametersFromWhere(String rawQuery) {
         String LOG_QUERY_WITH_WHERE = "(?<queryType>select|insert|update)(?<body>.*)(where )(?<parameters>.*)";
-        Matcher matcher = Pattern.compile(LOG_QUERY_WITH_WHERE, Pattern.CASE_INSENSITIVE).matcher(logQuery);
+        Matcher matcher = Pattern.compile(LOG_QUERY_WITH_WHERE, Pattern.CASE_INSENSITIVE).matcher(rawQuery);
         if (!matcher.find()) return new HashMap<>();
         String originalParameters = matcher.group("parameters");
         return mapPositionsToParametersFromWhere(originalParameters);
@@ -106,9 +107,9 @@ public class SqlRewritePolicy implements RewritePolicy {
         return indexMap;
     }
 
-    private Map<Integer, String> extractQueryParametersFromInsert(String logQuery) {
+    private Map<Integer, String> extractQueryParametersFromInsert(String rawQuery) {
         String RAW_PARAMETERS_INDEX = "insert\\sinto\\s(?<table>.+)\\s\\((?<parameters>.+)\\).+";
-        Matcher matcher = Pattern.compile(RAW_PARAMETERS_INDEX, Pattern.CASE_INSENSITIVE).matcher(logQuery);
+        Matcher matcher = Pattern.compile(RAW_PARAMETERS_INDEX, Pattern.CASE_INSENSITIVE).matcher(rawQuery);
         if (!matcher.find()) return new HashMap<>();
         String rawParameters = matcher.group("parameters");
         log.info("raw parameters: {}", rawParameters);
