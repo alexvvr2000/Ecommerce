@@ -7,7 +7,7 @@
         <Property name="profile">${bundle:application:spring.profiles.active}</Property>
         <Property name="filename">$${bundle:application:logging.file.name:-app}</Property>
         <Property name="default.masked.text">--MASKED--</Property>
-        <Property name="default.masked.fields">password,platform_user_id</Property>
+        <Property name="default.masked.fields">password,platform_user_id,id,deleted</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
