@@ -1,10 +1,9 @@
+from aiohttp import ClientSession
 from dataclasses import dataclass, asdict
+from faker import Faker
 from os import environ
 from typing import Optional
 from uuid import uuid4
-
-from aiohttp import ClientSession
-from faker import Faker
 
 from .connection import make_call_endpoint
 
